@@ -105,14 +105,25 @@ a:hover {
 /* ---- header ---- */
 
 header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--paper);
   border-bottom: 1px solid var(--rule);
+}
+@supports (backdrop-filter: blur(10px)) {
+  header {
+    background: color-mix(in srgb, var(--paper) 86%, transparent);
+    backdrop-filter: blur(10px) saturate(1.15);
+  }
 }
 header .wrap {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
-  padding-top: 1.1rem;
-  padding-bottom: 1.1rem;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 0.85rem;
+  padding-bottom: 0.85rem;
   font-family: var(--mono);
   font-size: 0.8125rem;
   letter-spacing: 0.04em;
@@ -124,11 +135,52 @@ header a {
 header a:hover {
   color: var(--accent);
 }
+header .brand {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+header .nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: none;
+}
 header .lang {
   color: var(--ink-soft);
+  white-space: nowrap;
 }
 header .lang a {
   color: var(--accent);
+}
+header .contact {
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: 0.3rem 0.8rem;
+  color: var(--accent);
+  line-height: 1;
+  white-space: nowrap;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+header .contact:hover,
+header .contact:focus-visible {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--paper);
+}
+@media (max-width: 26rem) {
+  header .wrap {
+    gap: 0.6rem;
+    font-size: 0.75rem;
+  }
+  header .nav {
+    gap: 0.65rem;
+  }
+}
+
+/* les ancres ne doivent pas passer sous le ruban */
+[id] {
+  scroll-margin-top: 4.5rem;
 }
 
 /* ---- hero ---- */
