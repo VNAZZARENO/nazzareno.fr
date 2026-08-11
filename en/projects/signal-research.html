@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Building a signal, then trying to break it</title>
+  <meta name="description" content="How a market intuition becomes a testable hypothesis, then a signal that holds up: out-of-sample protocol, overfitting controls, moving to production.">
+  <link rel="canonical" href="https://nazzareno.fr/en/projects/signal-research.html">
+  <link rel="alternate" hreflang="fr" href="https://nazzareno.fr/projets/recherche-de-signaux.html">
+  <link rel="alternate" hreflang="en" href="https://nazzareno.fr/en/projects/signal-research.html">
+  <link rel="alternate" hreflang="x-default" href="https://nazzareno.fr/projets/recherche-de-signaux.html">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+  <meta property="og:title" content="Building a signal, then trying to break it">
+  <meta property="og:description" content="How a market intuition becomes a testable hypothesis, then a signal that holds up: out-of-sample protocol, overfitting controls, moving to production.">
+  <meta property="og:url" content="https://nazzareno.fr/en/projects/signal-research.html">
+  <meta property="og:type" content="article">
+</head>
+<body class="article">
+
+<header>
+  <div class="wrap">
+    <a href="/en/">vincent nazzareno</a>
+    <span class="lang"><a href="/projets/recherche-de-signaux.html">fr</a> · en</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="kicker">Quant research</p>
+  <h1>Building a signal,<br>then trying to break it</h1>
+  <p class="standfirst">The easy part is finding something that works on history. The real work starts when you have to establish that this something is not an accident.</p>
+  <p class="facts"><span>python</span>
+    <span>pandas</span>
+    <span>statsmodels</span>
+    <span>market data</span></p>
+
+
+  <h2>From intuition to hypothesis</h2>
+
+  <p>A research idea rarely arrives in testable form. It looks more like "names left for dead after a bad print rebound too late". The first job is to turn it into a statement that can be false: on which universe, over which horizon, measured how, and compared against what.</p>
+
+  <p>This step decides everything that follows. A statement left loose will always end up finding a window where it works, and that window proves nothing.</p>
+
+  <h2>Protocol before results</h2>
+
+  <p>Sample splits, holding horizon, assumed costs and the stopping rule are fixed before the first test runs. Writing the protocol first costs an hour and avoids the most expensive bias in the job: adjusting the rules until the curve looks good.</p>
+
+  <ul>
+    <li>Part of the history stays untouched until the end, and is used exactly once.</li>
+    <li>Transaction costs are in from the first number, not bolted on at the end.</li>
+    <li>The result is compared against a naive benchmark, not against nothing.</li>
+  </ul>
+
+  <h2>The traps that pass noise off as signal</h2>
+
+  <p><strong>Overfitting</strong> comes in through the parameters: the more you try, the more certain you are to find one that shines by chance. The number of attempts matters as much as the result of the best one.</p>
+
+  <p><strong>Survivorship bias</strong> comes from the universe: testing on companies still listed today keeps only the ones that made it, which mechanically flatters anything risk-related.</p>
+
+  <p><strong>Look-ahead bias</strong> slips in through dates: accounting data used at its fiscal close, rather than its publication date, grants predictive power nobody had at the time.</p>
+
+  <p class="aside">A backtest only proves something once you have seriously tried to break it. As long as the only thing tested is performance, all you have measured is your own persistence.</p>
+
+  <h2>From research to production</h2>
+
+  <p>A signal that survives changes nature: it has to be recomputed on fresh data, watched for drift, and recognised when it stops working. That monitoring is often worth more than one extra point of backtested performance, because it is what stops you staying invested in a dead idea.</p>
+
+  <p class="backlink"><a href="/en/#projects">← back to projects</a></p>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Vincent Nazzareno</span>
+    <nav>
+      <a href="/mentions-legales.html">legal notice (fr)</a>
+      <a href="/politique-confidentialite.html">privacy (fr)</a>
+      <a href="/projets/recherche-de-signaux.html">français</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Une suite d'outils pour une équipe de gestion</title>
+  <meta name="description" content="Unifier positions, performances, indices, ESG et actualités derrière une seule couche d'accès, exposée à une interface web et à des agents LLM.">
+  <link rel="canonical" href="https://nazzareno.fr/projets/outils-de-gestion.html">
+  <link rel="alternate" hreflang="fr" href="https://nazzareno.fr/projets/outils-de-gestion.html">
+  <link rel="alternate" hreflang="en" href="https://nazzareno.fr/en/projects/investment-tooling.html">
+  <link rel="alternate" hreflang="x-default" href="https://nazzareno.fr/projets/outils-de-gestion.html">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+  <meta property="og:title" content="Une suite d'outils pour une équipe de gestion">
+  <meta property="og:description" content="Unifier positions, performances, indices, ESG et actualités derrière une seule couche d'accès, exposée à une interface web et à des agents LLM.">
+  <meta property="og:url" content="https://nazzareno.fr/projets/outils-de-gestion.html">
+  <meta property="og:type" content="article">
+</head>
+<body class="article">
+
+<header>
+  <div class="wrap">
+    <a href="/">vincent nazzareno</a>
+    <span class="lang">fr · <a href="/en/projects/investment-tooling.html">en</a></span>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="kicker">Projet</p>
+  <h1>Une suite d'outils<br>pour une équipe de gestion</h1>
+  <p class="standfirst">Le problème n'était pas l'absence de données, mais leur dispersion. Une même question demandait trois systèmes, deux exports et un tableur intermédiaire.</p>
+  <p class="facts"><span>python</span>
+    <span>api</span>
+    <span>sql</span>
+    <span>serveur mcp</span>
+    <span>interface web</span></p>
+
+
+  <h2>Le point de départ</h2>
+
+  <p>Les positions vivaient dans un système, les valeurs liquidatives dans un autre, les indices de référence chez un fournisseur, les données extra-financières ailleurs encore, et les actualités nulle part en particulier. Chaque question un peu transversale se payait en manipulations manuelles, avec le risque d'erreur que ça implique et, plus grave, une réponse impossible à refaire à l'identique.</p>
+
+  <h2>Une couche d'accès par domaine</h2>
+
+  <p>Plutôt qu'un entrepôt monolithique, l'architecture retenue est une couche d'accès découpée par domaine métier : portefeuilles, performance, données de marché, extra-financier, actualités. Chaque domaine expose un petit nombre de fonctions au vocabulaire du métier, et se charge lui-même de savoir où la donnée se trouve réellement.</p>
+
+  <p>L'intérêt est moins technique qu'organisationnel : quand la source d'un domaine change, un seul endroit bouge, et rien de ce qui est au-dessus n'a besoin d'être réécrit.</p>
+
+  <h2>Deux façons de s'en servir</h2>
+
+  <p>Au-dessus de cette couche, une interface web donne les vues habituelles, portefeuilles, performances, comparaisons. Mais la partie qui a le plus changé les usages est ailleurs : les mêmes fonctions sont exposées à des agents LLM via un serveur MCP.</p>
+
+  <p>Concrètement, une question posée en langage naturel déclenche des appels à ces fonctions et revient avec un chiffre sourcé, accompagné du chemin qui a permis de l'obtenir. Le modèle choisit les outils et rédige, il ne produit jamais les nombres lui-même.</p>
+
+  <p class="aside">C'est le principe qui rend l'ensemble utilisable en contexte professionnel : tout chiffre affiché est traçable jusqu'à sa source, et reproductible à l'identique.</p>
+
+  <h2>Ce que ça change</h2>
+
+  <p>Les questions qui demandaient une demi-journée de préparation se posent maintenant à voix haute. Surtout, les questions qu'on ne posait pas, parce que le coût de la réponse dépassait l'intérêt de la savoir, redeviennent accessibles.</p>
+
+  <p class="backlink"><a href="/#projets">← retour aux projets</a></p>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Vincent Nazzareno</span>
+    <nav>
+      <a href="/mentions-legales.html">mentions légales</a>
+      <a href="/politique-confidentialite.html">confidentialité</a>
+      <a href="/en/projects/investment-tooling.html">english</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

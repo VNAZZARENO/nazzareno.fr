@@ -239,6 +239,23 @@ section p + p {
   font-weight: 500;
   line-height: 1.45;
 }
+.items h3 a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 1px;
+}
+.items h3 a:hover,
+.items h3 a:focus-visible {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.items .more {
+  font-family: var(--mono);
+  font-size: 0.78125rem;
+  letter-spacing: 0.02em;
+  margin-top: 0.5rem;
+}
 .items p {
   color: var(--ink-soft);
   font-size: 1rem;
@@ -285,6 +302,109 @@ footer a {
 }
 footer a:hover {
   color: var(--accent);
+}
+
+/* ---- articles projet ---- */
+
+.article main {
+  padding: 3.25rem 0 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+.article .kicker {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.article h1 {
+  font-size: clamp(1.8rem, 5vw, 2.5rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+.article .standfirst {
+  font-size: 1.1875rem;
+  color: var(--ink-soft);
+  max-width: 38rem;
+}
+.article .facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  margin-top: 0.4rem;
+}
+.article .facts span {
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: 0.2rem 0.7rem;
+  color: var(--ink-soft);
+}
+.article h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-top: 1.6rem;
+  border-top: 1px solid var(--rule);
+  padding-top: 1.75rem;
+}
+.article p,
+.article ul {
+  max-width: 38rem;
+}
+.article ul {
+  margin-left: 1.15rem;
+}
+.article li + li {
+  margin-top: 0.4rem;
+}
+.article .aside {
+  border-left: 2px solid var(--accent);
+  padding: 0.15rem 0 0.15rem 1.1rem;
+  color: var(--ink-soft);
+}
+
+/* planche image sur fond sombre, pour les rendus graphiques */
+figure.plate {
+  margin: 0.75rem 0;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  overflow: hidden;
+  background: #0c1018;
+}
+figure.plate img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+figure.plate figcaption {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: #8a93a4;
+  padding: 0.75rem 0.9rem;
+  border-top: 1px solid #1c2432;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 1rem;
+  justify-content: space-between;
+}
+figure.plate figcaption a {
+  color: #9fc7ae;
+}
+
+.backlink {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  border-top: 1px solid var(--rule);
+  padding-top: 1.75rem;
+  margin-top: 1rem;
 }
 
 /* ---- pages légales ---- */

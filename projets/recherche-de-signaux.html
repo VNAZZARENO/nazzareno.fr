@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Construire un signal, puis essayer de le casser</title>
+  <meta name="description" content="Comment une intuition de marché devient une hypothèse testable, puis un signal qu'on peut défendre : protocole hors échantillon, contrôle du surapprentissage, passage en production.">
+  <link rel="canonical" href="https://nazzareno.fr/projets/recherche-de-signaux.html">
+  <link rel="alternate" hreflang="fr" href="https://nazzareno.fr/projets/recherche-de-signaux.html">
+  <link rel="alternate" hreflang="en" href="https://nazzareno.fr/en/projects/signal-research.html">
+  <link rel="alternate" hreflang="x-default" href="https://nazzareno.fr/projets/recherche-de-signaux.html">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+  <meta property="og:title" content="Construire un signal, puis essayer de le casser">
+  <meta property="og:description" content="Comment une intuition de marché devient une hypothèse testable, puis un signal qu'on peut défendre : protocole hors échantillon, contrôle du surapprentissage, passage en production.">
+  <meta property="og:url" content="https://nazzareno.fr/projets/recherche-de-signaux.html">
+  <meta property="og:type" content="article">
+</head>
+<body class="article">
+
+<header>
+  <div class="wrap">
+    <a href="/">vincent nazzareno</a>
+    <span class="lang">fr · <a href="/en/projects/signal-research.html">en</a></span>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="kicker">Recherche quantitative</p>
+  <h1>Construire un signal,<br>puis essayer de le casser</h1>
+  <p class="standfirst">La partie facile est de trouver quelque chose qui marche sur l'historique. Le vrai travail commence quand il faut établir que ce quelque chose n'est pas un accident.</p>
+  <p class="facts"><span>python</span>
+    <span>pandas</span>
+    <span>statsmodels</span>
+    <span>données de marché</span></p>
+
+
+  <h2>De l'intuition à l'hypothèse</h2>
+
+  <p>Une idée de recherche arrive rarement sous forme testable. Elle ressemble plutôt à « les titres délaissés après une mauvaise publication rebondissent trop tard ». Le premier travail consiste à en faire un énoncé qui peut être faux : sur quel univers, sur quel horizon, mesuré comment, et comparé à quoi.</p>
+
+  <p>Cette étape décide de tout le reste. Un énoncé trop souple finira toujours par trouver une fenêtre où il fonctionne, et cette fenêtre ne prouvera rien.</p>
+
+  <h2>Le protocole avant les résultats</h2>
+
+  <p>Le découpage des échantillons, l'horizon de détention, les coûts retenus et le critère d'arrêt sont fixés avant de lancer le premier test. Écrire le protocole d'abord coûte une heure et évite le biais le plus coûteux du métier : ajuster les règles jusqu'à ce que la courbe soit belle.</p>
+
+  <ul>
+    <li>Une partie de l'historique reste intouchée jusqu'à la fin, et ne sert qu'une fois.</li>
+    <li>Les coûts de transaction sont intégrés dès le premier chiffre, pas ajoutés en fin de parcours.</li>
+    <li>Le résultat est comparé à une référence naïve, pas au vide.</li>
+  </ul>
+
+  <h2>Les pièges qui font passer du bruit pour un signal</h2>
+
+  <p>Le <strong>surapprentissage</strong> arrive par la porte des paramètres : plus on en essaie, plus on est certain d'en trouver un qui brille par hasard. Le nombre d'essais compte autant que le résultat du meilleur d'entre eux.</p>
+
+  <p>Le <strong>biais de survivance</strong> vient de l'univers : tester sur les sociétés encore cotées aujourd'hui revient à ne garder que celles qui ont survécu, ce qui embellit mécaniquement tout ce qui touche au risque.</p>
+
+  <p>Le <strong>biais d'anticipation</strong> se glisse dans les dates : une donnée comptable utilisée à sa date de clôture, et non à sa date de publication, donne un pouvoir de prédiction que personne n'avait à l'époque.</p>
+
+  <p class="aside">Un backtest ne prouve quelque chose que si on a sérieusement cherché à le casser. Tant que la seule chose testée est la performance, on n'a mesuré que sa propre persévérance.</p>
+
+  <h2>De la recherche à la production</h2>
+
+  <p>Un signal qui survit change de nature : il faut le recalculer sur des données fraîches, surveiller sa dérive, et savoir reconnaître le moment où il cesse de fonctionner. Cette surveillance vaut souvent plus que le gain d'un point de performance en recherche, parce qu'elle est ce qui évite de rester investi dans une idée morte.</p>
+
+  <p class="backlink"><a href="/#projets">← retour aux projets</a></p>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Vincent Nazzareno</span>
+    <nav>
+      <a href="/mentions-legales.html">mentions légales</a>
+      <a href="/politique-confidentialite.html">confidentialité</a>
+      <a href="/en/projects/signal-research.html">english</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

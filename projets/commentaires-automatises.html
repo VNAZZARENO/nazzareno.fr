@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Des commentaires de gestion écrits chaque semaine, sans saisie</title>
+  <meta name="description" content="Automatiser la rédaction des commentaires de gestion hebdomadaires et mensuels, en séparant strictement le calcul déterministe de la rédaction par un modèle.">
+  <link rel="canonical" href="https://nazzareno.fr/projets/commentaires-automatises.html">
+  <link rel="alternate" hreflang="fr" href="https://nazzareno.fr/projets/commentaires-automatises.html">
+  <link rel="alternate" hreflang="en" href="https://nazzareno.fr/en/projects/automated-commentary.html">
+  <link rel="alternate" hreflang="x-default" href="https://nazzareno.fr/projets/commentaires-automatises.html">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+  <meta property="og:title" content="Des commentaires de gestion écrits chaque semaine, sans saisie">
+  <meta property="og:description" content="Automatiser la rédaction des commentaires de gestion hebdomadaires et mensuels, en séparant strictement le calcul déterministe de la rédaction par un modèle.">
+  <meta property="og:url" content="https://nazzareno.fr/projets/commentaires-automatises.html">
+  <meta property="og:type" content="article">
+</head>
+<body class="article">
+
+<header>
+  <div class="wrap">
+    <a href="/">vincent nazzareno</a>
+    <span class="lang">fr · <a href="/en/projects/automated-commentary.html">en</a></span>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="kicker">Projet</p>
+  <h1>Des commentaires de gestion<br>écrits chaque semaine</h1>
+  <p class="standfirst">Chaque lundi matin, le même rituel : reprendre les valeurs liquidatives, recalculer les contributions, et réécrire le même paragraphe pour chaque fonds.</p>
+  <p class="facts"><span>python</span>
+    <span>attribution déterministe</span>
+    <span>agents llm</span>
+    <span>publication planifiée</span></p>
+
+
+  <h2>Un travail répétitif mais pas mécanique</h2>
+
+  <p>Le commentaire de gestion n'est pas un texte qu'on peut produire au hasard. Il doit dire ce qui a porté la performance sur la période, ce qui l'a pénalisée, et pourquoi, avec des chiffres exacts. C'est répétitif dans la forme, mais chaque édition demande de reprendre les données et de les interpréter.</p>
+
+  <p>C'est exactement le profil de tâche que l'automatisation traite bien, à condition de ne pas confier au modèle ce qu'il fait mal.</p>
+
+  <h2>La règle qui structure tout le reste</h2>
+
+  <p>Les chiffres ne sont jamais produits par le modèle. L'attribution de performance, les contributions par ligne, les écarts à l'indice sont calculés par du code déterministe à partir des positions et des valeurs liquidatives. Le modèle reçoit ces résultats déjà établis, et son seul travail est de les mettre en récit.</p>
+
+  <p class="aside">Un modèle de langage qui calcule une contribution produira un nombre plausible. Dans un commentaire de gestion, plausible et faux est le pire des résultats possibles, parce que personne ne le vérifie.</p>
+
+  <h2>Le cadrage temporel</h2>
+
+  <p>Un détail qui pèse plus qu'il n'en a l'air : la période n'est pas déduite du calendrier mais des données réellement disponibles. La chaîne va chercher la dernière valeur liquidative publiée et construit la période à partir d'elle, ce qui évite tout un genre d'erreur silencieuse les semaines avec un jour férié.</p>
+
+  <h2>La chaîne complète</h2>
+
+  <ul>
+    <li>Récupération des valeurs liquidatives, des positions et de la trésorerie aux deux bornes de la période.</li>
+    <li>Calcul déterministe des contributions et de l'écart à la référence.</li>
+    <li>Recherche du contexte de marché pour expliquer les mouvements marquants.</li>
+    <li>Rédaction cadrée par des consignes de ton et de format propres à chaque produit.</li>
+    <li>Relecture humaine, puis publication.</li>
+  </ul>
+
+  <h2>Le résultat</h2>
+
+  <p>Le temps passé chaque semaine tombe de plusieurs heures à une relecture. Le gain moins visible est ailleurs : le format ne dérive plus, les mêmes indicateurs sont calculés de la même façon d'une édition à l'autre, et une question sur un chiffre d'il y a six mois trouve toujours sa réponse.</p>
+
+  <p class="backlink"><a href="/#projets">← retour aux projets</a></p>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Vincent Nazzareno</span>
+    <nav>
+      <a href="/mentions-legales.html">mentions légales</a>
+      <a href="/politique-confidentialite.html">confidentialité</a>
+      <a href="/en/projects/automated-commentary.html">english</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

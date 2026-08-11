@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Investment commentary written every week, without data entry</title>
+  <meta name="description" content="Automating weekly and monthly investment commentary, with a strict split between deterministic computation and model-written prose.">
+  <link rel="canonical" href="https://nazzareno.fr/en/projects/automated-commentary.html">
+  <link rel="alternate" hreflang="fr" href="https://nazzareno.fr/projets/commentaires-automatises.html">
+  <link rel="alternate" hreflang="en" href="https://nazzareno.fr/en/projects/automated-commentary.html">
+  <link rel="alternate" hreflang="x-default" href="https://nazzareno.fr/projets/commentaires-automatises.html">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+  <meta property="og:title" content="Investment commentary written every week, without data entry">
+  <meta property="og:description" content="Automating weekly and monthly investment commentary, with a strict split between deterministic computation and model-written prose.">
+  <meta property="og:url" content="https://nazzareno.fr/en/projects/automated-commentary.html">
+  <meta property="og:type" content="article">
+</head>
+<body class="article">
+
+<header>
+  <div class="wrap">
+    <a href="/en/">vincent nazzareno</a>
+    <span class="lang"><a href="/projets/commentaires-automatises.html">fr</a> · en</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="kicker">Project</p>
+  <h1>Investment commentary<br>written every week</h1>
+  <p class="standfirst">Every Monday morning, the same ritual: pull the net asset values, recompute contributions, and rewrite the same paragraph for each fund.</p>
+  <p class="facts"><span>python</span>
+    <span>deterministic attribution</span>
+    <span>llm agents</span>
+    <span>scheduled publishing</span></p>
+
+
+  <h2>Repetitive, but not mechanical</h2>
+
+  <p>Investment commentary is not a text you can produce loosely. It has to say what drove performance over the period, what held it back, and why, with exact figures. The form repeats, but every edition means going back to the data and interpreting it.</p>
+
+  <p>That is precisely the kind of task automation handles well, provided you do not hand the model the part it is bad at.</p>
+
+  <h2>The rule everything else is built on</h2>
+
+  <p>Numbers are never produced by the model. Performance attribution, per-holding contributions and the gap to benchmark are computed by deterministic code from positions and net asset values. The model receives those settled results, and its only job is to turn them into prose.</p>
+
+  <p class="aside">A language model asked to compute a contribution will produce a plausible number. In investment commentary, plausible and wrong is the worst possible outcome, because nobody checks it.</p>
+
+  <h2>Framing the period</h2>
+
+  <p>One detail carries more weight than it looks: the period is not derived from the calendar but from the data actually available. The pipeline fetches the latest published net asset value and builds the period from it, which rules out a whole class of silent error in weeks with a public holiday.</p>
+
+  <h2>The full pipeline</h2>
+
+  <ul>
+    <li>Fetch net asset values, positions and cash at both ends of the period.</li>
+    <li>Deterministic computation of contributions and the gap to benchmark.</li>
+    <li>Market context research to explain the notable moves.</li>
+    <li>Writing, framed by tone and format rules specific to each product.</li>
+    <li>Human review, then publication.</li>
+  </ul>
+
+  <h2>The outcome</h2>
+
+  <p>Weekly time drops from several hours to a review pass. The less visible gain sits elsewhere: the format stops drifting, the same indicators are computed the same way from one edition to the next, and a question about a figure from six months ago still has an answer.</p>
+
+  <p class="backlink"><a href="/en/#projects">← back to projects</a></p>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Vincent Nazzareno</span>
+    <nav>
+      <a href="/mentions-legales.html">legal notice (fr)</a>
+      <a href="/politique-confidentialite.html">privacy (fr)</a>
+      <a href="/projets/commentaires-automatises.html">français</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

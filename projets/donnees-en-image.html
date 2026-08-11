@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Des données de marché en fond d'écran, Vincent Nazzareno</title>
+  <meta name="description" content="Deux rendus 4K construits à partir de données de marché publiques : la surface de volatilité implicite du SPY et une carte de corrélation de l'univers actions.">
+  <link rel="canonical" href="https://nazzareno.fr/projets/donnees-en-image.html">
+  <link rel="alternate" hreflang="fr" href="https://nazzareno.fr/projets/donnees-en-image.html">
+  <link rel="alternate" hreflang="en" href="https://nazzareno.fr/en/projects/data-as-image.html">
+  <link rel="alternate" hreflang="x-default" href="https://nazzareno.fr/projets/donnees-en-image.html">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+  <meta property="og:title" content="Des données de marché en fond d'écran, Vincent Nazzareno">
+  <meta property="og:description" content="Deux rendus 4K construits à partir de données de marché publiques : la surface de volatilité implicite du SPY et une carte de corrélation de l'univers actions.">
+  <meta property="og:url" content="https://nazzareno.fr/projets/donnees-en-image.html">
+  <meta property="og:type" content="article">
+</head>
+<body class="article">
+
+<header>
+  <div class="wrap">
+    <a href="/">vincent nazzareno</a>
+    <span class="lang">fr · <a href="/en/projects/data-as-image.html">en</a></span>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="kicker">Projet</p>
+  <h1>Des données de marché,<br>en fond d'écran</h1>
+  <p class="standfirst">Deux rendus en 3840×2160, construits à partir de données de marché publiques. Aucune donnée inventée, aucun effet ajouté après coup : ce qu'on voit est la structure elle-même.</p>
+  <p class="facts"><span>python</span>
+    <span>matplotlib</span>
+    <span>données publiques</span>
+    <span>3840 × 2160</span>
+    <span>libres de téléchargement</span></p>
+
+
+  <p>Un quant passe ses journées devant des surfaces de volatilité et des matrices de corrélation, presque toujours affichées dans des rendus utilitaires. Ces objets ont pourtant une forme, et cette forme veut dire quelque chose. L'exercice a consisté à les traiter comme des objets graphiques à part entière, sans jamais lisser ni déformer ce que les données disent.</p>
+
+  <h2>La surface de volatilité implicite</h2>
+
+  <figure class="plate">
+    <img src="/assets/img/vol_surface_spy.webp" width="1600" height="900" loading="lazy" decoding="async" alt="Rendu 3D d'une surface de volatilité implicite du SPY, en dégradé bleu-vert sur fond bleu nuit, avec une aile relevée à gauche et les lignes de niveau projetées au sol.">
+    <figcaption>
+      <span>SPY, surface de volatilité implicite, 1<sup>er</sup> juillet 2026</span>
+      <span><a href="/assets/img/vol_surface_spy-4k.png" download>télécharger en 4K, 1,3 Mo</a></span>
+    </figcaption>
+  </figure>
+
+  <p>Deux axes au sol, le prix d'exercice et la maturité. En hauteur, la volatilité implicite lue dans les prix d'options. La pointe relevée sur la gauche est le <em>skew</em> : les options de protection à la baisse se paient nettement plus cher que les options symétriques à la hausse. Ce n'est pas un artefact de rendu, c'est la prime que le marché accepte de payer contre une chute.</p>
+
+  <p>La nappe projetée au sol reprend les mêmes valeurs en lignes de niveau. Elle sert de repère : elle montre où la surface est plate, donc où le marché a peu d'opinion, et où elle se cabre.</p>
+
+  <h2>La carte de corrélation</h2>
+
+  <figure class="plate">
+    <img src="/assets/img/starmap_universe.webp" width="1600" height="900" loading="lazy" decoding="async" alt="Carte façon ciel étoilé : des centaines de points colorés par groupe, regroupés en amas, sur fond bleu nuit." >
+    <figcaption>
+      <span>Univers actions, carte de corrélation, SPX / SXXP / NKY</span>
+      <span><a href="/assets/img/starmap_universe-4k.png" download>télécharger en 4K, 1,1 Mo</a></span>
+    </figcaption>
+  </figure>
+
+  <p>Chaque point est une valeur des grands indices américain, européen et japonais. Les distances viennent de la matrice de corrélation des rendements : deux titres qui bougent ensemble se retrouvent voisins, deux titres indépendants s'éloignent. La couleur marque les groupes.</p>
+
+  <p>La lecture intéressante n'est pas la position d'une valeur mais la forme des amas. Un amas dense signale un groupe qui bouge d'un bloc, donc une diversification illusoire à l'intérieur. Les points isolés, eux, sont les rares titres qui ne suivent personne.</p>
+
+  <h2>Les contraintes de rendu</h2>
+
+  <p>Un fond d'écran a un cahier des charges particulier : il doit rester lisible sous une rangée d'icônes, ne pas fatiguer sur huit heures, et se passer de légende encombrante. D'où le fond très sombre, une seule ligne de contexte en bas à droite, et une palette qui reste sourde sauf là où la donnée mérite qu'on la regarde.</p>
+
+  <p class="aside">Les deux images sont téléchargeables librement, en pleine résolution.</p>
+
+  <p class="backlink"><a href="/#projets">← retour aux projets</a></p>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Vincent Nazzareno</span>
+    <nav>
+      <a href="/mentions-legales.html">mentions légales</a>
+      <a href="/politique-confidentialite.html">confidentialité</a>
+      <a href="/en/projects/data-as-image.html">english</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

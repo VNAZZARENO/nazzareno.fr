@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Let the machine read the documents, let people validate</title>
+  <meta name="description" content="Processing pipelines that read documents, extract structured fields, and only escalate doubtful cases to a human.">
+  <link rel="canonical" href="https://nazzareno.fr/en/projects/document-extraction.html">
+  <link rel="alternate" hreflang="fr" href="https://nazzareno.fr/projets/extraction-documentaire.html">
+  <link rel="alternate" hreflang="en" href="https://nazzareno.fr/en/projects/document-extraction.html">
+  <link rel="alternate" hreflang="x-default" href="https://nazzareno.fr/projets/extraction-documentaire.html">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+  <meta property="og:title" content="Let the machine read the documents, let people validate">
+  <meta property="og:description" content="Processing pipelines that read documents, extract structured fields, and only escalate doubtful cases to a human.">
+  <meta property="og:url" content="https://nazzareno.fr/en/projects/document-extraction.html">
+  <meta property="og:type" content="article">
+</head>
+<body class="article">
+
+<header>
+  <div class="wrap">
+    <a href="/en/">vincent nazzareno</a>
+    <span class="lang"><a href="/projets/extraction-documentaire.html">fr</a> · en</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="kicker">Freelance</p>
+  <h1>Let the machine<br>read the documents</h1>
+  <p class="standfirst">Your staff validates instead of typing. That is the whole promise, and it is also the only way to make automatic extraction acceptable in production.</p>
+  <p class="facts"><span>python</span>
+    <span>rag</span>
+    <span>model apis</span>
+    <span>output schema</span>
+    <span>human review</span></p>
+
+
+  <h2>The real problem</h2>
+
+  <p>In many trades, a large share of the time goes into copying: reading an invoice, a statement, a contract, and carrying a dozen fields into a tool. The work is dull, expensive, and paradoxically unreliable, because attention drops with repetition.</p>
+
+  <h2>The pipeline</h2>
+
+  <ul>
+    <li><strong>Reading</strong> the document, whatever its original format, scanned ones included.</li>
+    <li><strong>Extraction</strong> of the expected fields, constrained by a strict output schema: the model can only return the planned structure.</li>
+    <li><strong>Business checks</strong> on the result: totals adding up, formats, plausible values.</li>
+    <li><strong>Writing</strong> into the target tool, with no manual step in between.</li>
+  </ul>
+
+  <h2>Confidence, not accuracy</h2>
+
+  <p>The first question people ask is the success rate. It is the wrong one. A pipeline that extracts correctly 95% of the time and stays silent about the other 5% is unusable, because you then have to recheck everything.</p>
+
+  <p>What makes the system workable is its ability to know when it does not know. Every extracted field carries a confidence level, and anything below the threshold goes to human review. The rest goes through on its own.</p>
+
+  <p class="aside">The metric that matters is not the correct-extraction rate, but the share of documents processed with no intervention, at a constant error rate.</p>
+
+  <h2>What fails</h2>
+
+  <p>Badly scanned documents, unusual layouts and genuine edge cases remain edge cases. The goal is not to solve them at any cost but to identify them reliably, so they land on someone's desk instead of turning into a silent error in the system.</p>
+
+  <p class="backlink"><a href="/en/#projects">← back to projects</a></p>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Vincent Nazzareno</span>
+    <nav>
+      <a href="/mentions-legales.html">legal notice (fr)</a>
+      <a href="/politique-confidentialite.html">privacy (fr)</a>
+      <a href="/projets/extraction-documentaire.html">français</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Faire lire les documents par la machine, faire valider par l'humain</title>
+  <meta name="description" content="Chaînes de traitement qui lisent des documents, en extraient des champs structurés et ne remontent à l'humain que les cas douteux.">
+  <link rel="canonical" href="https://nazzareno.fr/projets/extraction-documentaire.html">
+  <link rel="alternate" hreflang="fr" href="https://nazzareno.fr/projets/extraction-documentaire.html">
+  <link rel="alternate" hreflang="en" href="https://nazzareno.fr/en/projects/document-extraction.html">
+  <link rel="alternate" hreflang="x-default" href="https://nazzareno.fr/projets/extraction-documentaire.html">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+  <meta property="og:title" content="Faire lire les documents par la machine, faire valider par l'humain">
+  <meta property="og:description" content="Chaînes de traitement qui lisent des documents, en extraient des champs structurés et ne remontent à l'humain que les cas douteux.">
+  <meta property="og:url" content="https://nazzareno.fr/projets/extraction-documentaire.html">
+  <meta property="og:type" content="article">
+</head>
+<body class="article">
+
+<header>
+  <div class="wrap">
+    <a href="/">vincent nazzareno</a>
+    <span class="lang">fr · <a href="/en/projects/document-extraction.html">en</a></span>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="kicker">Freelance</p>
+  <h1>Faire lire les documents<br>par la machine</h1>
+  <p class="standfirst">Le collaborateur valide au lieu de saisir. C'est toute la promesse, et c'est aussi la seule façon de rendre une extraction automatique acceptable en production.</p>
+  <p class="facts"><span>python</span>
+    <span>rag</span>
+    <span>apis de modèles</span>
+    <span>schéma de sortie</span>
+    <span>revue humaine</span></p>
+
+
+  <h2>Le problème réel</h2>
+
+  <p>Dans beaucoup de métiers, une part importante du temps passe à recopier : lire une facture, un relevé, un contrat, et reporter une dizaine de champs dans un outil. C'est un travail sans intérêt, coûteux, et paradoxalement peu fiable, parce que l'attention baisse avec la répétition.</p>
+
+  <h2>La chaîne</h2>
+
+  <ul>
+    <li><strong>Lecture</strong> du document, quel que soit son format d'origine, y compris les documents scannés.</li>
+    <li><strong>Extraction</strong> des champs attendus, contrainte par un schéma de sortie strict : le modèle ne peut renvoyer que la structure prévue.</li>
+    <li><strong>Contrôles</strong> métier sur le résultat, cohérence des totaux, formats, valeurs plausibles.</li>
+    <li><strong>Écriture</strong> dans l'outil cible, sans étape manuelle intermédiaire.</li>
+  </ul>
+
+  <h2>La confiance, pas la performance</h2>
+
+  <p>La question qu'on pose toujours en premier est le taux de réussite. Ce n'est pas la bonne. Une chaîne qui extrait juste dans 95 % des cas et se tait sur les 5 % restants est inutilisable, parce qu'il faut alors tout revérifier.</p>
+
+  <p>Ce qui rend le système exploitable, c'est sa capacité à savoir quand il ne sait pas. Chaque champ extrait porte un niveau de confiance, et tout ce qui passe sous le seuil part en revue humaine. Le reste passe seul.</p>
+
+  <p class="aside">L'indicateur qui compte n'est pas le taux d'extraction correcte, mais la part des documents traités sans intervention, à taux d'erreur constant.</p>
+
+  <h2>Ce qui échoue</h2>
+
+  <p>Les documents mal scannés, les mises en page inhabituelles et les cas limites du métier restent des cas limites. L'objectif n'est pas de les résoudre à tout prix mais de les identifier de façon fiable, pour qu'ils arrivent chez quelqu'un plutôt que de se transformer en erreur silencieuse dans le système.</p>
+
+  <p class="backlink"><a href="/#projets">← retour aux projets</a></p>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Vincent Nazzareno</span>
+    <nav>
+      <a href="/mentions-legales.html">mentions légales</a>
+      <a href="/politique-confidentialite.html">confidentialité</a>
+      <a href="/en/projects/document-extraction.html">english</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

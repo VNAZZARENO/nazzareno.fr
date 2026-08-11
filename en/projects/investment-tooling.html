@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A tooling suite for an investment team</title>
+  <meta name="description" content="Unifying positions, performance, benchmarks, ESG and news behind a single access layer, exposed to a web interface and to LLM agents.">
+  <link rel="canonical" href="https://nazzareno.fr/en/projects/investment-tooling.html">
+  <link rel="alternate" hreflang="fr" href="https://nazzareno.fr/projets/outils-de-gestion.html">
+  <link rel="alternate" hreflang="en" href="https://nazzareno.fr/en/projects/investment-tooling.html">
+  <link rel="alternate" hreflang="x-default" href="https://nazzareno.fr/projets/outils-de-gestion.html">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+  <meta property="og:title" content="A tooling suite for an investment team">
+  <meta property="og:description" content="Unifying positions, performance, benchmarks, ESG and news behind a single access layer, exposed to a web interface and to LLM agents.">
+  <meta property="og:url" content="https://nazzareno.fr/en/projects/investment-tooling.html">
+  <meta property="og:type" content="article">
+</head>
+<body class="article">
+
+<header>
+  <div class="wrap">
+    <a href="/en/">vincent nazzareno</a>
+    <span class="lang"><a href="/projets/outils-de-gestion.html">fr</a> · en</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="kicker">Project</p>
+  <h1>A tooling suite<br>for an investment team</h1>
+  <p class="standfirst">The problem was not a lack of data, but how scattered it was. One question meant three systems, two exports and an intermediate spreadsheet.</p>
+  <p class="facts"><span>python</span>
+    <span>api</span>
+    <span>sql</span>
+    <span>mcp server</span>
+    <span>web interface</span></p>
+
+
+  <h2>The starting point</h2>
+
+  <p>Positions lived in one system, net asset values in another, benchmarks at a vendor, extra-financial data somewhere else again, and news nowhere in particular. Any question cutting across those paid for itself in manual work, with the error risk that implies and, worse, an answer nobody could reproduce exactly.</p>
+
+  <h2>An access layer per domain</h2>
+
+  <p>Rather than a monolithic warehouse, the architecture is an access layer split by business domain: portfolios, performance, market data, extra-financial, news. Each domain exposes a small number of functions in the language of the job, and takes care of knowing where the data actually sits.</p>
+
+  <p>The benefit is organisational more than technical: when a domain's source changes, one place moves, and nothing above it needs rewriting.</p>
+
+  <h2>Two ways to use it</h2>
+
+  <p>On top of that layer, a web interface provides the usual views: portfolios, performance, comparisons. But the part that changed habits most sits elsewhere: the same functions are exposed to LLM agents through an MCP server.</p>
+
+  <p>In practice, a question asked in plain language triggers calls to those functions and comes back with a sourced number, along with the path that produced it. The model picks the tools and writes, it never produces the numbers itself.</p>
+
+  <p class="aside">That principle is what makes the whole thing usable in a professional setting: every number shown is traceable to its source, and reproducible exactly.</p>
+
+  <h2>What it changes</h2>
+
+  <p>Questions that used to need half a day of preparation are now asked out loud. More importantly, the questions nobody asked, because the cost of the answer outweighed the value of knowing, are back within reach.</p>
+
+  <p class="backlink"><a href="/en/#projects">← back to projects</a></p>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Vincent Nazzareno</span>
+    <nav>
+      <a href="/mentions-legales.html">legal notice (fr)</a>
+      <a href="/politique-confidentialite.html">privacy (fr)</a>
+      <a href="/projets/outils-de-gestion.html">français</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Le moteur mathématique d'une machine à sous</title>
+  <meta name="description" content="Concevoir et vérifier la mathématique d'un jeu de casino en ligne : taux de retour cible, volatilité, simulation à grande échelle, puis intégration du rendu web.">
+  <link rel="canonical" href="https://nazzareno.fr/projets/machines-a-sous.html">
+  <link rel="alternate" hreflang="fr" href="https://nazzareno.fr/projets/machines-a-sous.html">
+  <link rel="alternate" hreflang="en" href="https://nazzareno.fr/en/projects/slot-games.html">
+  <link rel="alternate" hreflang="x-default" href="https://nazzareno.fr/projets/machines-a-sous.html">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+  <meta property="og:title" content="Le moteur mathématique d'une machine à sous">
+  <meta property="og:description" content="Concevoir et vérifier la mathématique d'un jeu de casino en ligne : taux de retour cible, volatilité, simulation à grande échelle, puis intégration du rendu web.">
+  <meta property="og:url" content="https://nazzareno.fr/projets/machines-a-sous.html">
+  <meta property="og:type" content="article">
+</head>
+<body class="article">
+
+<header>
+  <div class="wrap">
+    <a href="/">vincent nazzareno</a>
+    <span class="lang">fr · <a href="/en/projects/slot-games.html">en</a></span>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="kicker">Projet</p>
+  <h1>Le moteur mathématique<br>d'une machine à sous</h1>
+  <p class="standfirst">Un jeu de casino est d'abord une distribution de probabilité à laquelle on donne une forme. Le travail consiste à obtenir la distribution voulue, puis à prouver qu'on l'a obtenue.</p>
+  <p class="facts"><span>python</span>
+    <span>simulation monte-carlo</span>
+    <span>pixi.js</span>
+    <span>spine</span></p>
+
+
+  <h2>Un cahier des charges chiffré</h2>
+
+  <p>Un jeu arrive avec des contraintes précises : un taux de retour au joueur visé, une volatilité souhaitée, une fréquence de gain, un gain maximum. Ces paramètres ne sont pas indépendants. Augmenter le gain maximum sans toucher au taux de retour oblige mécaniquement à raréfier les gains ailleurs, et le jeu change de sensation.</p>
+
+  <p>La conception consiste à trouver le jeu de tables qui satisfait ces contraintes ensemble, pas séparément.</p>
+
+  <h2>Vérifier plutôt que croire</h2>
+
+  <p>Le taux de retour se calcule analytiquement sur les fonctions simples, mais dès qu'apparaissent des tours gratuits, des symboles qui s'étendent ou des relances, le calcul exact devient impraticable. On passe alors par la simulation, sur des volumes très importants de tours.</p>
+
+  <p>Et ce qui compte n'est pas la moyenne obtenue mais son incertitude : un taux de retour annoncé à trois décimales n'a de sens que si l'intervalle de confiance est plus serré que la précision annoncée. Une simulation trop courte donne un chiffre qui a l'air juste et ne l'est pas.</p>
+
+  <p class="aside">Toute la chaîne est reproductible à la graine aléatoire près, ce qui permet de rejouer exactement une campagne de simulation et d'expliquer un écart plutôt que de le constater.</p>
+
+  <h2>Du modèle à l'écran</h2>
+
+  <p>La seconde moitié du travail est l'intégration : rendu web, animations de symboles, séquences de gain, enchaînement des tours. Les contraintes changent complètement, il faut tenir une image fluide sur des terminaux modestes, avec des animations lourdes et des transitions permanentes.</p>
+
+  <p>Le point délicat est la frontière entre les deux mondes. Le résultat d'un tour est déterminé par le moteur mathématique, jamais par l'animation. L'affichage ne fait que raconter un résultat déjà arrêté, et cette séparation stricte est ce qui rend le jeu vérifiable.</p>
+
+  <p class="backlink"><a href="/#projets">← retour aux projets</a></p>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Vincent Nazzareno</span>
+    <nav>
+      <a href="/mentions-legales.html">mentions légales</a>
+      <a href="/politique-confidentialite.html">confidentialité</a>
+      <a href="/en/projects/slot-games.html">english</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

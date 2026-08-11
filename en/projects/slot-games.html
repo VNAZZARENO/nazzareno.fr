@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The math engine behind a slot game</title>
+  <meta name="description" content="Designing and verifying the mathematics of an online casino game: target return to player, volatility, large-scale simulation, then web rendering integration.">
+  <link rel="canonical" href="https://nazzareno.fr/en/projects/slot-games.html">
+  <link rel="alternate" hreflang="fr" href="https://nazzareno.fr/projets/machines-a-sous.html">
+  <link rel="alternate" hreflang="en" href="https://nazzareno.fr/en/projects/slot-games.html">
+  <link rel="alternate" hreflang="x-default" href="https://nazzareno.fr/projets/machines-a-sous.html">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+  <meta property="og:title" content="The math engine behind a slot game">
+  <meta property="og:description" content="Designing and verifying the mathematics of an online casino game: target return to player, volatility, large-scale simulation, then web rendering integration.">
+  <meta property="og:url" content="https://nazzareno.fr/en/projects/slot-games.html">
+  <meta property="og:type" content="article">
+</head>
+<body class="article">
+
+<header>
+  <div class="wrap">
+    <a href="/en/">vincent nazzareno</a>
+    <span class="lang"><a href="/projets/machines-a-sous.html">fr</a> · en</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="kicker">Project</p>
+  <h1>The math engine<br>behind a slot game</h1>
+  <p class="standfirst">A casino game is first a probability distribution given a shape. The work is getting the distribution you want, then proving you got it.</p>
+  <p class="facts"><span>python</span>
+    <span>monte carlo simulation</span>
+    <span>pixi.js</span>
+    <span>spine</span></p>
+
+
+  <h2>A brief written in numbers</h2>
+
+  <p>A game arrives with precise constraints: a target return to player, a desired volatility, a hit frequency, a maximum win. These parameters are not independent. Raising the maximum win without touching the return to player mechanically thins out wins elsewhere, and the game feels different.</p>
+
+  <p>Design means finding the set of tables that satisfies those constraints together, not separately.</p>
+
+  <h2>Verify rather than believe</h2>
+
+  <p>Return to player can be computed analytically for simple features, but as soon as free spins, expanding symbols or re-triggers appear, exact computation becomes impractical. Simulation takes over, across very large numbers of spins.</p>
+
+  <p>What matters is not the mean obtained but its uncertainty: a return to player quoted to three decimals only means something if the confidence interval is tighter than the precision quoted. A run that is too short gives a number that looks right and is not.</p>
+
+  <p class="aside">The whole chain is reproducible down to the random seed, so a simulation campaign can be replayed exactly and a discrepancy explained rather than merely observed.</p>
+
+  <h2>From model to screen</h2>
+
+  <p>The second half of the work is integration: web rendering, symbol animation, win sequences, spin flow. The constraints change completely, you have to hold a smooth frame rate on modest devices, with heavy animation and constant transitions.</p>
+
+  <p>The delicate point is the boundary between the two worlds. A spin's outcome is decided by the math engine, never by the animation. The display only narrates a result already settled, and that strict separation is what makes the game verifiable.</p>
+
+  <p class="backlink"><a href="/en/#projects">← back to projects</a></p>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Vincent Nazzareno</span>
+    <nav>
+      <a href="/mentions-legales.html">legal notice (fr)</a>
+      <a href="/politique-confidentialite.html">privacy (fr)</a>
+      <a href="/projets/machines-a-sous.html">français</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

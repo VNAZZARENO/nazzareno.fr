@@ -11,4 +11,70 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://nazzareno.fr/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://nazzareno.fr/en/"/>
   </url>
+
+  <url>
+    <loc>https://nazzareno.fr/projets/recherche-de-signaux.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://nazzareno.fr/projets/recherche-de-signaux.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nazzareno.fr/en/projects/signal-research.html"/>
+  </url>
+  <url>
+    <loc>https://nazzareno.fr/en/projects/signal-research.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://nazzareno.fr/projets/recherche-de-signaux.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nazzareno.fr/en/projects/signal-research.html"/>
+  </url>
+
+  <url>
+    <loc>https://nazzareno.fr/projets/outils-de-gestion.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://nazzareno.fr/projets/outils-de-gestion.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nazzareno.fr/en/projects/investment-tooling.html"/>
+  </url>
+  <url>
+    <loc>https://nazzareno.fr/en/projects/investment-tooling.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://nazzareno.fr/projets/outils-de-gestion.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nazzareno.fr/en/projects/investment-tooling.html"/>
+  </url>
+
+  <url>
+    <loc>https://nazzareno.fr/projets/commentaires-automatises.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://nazzareno.fr/projets/commentaires-automatises.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nazzareno.fr/en/projects/automated-commentary.html"/>
+  </url>
+  <url>
+    <loc>https://nazzareno.fr/en/projects/automated-commentary.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://nazzareno.fr/projets/commentaires-automatises.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nazzareno.fr/en/projects/automated-commentary.html"/>
+  </url>
+
+  <url>
+    <loc>https://nazzareno.fr/projets/donnees-en-image.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://nazzareno.fr/projets/donnees-en-image.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nazzareno.fr/en/projects/data-as-image.html"/>
+  </url>
+  <url>
+    <loc>https://nazzareno.fr/en/projects/data-as-image.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://nazzareno.fr/projets/donnees-en-image.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nazzareno.fr/en/projects/data-as-image.html"/>
+  </url>
+
+  <url>
+    <loc>https://nazzareno.fr/projets/extraction-documentaire.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://nazzareno.fr/projets/extraction-documentaire.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nazzareno.fr/en/projects/document-extraction.html"/>
+  </url>
+  <url>
+    <loc>https://nazzareno.fr/en/projects/document-extraction.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://nazzareno.fr/projets/extraction-documentaire.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nazzareno.fr/en/projects/document-extraction.html"/>
+  </url>
+
+  <url>
+    <loc>https://nazzareno.fr/projets/machines-a-sous.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://nazzareno.fr/projets/machines-a-sous.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nazzareno.fr/en/projects/slot-games.html"/>
+  </url>
+  <url>
+    <loc>https://nazzareno.fr/en/projects/slot-games.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://nazzareno.fr/projets/machines-a-sous.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nazzareno.fr/en/projects/slot-games.html"/>
+  </url>
 </urlset>
