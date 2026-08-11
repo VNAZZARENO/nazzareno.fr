@@ -322,6 +322,41 @@ section p + p {
   }
 }
 
+/* étapes d'un engagement : ici la numérotation porte un ordre réel */
+
+.subhead {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  margin-top: 2.25rem;
+}
+.steps {
+  list-style: none;
+  counter-reset: step;
+  margin-top: 1.25rem;
+  display: grid;
+  gap: 1.25rem;
+}
+.steps li {
+  display: grid;
+  grid-template-columns: 2.25rem 1fr;
+}
+.steps li::before {
+  counter-increment: step;
+  content: counter(step, decimal-leading-zero);
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  color: var(--accent);
+  line-height: 1.75;
+}
+.steps strong {
+  font-weight: 600;
+}
+.steps p {
+  color: var(--ink-soft);
+  font-size: 1rem;
+  margin-top: 0.15rem;
+}
+
 /* ---- contact ---- */
 
 .contact .big {
