@@ -152,6 +152,9 @@ header .lang {
 }
 header .lang a {
   color: var(--accent);
+  /* souligné : la langue active ne doit pas se distinguer que par la couleur */
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 header .contact {
   border: 1px solid var(--rule);
