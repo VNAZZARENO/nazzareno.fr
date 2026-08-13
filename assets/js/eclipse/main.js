@@ -5,12 +5,14 @@
 // drapeau `sale`. La boucle rAF est la seule a l'abaisser, et seulement apres
 // avoir dessine.
 //
-// Ce module ne fait encore rien voir : dessiner() vide juste le canevas dans
-// une teinte sombre. L'atmosphere arrive aux taches 16-19, les commandes a la
-// tache 20. Le but ici est la tuyauterie et la discipline du dirty flag.
+// A ce stade, dessiner() rend UN panneau plein cadre, sans Lune : un ciel
+// ordinaire, pour verifier le modele de diffusion avant d'y ajouter l'eclipse
+// (tache 18). Les deux panneaux et les commandes arrivent a la tache 20.
 
 import { createContext } from './gl.js';
-import { loadEclipse } from './data.js';
+import { loadEclipse, stateAt } from './data.js';
+import { buildLuts } from './luts.js';
+import { createSky } from './sky.js';
 
 const URL_DONNEES = '/assets/data/eclipse-2026-08-12.json';
 const SITE_GAUCHE = 'paris';
@@ -24,6 +26,12 @@ export async function init(racine) {
   if (!gl) return; // pas de WebGL2 utilisable : on reste sur le HTML statique
 
   const eclipse = await loadEclipse(URL_DONNEES);
+
+  // Les LUT ne dependent ni du lieu ni de l'instant : une seule construction,
+  // partagee par tous les panneaux, faite avant la premiere image.
+  const luts = buildLuts(gl);
+  const dessinerCiel = createSky(gl);
+  const siteGauche = eclipse.sites.find((s) => s.id === SITE_GAUCHE);
 
   // Etat du simulateur. Rien ne le pilote encore (taches 20+) : on ne fait
   // que le porter, pour que les prochaines taches n'aient qu'a le lire/ecrire
@@ -90,13 +98,19 @@ export async function init(racine) {
   window.addEventListener('resize', redimensionner);
   redimensionner();
 
-  // Pas encore d'atmosphere : on vide juste le canevas dans une teinte
-  // sombre proche de --paper en mode sombre, pour que le rectangle ne soit
-  // pas un noir plat avant l'arrivee du ciel (taches 16-19).
+  // Tache 17 : un seul panneau, plein cadre, et pas d'eclipse. Le flux visible
+  // est force a 1 -- c'est-a-dire le Soleil entier -- pour que ce point de
+  // controle ne juge que le modele de diffusion. La Lune arrive a la tache 18,
+  // le second panneau a la tache 20.
   function dessiner() {
-    gl.viewport(0, 0, canvas.width, canvas.height);
-    gl.clearColor(0.07, 0.07, 0.09, 1);
-    gl.clear(gl.COLOR_BUFFER_BIT);
+    const instant = stateAt(siteGauche, etat.tSecondes);
+    dessinerCiel({
+      sunAz: instant.sunAz,
+      sunAlt: instant.sunAlt,
+      fluxR: 1, fluxG: 1, fluxB: 1,
+      azimutRegard: instant.sunAz + etat.azimutRegard,
+      altitudeObs: siteGauche.elevation_m,
+    }, { x: 0, y: 0, w: canvas.width, h: canvas.height }, luts);
     // Compteur de verification du drapeau dirty, actif seulement derriere
     // un flag explicite : jamais de cout ni de bruit en production.
     if (window.__ECLIPSE_DEBUG__) {
