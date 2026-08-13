@@ -29,7 +29,74 @@ import { LUT_D, LUT_RATIO, RATIO_MIN, RATIO_MAX, D_MAX } from './flux.js';
 // luminance physique dans le domaine ou la courbe de transfert travaille. Les
 // unites sont arbitraires -- l'irradiance solaire hors atmosphere vaut 1 par
 // canal -- donc ce nombre n'a de sens que relativement a elle.
-const EXPOSITION = 40.0;
+//
+// Exportee avec TONALITE ci-dessous: l'encart teleobjectif (tache 22) doit
+// rendre la MEME luminance a la MEME couleur que le ciel qui l'entoure. Deux
+// copies de cette constante, ou deux copies de la courbe, finiraient par
+// diverger d'un chouia et la page raconterait deux histoires differentes sur
+// la meme image, sans que rien ne le signale.
+export const EXPOSITION = 40.0;
+
+// ---------------------------------------------------------------------------
+// Courbe de transfert: la reponse de l'OEIL, pas celle d'un appareil photo.
+//
+// Ce que le calcul produit est une luminance physique. Une courbe filmique
+// ordinaire (Hable) sur une exposition calibree en plein jour la restituait
+// litteralement: Paris a son maximum rendait cinq fois plus sombre qu'un ciel
+// normal, ce qui est exact -- et faux comme image. C'est ce qu'enregistrerait
+// un appareil a reglage fixe; la page, elle, raconte ce qu'a vu un temoin, et
+// a 92 % d'obscuration un temoin voyait une soiree ordinaire parce que son oeil
+// adapte environ quatre diaphragmes. Voir la spec, section 4.5.
+//
+// Forme retenue: log(1 + K*L), normalisee. C'est la compression de
+// Weber-Fechner, la reponse la plus simple qui soit reellement celle d'un oeil,
+// et elle a les proprietes qu'il faut: monotone, exactement nulle en zero, et
+// elle n'atteint 1 qu'en BLANC, tres au-dessus de tout ce que ce ciel produit
+// -- donc aucune haute lumiere ne s'ecrete, meme en plein Soleil.
+//
+// K = 1000 est calibre sur une seule mesure: entre Paris en plein Soleil et
+// Paris au maximum, la scene perd 5,1 diaphragmes; la courbe n'en laisse que
+// 0,95 a l'ecran. Elle reproduit donc les quatre diaphragmes d'adaptation de
+// l'oeil, ce qui est exactement ce qu'on lui demande -- et pas un reglage a
+// vue. BLANC = 160 ne fait que placer le plein jour vers sRGB 0,80.
+//
+// Un seul jeu de constantes, applique a TOUS les instants, aux DEUX panneaux
+// et a l'encart teleobjectif. Rien ne s'adapte au contenu de l'image: ce n'est
+// pas une auto-exposition, c'est une fonction fixe et annoncee.
+export const TONALITE = `
+const float EXPOSITION = ${EXPOSITION.toFixed(1)};
+const float K_OEIL = 1000.0;
+const float BLANC = 160.0;
+const vec3 LUMA = vec3(0.2126, 0.7152, 0.0722);
+const float DESATURATION = 0.55;
+
+// La courbe s'applique a la LUMINANCE, et les trois canaux sont ensuite remis
+// dans leur rapport d'origine. Appliquee canal par canal, une courbe aussi
+// logarithmique ecraserait les rapports entre canaux et pousserait tout vers
+// le blanc: le ciel haut de Paris, dont le bleu vaut quatre fois le rouge en
+// luminance physique, ne le vaudrait plus que 1,25 fois a l'ecran -- du gris.
+// Sur la luminance seule, le rapport survit, et l'anneau de crepuscule de la
+// totalite garde son bleu profond.
+//
+// Conserver le rapport des canaux TEL QUEL ne marche pas non plus: un ciel
+// bleu profond a B/Y = 2,2, et une fois sa luminance remontee a 0,52 le canal
+// bleu vaudrait 1,12 -- hors du gamut sRGB, sur plus de la moitie de l'image.
+// On desature donc d'autant plus que le pixel est clair, ce que fait aussi
+// l'oeil: les noirs gardent toute leur couleur, les hautes lumieres tirent
+// vers le blanc. C'est une fonction du pixel lui-meme, pas de l'image: rien
+// ici ne regarde le contenu du cadre.
+vec3 tonalite(vec3 lumiere) {
+  float luminance = max(dot(lumiere, LUMA), 1e-9);
+  float compressee = log(1.0 + K_OEIL * luminance) / log(1.0 + K_OEIL * BLANC);
+  vec3 chroma = lumiere / luminance;
+  return compressee * pow(chroma, vec3(1.0 - DESATURATION * compressee));
+}
+
+vec3 versSRGB(vec3 c) {
+  c = clamp(c, 0.0, 1.0);
+  return mix(12.92 * c, 1.055 * pow(c, vec3(1.0 / 2.4)) - 0.055, step(0.0031308, c));
+}
+`;
 
 // Nombre maximal d'astres (etoiles + planetes) transmis par panneau. Le JSON
 // porte jusqu'a 60 etoiles a lui seul, plus 1 a 4 planetes selon le lieu: la
@@ -60,6 +127,7 @@ uniform int uNbAstres;          // nombre d'astres reellement remplis (<= le max
 
 ${ATMOSPHERE}
 ${TRANSMITTANCE_LUT}
+${TONALITE}
 
 // Champ de vision. On borne la hauteur a 90 degres et on en deduit la largeur,
 // de sorte que l'echelle reste la meme sur les deux axes quel que soit le
@@ -74,7 +142,6 @@ const float HORIZON = 0.22;
 
 const int PAS = 32;             // pas du raymarch principal
 const int PAS_AMBIANT = 8;      // pas de l'estimation du ciel vu par le sol
-const float EXPOSITION = ${EXPOSITION.toFixed(1)};
 
 // Parametrage de la LUT de flux, repris tel quel de flux.js -- ces valeurs ne
 // sont pas recopiees a la main, elles sont interpolees depuis le module qui
@@ -268,58 +335,6 @@ vec3 sol(vec3 p) {
   return ALBEDO_SOL / PI * (direct + PI * zenith);
 }
 
-// Courbe de transfert: la reponse de l'OEIL, pas celle d'un appareil photo.
-//
-// Ce que le calcul produit est une luminance physique. Une courbe filmique
-// ordinaire (Hable) sur une exposition calibree en plein jour la restituait
-// litteralement: Paris a son maximum rendait cinq fois plus sombre qu'un ciel
-// normal, ce qui est exact -- et faux comme image. C'est ce qu'enregistrerait
-// un appareil a reglage fixe; la page, elle, raconte ce qu'a vu un temoin, et
-// a 92 % d'obscuration un temoin voyait une soiree ordinaire parce que son oeil
-// adapte environ quatre diaphragmes. Voir la spec, section 4.5.
-//
-// Forme retenue: log(1 + K*L), normalisee. C'est la compression de
-// Weber-Fechner, la reponse la plus simple qui soit reellement celle d'un oeil,
-// et elle a les proprietes qu'il faut: monotone, exactement nulle en zero, et
-// elle n'atteint 1 qu'en BLANC, tres au-dessus de tout ce que ce ciel produit
-// -- donc aucune haute lumiere ne s'ecrete, meme en plein Soleil.
-//
-// K = 1000 est calibre sur une seule mesure: entre Paris en plein Soleil et
-// Paris au maximum, la scene perd 5,1 diaphragmes; la courbe n'en laisse que
-// 0,95 a l'ecran. Elle reproduit donc les quatre diaphragmes d'adaptation de
-// l'oeil, ce qui est exactement ce qu'on lui demande -- et pas un reglage a
-// vue. BLANC = 160 ne fait que placer le plein jour vers sRGB 0,80.
-//
-// Un seul jeu de constantes, applique a TOUS les instants et aux DEUX
-// panneaux. Rien ne s'adapte au contenu de l'image: ce n'est pas une
-// auto-exposition, c'est une fonction fixe et annoncee.
-const float K_OEIL = 1000.0;
-const float BLANC = 160.0;
-const vec3 LUMA = vec3(0.2126, 0.7152, 0.0722);
-const float DESATURATION = 0.55;
-
-// La courbe s'applique a la LUMINANCE, et les trois canaux sont ensuite remis
-// dans leur rapport d'origine. Appliquee canal par canal, une courbe aussi
-// logarithmique ecraserait les rapports entre canaux et pousserait tout vers
-// le blanc: le ciel haut de Paris, dont le bleu vaut quatre fois le rouge en
-// luminance physique, ne le vaudrait plus que 1,25 fois a l'ecran -- du gris.
-// Sur la luminance seule, le rapport survit, et l'anneau de crepuscule de la
-// totalite garde son bleu profond.
-//
-// Conserver le rapport des canaux TEL QUEL ne marche pas non plus: un ciel
-// bleu profond a B/Y = 2,2, et une fois sa luminance remontee a 0,52 le canal
-// bleu vaudrait 1,12 -- hors du gamut sRGB, sur plus de la moitie de l'image.
-// On desature donc d'autant plus que le pixel est clair, ce que fait aussi
-// l'oeil: les noirs gardent toute leur couleur, les hautes lumieres tirent
-// vers le blanc. C'est une fonction du pixel lui-meme, pas de l'image: rien
-// ici ne regarde le contenu du cadre.
-vec3 tonalite(vec3 lumiere) {
-  float luminance = max(dot(lumiere, LUMA), 1e-9);
-  float compressee = log(1.0 + K_OEIL * luminance) / log(1.0 + K_OEIL * BLANC);
-  vec3 chroma = lumiere / luminance;
-  return compressee * pow(chroma, vec3(1.0 - DESATURATION * compressee));
-}
-
 // Etoiles et planetes (tache 21).
 //
 // SIMPLIFICATION ASSUMEE, a noter explicitement: uAstres vient de sky_at_max,
@@ -376,13 +391,14 @@ vec3 astres(float azimut, float hauteur) {
 }
 
 // Luminance percue du ciel SEUL (sans les astres), sur la meme echelle que la
-// courbe de transfert de tonalite() ci-dessous -- c'est litteralement sa
-// formule, dupliquee ici a dessein: on veut mesurer si le ciel est deja
-// sombre a l'ecran, pas recalculer une notion differente de "sombre". Reprise
-// separee plutot que factorisation parce que tonalite() prend la lumiere
-// finale (astres compris) alors qu'ici on doit juger AVANT de les ajouter --
-// sans quoi une etoile brillante s'auto-effacerait en assombrissant sa propre
-// condition d'apparition.
+// courbe de transfert de TONALITE -- c'est litteralement la branche de
+// compression de tonalite(), reprise ici a dessein: on veut mesurer si le ciel
+// est deja sombre a l'ecran, pas recalculer une notion differente de "sombre".
+// Reprise separee plutot qu'appel a tonalite() parce que celle-ci prend la
+// lumiere finale (astres compris) alors qu'ici on doit juger AVANT de les
+// ajouter -- sans quoi une etoile brillante s'auto-effacerait en assombrissant
+// sa propre condition d'apparition. Les constantes, elles, viennent bien du
+// fragment partage: rien n'est recopie a la main.
 float luminancePercue(vec3 lumiereSansAstres) {
   float luminance = max(dot(lumiereSansAstres * EXPOSITION, LUMA), 1e-9);
   return log(1.0 + K_OEIL * luminance) / log(1.0 + K_OEIL * BLANC);
@@ -400,11 +416,6 @@ float luminancePercue(vec3 lumiereSansAstres) {
 // que de clignoter.
 const float SEUIL_LUMINANCE_BAS = 0.028;
 const float SEUIL_LUMINANCE_HAUT = 0.060;
-
-vec3 versSRGB(vec3 c) {
-  c = clamp(c, 0.0, 1.0);
-  return mix(12.92 * c, 1.055 * pow(c, vec3(1.0 / 2.4)) - 0.055, step(0.0031308, c));
-}
 
 void main() {
   vec2 uv = (gl_FragCoord.xy - uZone.xy) / uZone.zw;

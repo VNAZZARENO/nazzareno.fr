@@ -13,6 +13,7 @@ import { createContext } from './gl.js';
 import { loadEclipse, stateAt } from './data.js';
 import { buildLuts } from './luts.js';
 import { createSky } from './sky.js';
+import { createInset } from './inset.js';
 import { createUi, secondesLocales } from './ui.js';
 
 const URL_DONNEES = '/assets/data/eclipse-2026-08-12.json';
@@ -53,6 +54,7 @@ export async function init(racine) {
   // partagee par tous les panneaux, faite avant la premiere image.
   const luts = buildLuts(gl);
   const dessinerCiel = createSky(gl);
+  const dessinerEncart = createInset(gl);
 
   // Les sites sont resolus a chaque image depuis `etat`, et non captures une
   // fois pour toutes : les selecteurs de ui.js ecrivent `etat.siteGauche` et
@@ -149,6 +151,28 @@ export async function init(racine) {
     return [{ x: 0, y: coupe, w: l, h: h - coupe }, { x: 0, y: 0, w: l, h: coupe }];
   }
 
+  // Encart teleobjectif d'un panneau (tache 22) : un carre en BAS A DROITE du
+  // panneau, cote a 30 % de sa plus petite dimension, avec une marge. La regle
+  // est exprimee relativement au panneau et non au cadre entier, donc elle
+  // s'applique telle quelle a la disposition empilee : chaque panneau porte le
+  // sien, a la meme place et a la meme taille relative.
+  // L'origine etant en bas a gauche, « bas a droite » est bien x maximal et y
+  // minimal.
+  const PART_ENCART = 0.30;
+  const PART_MARGE = 0.04;
+
+  function encart(zone) {
+    const petit = Math.min(zone.w, zone.h);
+    const cote = Math.max(1, Math.round(PART_ENCART * petit));
+    const marge = Math.round(PART_MARGE * petit);
+    return {
+      x: zone.x + zone.w - cote - marge,
+      y: zone.y + marge,
+      w: cote,
+      h: cote,
+    };
+  }
+
   // Deux panneaux, deux lieux, UN instant absolu. Chaque site convertit cet
   // instant en ses propres secondes locales via son t0_utc ; c'est la seule
   // chose qui rend la comparaison honnete. Tout le reste sort tel quel des
@@ -179,6 +203,20 @@ export async function init(racine) {
         // visible sur la duree de la totalite.
         skyAtMax: site.sky_at_max,
       }, cadres[i], luts);
+
+      // L'encart passe APRES le ciel du meme panneau : il se dessine dessus.
+      // Il recoit le meme `instant`, donc exactement les memes ephemerides que
+      // le ciel et que la lecture chiffree — il n'y a pas de seconde source de
+      // verite pour la geometrie des deux disques.
+      dessinerEncart({
+        sunAz: instant.sunAz,
+        sunAlt: instant.sunAlt,
+        moonAz: instant.moonAz,
+        moonAlt: instant.moonAlt,
+        rSun: instant.rSun,
+        rMoon: instant.rMoon,
+        fluxR: instant.fluxR, fluxG: instant.fluxG, fluxB: instant.fluxB,
+      }, encart(cadres[i]));
     }
     // Compteur de verification du drapeau dirty, actif seulement derriere
     // un flag explicite : jamais de cout ni de bruit en production.
