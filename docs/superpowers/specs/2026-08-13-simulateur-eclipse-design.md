@@ -141,13 +141,20 @@ disque solaire est nettement plus brillant que son bord, ce qui produit deux ré
 - **Au début de l'éclipse**, la Lune mord le disque par le *limbe*, sa partie la plus sombre.
   Elle retire donc moins de lumière que d'aire, et il reste **plus** que `1 − obscuration`.
 - **En partielle profonde**, la Lune couvre le centre et ne laisse qu'un croissant au limbe.
-  Il reste alors **moins** que `1 − obscuration`. À 90 % d'obscuration, le calcul donne 7,1 %
-  de lumière résiduelle en vert, pas 10 %.
+  Il reste alors **moins** que `1 − obscuration`. À Paris, au maximum de 92,12 % d'obscuration,
+  il reste 5,4 % du flux vert, contre 7,9 % pour un disque uniforme.
 
-Le basculement se produit exactement quand le centre du Soleil passe sous le disque lunaire,
-c'est-à-dire quand `d < r☾`, ce qui équivaut à une magnitude de 0,5 — soit environ 34 %
-d'obscuration. Ce critère est exact, pas empirique, et c'est lui que le test d'invariant
-emploie pour vérifier les deux régimes séparément.
+**Où se fait le basculement, et pourquoi on ne peut pas le nommer.** Il est tentant de le
+placer là où le centre du Soleil passe sous le disque lunaire — `d < r☾`, soit exactement une
+magnitude de 0,5. C'est une heuristique, pas un théorème : le croisement est le point où les
+deux *intégrales* s'égalisent, et rien n'oblige ce point à coïncider avec un repère géométrique
+simple. Mesuré sur les données réelles, il tombe vers **33 % d'obscuration**, soit une magnitude
+d'environ 0,44 ; la magnitude 0,5 correspond, elle, à 39 % d'obscuration, déjà au-delà.
+
+Le test d'invariant en tient compte : il vérifie le régime profond au-dessus de la magnitude
+0,5 et le régime initial au-dessous de 0,4, en laissant délibérément la bande intermédiaire
+non asserée — puisque c'est là que se trouve le croisement. Les deux bornes sont donc des
+majorants sûrs, pas la position du basculement.
 
 **L'œil, lui, répond de façon logarithmique.** C'est cela, et non l'assombrissement centre-bord,
 qui explique qu'une partielle à 90 % se vive comme une journée à peine voilée. Un facteur dix
