@@ -63,12 +63,12 @@ def state_at(eph, obs, t):
         temperature_C=TEMPERATURE_C, pressure_mbar=PRESSURE_MBAR)
 
     return State(
-        sun_az=sun_az.degrees,
-        sun_alt=sun_alt.degrees,
-        moon_az=moon_az.degrees,
-        moon_alt=moon_alt.degrees,
-        r_sun=math.degrees(math.asin(R_SUN_KM / sun_dist.km)),
-        r_moon=math.degrees(math.asin(R_MOON_KM / moon_dist.km)),
-        d_sun_km=sun_dist.km,
-        d_moon_km=moon_dist.km,
+        sun_az=float(sun_az.degrees),
+        sun_alt=float(sun_alt.degrees),
+        moon_az=float(moon_az.degrees),
+        moon_alt=float(moon_alt.degrees),
+        r_sun=float(math.degrees(math.asin(R_SUN_KM / sun_dist.km))),
+        r_moon=float(math.degrees(math.asin(R_MOON_KM / moon_dist.km))),
+        d_sun_km=float(sun_dist.km),
+        d_moon_km=float(moon_dist.km),
     )
