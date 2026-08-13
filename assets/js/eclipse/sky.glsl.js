@@ -31,6 +31,13 @@ import { LUT_D, LUT_RATIO, RATIO_MIN, RATIO_MAX, D_MAX } from './flux.js';
 // canal -- donc ce nombre n'a de sens que relativement a elle.
 const EXPOSITION = 40.0;
 
+// Nombre maximal d'astres (etoiles + planetes) transmis par panneau. Le JSON
+// porte jusqu'a 60 etoiles a lui seul, plus 1 a 4 planetes selon le lieu: la
+// somme deborderait 60, d'ou la troncature faite cote JS (sky.js). Exporte
+// pour que sky.js dimensionne son Float32Array sur la MEME valeur que celle
+// qui fixe la taille du tableau uniforme ici -- un seul nombre, jamais recopie.
+export const MAX_ASTRES = 60;
+
 export const SKY_FS = `#version 300 es
 precision highp float;
 precision highp sampler2D;
@@ -48,6 +55,8 @@ uniform float uAzimutCentre;    // azimut vise au centre du panneau, en radians
 uniform float uAltitudeObs;     // altitude de l'observateur, en metres
 uniform sampler2D uMultiScatter;
 uniform sampler2D uFluxLut;
+uniform vec3 uAstres[${MAX_ASTRES}];  // (azimut, hauteur, magnitude) par astre, en RADIANS/RADIANS/mag
+uniform int uNbAstres;          // nombre d'astres reellement remplis (<= le max ci-dessus)
 
 ${ATMOSPHERE}
 ${TRANSMITTANCE_LUT}
@@ -311,6 +320,87 @@ vec3 tonalite(vec3 lumiere) {
   return compressee * pow(chroma, vec3(1.0 - DESATURATION * compressee));
 }
 
+// Etoiles et planetes (tache 21).
+//
+// SIMPLIFICATION ASSUMEE, a noter explicitement: uAstres vient de sky_at_max,
+// calcule par les ephemerides JPL a l'instant du maximum d'eclipse SEULEMENT
+// -- pas image par image. Sur les ~100 s de la totalite le ciel tourne
+// d'environ 0,4 deg, tres en dessous du rayon de la tache gaussienne
+// ci-dessous (RAYON_ASTRE): rejouer toute la fenetre ne fait donc pas deriver
+// les astres de facon perceptible, meme si ce n'est pas non plus exact.
+//
+// Chaque astre est une petite tache gaussienne placee directement dans
+// l'espace ECRAN (azimut, hauteur), pas dans l'espace 3D: c'est exactement la
+// projection equidistante decrite en tete de fichier (x lineaire en azimut, y
+// lineaire en hauteur), donc un astre y dessine un disque rond a l'ecran, la
+// meme legere compression pres du zenith que le reste du ciel deja acceptee
+// (section 1), et rien de plus a justifier.
+//
+// Cout: jusqu'a 60 iterations par pixel de ciel (le sol les court-circuite
+// entierement, voir main()). Les deux premieres comparaisons -- hauteur puis
+// azimut, sans le moindre appel trigonometrique -- rejettent l'immense
+// majorite des couples pixel/astre avant le exp() couteux: pour un champ de
+// 108x90 degres, un astre n'est jamais qu'a moins de PORTEE_ASTRE de degres
+// de distance sur une toute petite fraction de l'image.
+const float RAYON_ASTRE = radians(0.35);     // ecart-type angulaire de la tache
+const float PORTEE_ASTRE = radians(1.5);     // rayon de rejet grossier, avant le exp()
+const vec3 COULEUR_ASTRE = vec3(0.85, 0.9, 1.0); // blanc legerement bleute, pas de teinte par astre
+
+vec3 astres(float azimut, float hauteur) {
+  vec3 total = vec3(0.0);
+  for (int i = 0; i < uNbAstres; i++) {
+    vec3 astre = uAstres[i];
+
+    float dHauteur = hauteur - astre.y;
+    if (abs(dHauteur) > PORTEE_ASTRE) continue;
+
+    float dAzimut = azimut - astre.x;
+    // Repli dans (-PI, PI]: sans lui, un astre proche de l'azimut 0/360 ne
+    // rencontrerait jamais un pixel de l'autre cote du saut.
+    dAzimut -= 2.0 * PI * floor(dAzimut / (2.0 * PI) + 0.5);
+    if (abs(dAzimut) > PORTEE_ASTRE) continue;
+
+    // Distance angulaire au carre; a cette echelle (< 1 deg) l'angle et la
+    // corde coincident, donc une simple somme de carres suffit -- pas besoin
+    // de reconstruire une direction 3D ni de normaliser quoi que ce soit.
+    float d2 = dAzimut * dAzimut + dHauteur * dHauteur;
+    float profil = exp(-0.5 * d2 / (RAYON_ASTRE * RAYON_ASTRE));
+
+    // Intensite depuis la magnitude: l'echelle de Pogson standard. "A
+    // gout" (voir tache 21): ce facteur n'a d'autre justification que de
+    // rendre les astres visibles sans ecraser le ciel qui les entoure.
+    float intensite = pow(10.0, -0.4 * astre.z);
+    total += profil * intensite * COULEUR_ASTRE;
+  }
+  return total;
+}
+
+// Luminance percue du ciel SEUL (sans les astres), sur la meme echelle que la
+// courbe de transfert de tonalite() ci-dessous -- c'est litteralement sa
+// formule, dupliquee ici a dessein: on veut mesurer si le ciel est deja
+// sombre a l'ecran, pas recalculer une notion differente de "sombre". Reprise
+// separee plutot que factorisation parce que tonalite() prend la lumiere
+// finale (astres compris) alors qu'ici on doit juger AVANT de les ajouter --
+// sans quoi une etoile brillante s'auto-effacerait en assombrissant sa propre
+// condition d'apparition.
+float luminancePercue(vec3 lumiereSansAstres) {
+  float luminance = max(dot(lumiereSansAstres * EXPOSITION, LUMA), 1e-9);
+  return log(1.0 + K_OEIL * luminance) / log(1.0 + K_OEIL * BLANC);
+}
+
+// Seuils du fondu, sur cette meme echelle 0 (noir a l'ecran) .. 1 (plein
+// jour a l'ecran, cf. le commentaire de BLANC plus haut: le plein jour vaut
+// a peu pres 0,80). Calibres par la mesure, pas a vue: a Paris, au maximum
+// (92 % d'obscuration, la scene la plus sombre que ce lieu produise), le
+// ciel reste au-dessus de SEUIL_HAUT -- Paris ne doit JAMAIS montrer une
+// etoile, c'est le critere d'acceptation de la tache 21. A Palma et a
+// Reykjavik, sous la totalite, le ciel proche du Soleil eclipse plonge sous
+// SEUIL_BAS et les astres apparaissent en plein; entre les deux, le fondu est
+// continu (smoothstep), donc ils entrent et sortent progressivement plutot
+// que de clignoter.
+const float SEUIL_LUMINANCE_BAS = 0.028;
+const float SEUIL_LUMINANCE_HAUT = 0.060;
+
 vec3 versSRGB(vec3 c) {
   c = clamp(c, 0.0, 1.0);
   return mix(12.92 * c, 1.055 * pow(c, vec3(1.0 / 2.4)) - 0.055, step(0.0031308, c));
@@ -334,7 +424,18 @@ void main() {
 
   vec3 transmittance;
   vec3 lumiere = diffusion(origine, dir, portee, PAS, transmittance);
-  if (versSol > 0.0) lumiere += transmittance * sol(origine + dir * versSol);
+  if (versSol > 0.0) {
+    lumiere += transmittance * sol(origine + dir * versSol);
+  } else {
+    // Astres : jamais sur le sol (versSol > 0), et jamais au premier degre
+    // pres tant que le ciel local n'est pas deja sombre -- voir
+    // luminancePercue() ci-dessus pour ce que "sombre" veut dire ici. Le
+    // fondu ne depend que de cette luminance, jamais de l'instant ni de la
+    // phase de l'eclipse: Paris et Reykjavik suivent donc automatiquement la
+    // meme regle, sans cas particulier par lieu.
+    float sombre = 1.0 - smoothstep(SEUIL_LUMINANCE_BAS, SEUIL_LUMINANCE_HAUT, luminancePercue(lumiere));
+    if (sombre > 0.0) lumiere += sombre * astres(azimut, hauteur);
+  }
 
   sortie = vec4(versSRGB(tonalite(lumiere * EXPOSITION)), 1.0);
 }`;

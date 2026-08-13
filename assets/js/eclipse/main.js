@@ -173,6 +173,11 @@ export async function init(racine) {
         // chaque lieu, il cadre les deux ciels de la meme facon.
         azimutRegard: instant.sunAz + etat.azimutRegard,
         altitudeObs: site.elevation_m,
+        // Etoiles et planetes (tache 21) : figees a l'instant du maximum
+        // d'eclipse (sky_at_max), pas recalculees par image -- voir le
+        // commentaire de sky.glsl.js pour pourquoi c'est sans consequence
+        // visible sur la duree de la totalite.
+        skyAtMax: site.sky_at_max,
       }, cadres[i], luts);
     }
     // Compteur de verification du drapeau dirty, actif seulement derriere
