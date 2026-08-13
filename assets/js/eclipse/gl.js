@@ -8,14 +8,19 @@
 // besoin de cibles de rendu flottantes, donc son absence rend le reste du
 // pipeline inutilisable. C'est a l'appelant de traiter null comme "reste
 // avec le HTML statique", jamais comme une erreur a remonter a l'utilisateur.
-export function createContext(canvas) {
+//
+// `preserveDrawingBuffer` reste faux en usage normal : garder la memoire
+// tampon apres composition coute une copie par image pour rien. La route
+// poster (main.js) est le seul appelant a le demander, parce qu'elle doit
+// relire le canevas apres coup pour l'encoder en PNG.
+export function createContext(canvas, { preserveDrawingBuffer = false } = {}) {
   const gl = canvas.getContext('webgl2', {
     alpha: false,
     antialias: false,
     depth: false,
     stencil: false,
     powerPreference: 'low-power',
-    preserveDrawingBuffer: false,
+    preserveDrawingBuffer,
   });
   if (!gl) return null;
   if (!gl.getExtension('EXT_color_buffer_float')) return null;

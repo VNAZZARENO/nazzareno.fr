@@ -638,17 +638,34 @@ table.contacts .utc {
 .sim[data-webgl="ok"] .sim-canvas {
   display: block;
 }
-.sim-canvas:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
+
+/* Le poster est l'exacte image miroir du canevas : visible par defaut, cache
+   des que data-webgl="ok" revele le simulateur. Sans JavaScript, sans WebGL2
+   ou sans l'extension de filtrage flottant, c'est lui qui montre ce que la
+   page a a dire ; le tableau des contacts, lui, reste la dans tous les cas.
+   loading="lazy" dans le balisage evite le telechargement quand le simulateur
+   demarre avant que l'image n'approche du champ. */
+.sim-poster {
+  display: block;
+  margin: 0 0 1rem;
 }
-/* Sous 48rem les deux panneaux (lieu gauche, lieu droit) s'empilent
-   verticalement plutot que cote a cote : main.js lit la forme du cadre et
-   decoupe en consequence, il n'y a donc qu'un seul point de rupture, ici. */
-@media (max-width: 48rem) {
-  .sim-canvas {
-    aspect-ratio: 4 / 5;
-  }
+.sim-poster img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: #0d0d0f;
+}
+.sim-poster figcaption {
+  margin-top: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+.sim[data-webgl="ok"] .sim-poster {
+  display: none;
 }
 
 /* Commandes du simulateur. Comme le canevas, elles n'existent que si main.js a

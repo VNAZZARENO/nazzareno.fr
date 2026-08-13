@@ -32,11 +32,24 @@ const SITE_DROIT = 'espagne';
 // rendre, pas un rectangle noir.
 const ECART_REGARD_DEG = 35;
 
+// Paire et instant imposes a la route ?poster=1, independamment des defauts
+// ci-dessus : l'image de repli doit toujours montrer la meme chose, Paris
+// encore en plein jour a gauche et Palma dans la totalite a droite.
+const POSTER_GAUCHE = 'paris';
+const POSTER_DROIT = 'espagne';
+
 export async function init(racine) {
   const canvas = racine.querySelector('canvas.sim-canvas');
   if (!canvas) return;
 
-  const gl = createContext(canvas);
+  // Route de service commandee par la barre d'adresse, sans le moindre effet
+  // — ni cout — sur la page ordinaire : ?poster=1 fabrique l'image de repli
+  // AVEC le simulateur lui-meme, plutot que de dessiner a cote une
+  // illustration qui divergerait au premier changement de shader.
+  const parametres = new URLSearchParams(location.search);
+  const modePoster = parametres.get('poster') === '1';
+
+  const gl = createContext(canvas, { preserveDrawingBuffer: modePoster });
   if (!gl) return; // pas de WebGL2 utilisable : on reste sur le HTML statique
 
   // La LUT de flux est en RGB32F et le shader du ciel l'echantillonne en
@@ -66,10 +79,12 @@ export async function init(racine) {
   // t0_utc different de plusieurs dizaines de minutes sur la meme frise. La
   // valeur d'ouverture est le maximum d'eclipse du panneau de droite, soit
   // Palma a 18:31:45 UTC : la page s'ouvre sur ce qu'elle a a montrer.
-  const droitInitial = siteDe(SITE_DROIT);
+  const idGauche = modePoster ? POSTER_GAUCHE : SITE_GAUCHE;
+  const idDroit = modePoster ? POSTER_DROIT : SITE_DROIT;
+  const droitInitial = siteDe(idDroit);
   const etat = {
-    siteGauche: SITE_GAUCHE,
-    siteDroit: SITE_DROIT,
+    siteGauche: idGauche,
+    siteDroit: idDroit,
     instantMs: droitInitial.t0Ms + droitInitial.t_max_s * 1000,
     azimutRegard: ECART_REGARD_DEG,
     enLecture: false,
@@ -103,9 +118,15 @@ export async function init(racine) {
   // min(devicePixelRatio, 1.5) * 0.7. Un ciel simule n'a pas besoin de la
   // nettete d'un ecran Retina plein pot, et ce facteur economise beaucoup de
   // pixels a remplir pour un rendu qui restera flou par nature (diffusion).
+  // Le plafond a 1,5 et le facteur 0,7 sont deux mesures de cadence d'images :
+  // ils n'ont plus de sens pour une image fixe encodee une seule fois. La route
+  // poster rend donc a l'echelle 1,0 et au ratio de pixels reel du navigateur
+  // de capture, ce qui donne un fichier utilisable comme repli et comme source
+  // des vignettes de partage.
   function tailleCible() {
     const rect = canvas.getBoundingClientRect();
-    const echelle = Math.min(window.devicePixelRatio || 1, 1.5) * 0.7;
+    const dpr = window.devicePixelRatio || 1;
+    const echelle = modePoster ? dpr : Math.min(dpr, 1.5) * 0.7;
     return {
       largeur: Math.max(1, Math.round(rect.width * echelle)),
       hauteur: Math.max(1, Math.round(rect.height * echelle)),
@@ -225,10 +246,38 @@ export async function init(racine) {
     }
   }
 
+  // ---- route ?poster=1 -----------------------------------------------------
+  // Une seule image, encodee en PNG et telechargee. C'est cette image-la qui
+  // devient assets/img/eclipse-poster.webp : le repli sans WebGL est donc
+  // produit par le simulateur, et ne peut pas diverger de lui.
+  let posterExporte = false;
+
+  function exporterPoster() {
+    posterExporte = true;
+    canvas.toBlob((blob) => {
+      if (!blob) return;
+      const url = URL.createObjectURL(blob);
+      const lien = document.createElement('a');
+      lien.href = url;
+      lien.download = 'eclipse-poster.png';
+      document.body.append(lien);
+      lien.click();
+      lien.remove();
+      // Un revoke immediat couperait le telechargement en cours dans certains
+      // navigateurs ; l'URL vit le temps de l'ecriture du fichier.
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+      racine.dataset.poster = 'pret'; // repere pour une capture automatisee
+    }, 'image/png');
+  }
+
   function boucle() {
-    if (etat.sale && etat.visible && !document.hidden) {
+    // En mode poster on ne consulte ni l'observateur d'intersection ni la
+    // visibilite de l'onglet : l'image doit sortir meme si le canevas est hors
+    // ecran ou l'onglet en arriere-plan pendant la capture.
+    if (etat.sale && (modePoster || (etat.visible && !document.hidden))) {
       dessiner();
       etat.sale = false;
+      if (modePoster && !posterExporte) exporterPoster();
     }
     requestAnimationFrame(boucle);
   }
