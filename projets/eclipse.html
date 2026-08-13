@@ -21,7 +21,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta property="og:type" content="article">
 </head>
-<body class="article">
+<body class="article post">
 
 <header>
   <div class="wrap">
@@ -34,10 +34,10 @@
 </header>
 
 <main class="wrap">
-  <p class="kicker">Projet</p>
-  <h1>Une éclipse totale,<br>calculée plutôt qu'illustrée</h1>
+  <p class="post-date"><time datetime="2026-08-13">jeudi 13 août 2026</time></p>
+  <h1>Une éclipse totale, calculée plutôt qu'illustrée</h1>
   <p class="standfirst">Le 12 août 2026, Paris a perdu 92 % de son Soleil sans que grand monde s'en aperçoive, pendant qu'à Palma de Majorque la totalité se jouait à deux degrés et demi au-dessus de la mer. Ce qui suit est calculé, lieu par lieu, pas repris d'ailleurs.</p>
-  <p class="facts"><span>skyfield</span>
+  <p class="facts"><b>Mots-clés</b> <span>skyfield</span>
     <span>éphémérides JPL DE440s</span>
     <span>12 août 2026</span>
     <span>trois lieux</span>
@@ -136,13 +136,13 @@
 
   <h2>À Palma, la fin de l'éclipse s'est jouée sous l'horizon</h2>
 
-  <p>La totalité y a duré 98,8 secondes, à 2,64° de hauteur — l'épaisseur de deux doigts tendus à bout de bras. C'est la signature espagnole de cette éclipse : presque partout ailleurs on levait la tête, là il fallait regarder la mer.</p>
+  <p>La totalité y a duré 98,8 secondes, à 2,64° de hauteur, soit l'épaisseur de deux doigts tendus à bout de bras. C'est la signature espagnole de cette éclipse : presque partout ailleurs on levait la tête, là il fallait regarder la mer.</p>
 
   <p>Le quatrième contact, lui, tombe à 21 h 22 min 31 s locales, une bonne demi-heure après le coucher du Soleil. La fin de l'éclipse n'a donc jamais été visible depuis Palma : le Soleil s'est couché encore entamé, et le reste s'est passé sous l'horizon. Le tableau donne quand même l'instant, parce que c'est une position relative de deux astres et qu'elle ne cesse pas d'exister quand la Terre s'interpose.</p>
 
   <h2>Le limbe du Soleil est plus sombre que son centre</h2>
 
-  <p>Le disque solaire n'est pas uniformément brillant. Vers le bord, la ligne de visée traverse une plus grande épaisseur d'atmosphère solaire et s'arrête donc plus haut, dans des couches plus froides : le limbe rayonne nettement moins que le centre. Une éclipse partielle ne retire par conséquent pas la lumière en proportion de la surface qu'elle masque — et l'écart change de signe en cours de route.</p>
+  <p>Le disque solaire n'est pas uniformément brillant. Vers le bord, la ligne de visée traverse une plus grande épaisseur d'atmosphère solaire et s'arrête donc plus haut, dans des couches plus froides : le limbe rayonne nettement moins que le centre. Une éclipse partielle ne retire par conséquent pas la lumière en proportion de la surface qu'elle masque, et l'écart change de signe en cours de route.</p>
 
   <p>Au début, la Lune mord le bord, c'est-à-dire la partie sombre. Elle enlève moins de lumière que de surface : à 10 % d'obscuration, il reste encore 91,4 % du flux, et non les 90 % que donnerait un disque uniforme.</p>
 
@@ -166,7 +166,7 @@
 
   <p>skyfield applique la réfraction atmosphérique astre par astre, et son modèle la coupe net sous −1° de hauteur vraie. Or le Soleil franchit ce seuil une vingtaine de secondes avant la Lune, qui le suit d'un demi-degré. Pendant ces vingt secondes, l'un était relevé par la réfraction et l'autre pas : la séparation apparente des deux disques bondissait de 0,55°, davantage que la somme de leurs rayons. À Palma, où l'éclipse se poursuit après le coucher du Soleil, cet artefact tombait en pleine phase partielle. Une image y aurait montré un Soleil parfaitement libre, au beau milieu de l'éclipse.</p>
 
-  <p>Le calcul relève désormais les deux astres du même angle, celui calculé pour le Soleil. La réfraction ne modifie alors plus la géométrie, seulement la hauteur apparente — ce qu'elle est censée faire. Il subsiste une marche de 0,44° au franchissement du seuil, mais elle affecte les deux astres ensemble, et elle se produit sous l'horizon, là où il n'y a plus rien à voir.</p>
+  <p>Le calcul relève désormais les deux astres du même angle, celui calculé pour le Soleil. La réfraction ne modifie alors plus la géométrie, seulement la hauteur apparente, ce qu'elle est censée faire. Il subsiste une marche de 0,44° au franchissement du seuil, mais elle affecte les deux astres ensemble, et elle se produit sous l'horizon, là où il n'y a plus rien à voir.</p>
 
   <h2>Ce qui est calculé, ce qui est modélisé</h2>
 
@@ -175,9 +175,9 @@
   <ul>
     <li><strong>Calculé.</strong> Les positions et les diamètres apparents du Soleil et de la Lune, les quatre instants de contact, la magnitude, l'obscuration, la hauteur du Soleil, ainsi que les étoiles et les planètes au-dessus de l'horizon. Tout vient de l'éphéméride JPL DE440s lue avec skyfield, en positions apparentes topocentriques, réfraction atmosphérique standard comprise. Une réserve sur les astres : ils sont calculés pour le seul instant du maximum d'éclipse, et non image par image. Sur la centaine de secondes de la totalité, le ciel tourne d'environ 0,4°, l'ordre de grandeur de la tache qui figure une étoile à l'écran ; parcourir la frise ne les fait donc pas dériver de façon perceptible, sans que ce soit exact pour autant.</li>
 
-    <li><strong>Modélisé d'après la physique.</strong> L'assombrissement centre-bord du Soleil, par la loi quadratique de Pierce &amp; Slaughter (1977) prise aux longueurs d'onde des trois primaires sRGB — c'est elle qui donne le flux résiduel canal par canal cité plus haut. Puis la diffusion Rayleigh, la diffusion de Mie et l'absorption par l'ozone, dont sort la luminance du ciel, et la géométrie du cône d'ombre, qui fixe la fraction de Soleil encore visible en chaque point de l'atmosphère traversée par le rayon. Une approximation y est délibérée, et je préfère l'écrire : le terme de diffusion multiple est modulé non par le flux au point, mais par sa moyenne sur ±50 km autour de lui. La lumière qui a rebondi deux ou trois fois avant d'arriver sous l'ombre vient d'une région large d'une centaine de kilomètres, dont une bonne part est restée au soleil ; la moduler par le flux du seul point creuserait un trou noir là où il y a un anneau de crépuscule.</li>
+    <li><strong>Modélisé d'après la physique.</strong> L'assombrissement centre-bord du Soleil, par la loi quadratique de Pierce &amp; Slaughter (1977) prise aux longueurs d'onde des trois primaires sRGB : c'est elle qui donne le flux résiduel canal par canal cité plus haut. Puis la diffusion Rayleigh, la diffusion de Mie et l'absorption par l'ozone, dont sort la luminance du ciel, et la géométrie du cône d'ombre, qui fixe la fraction de Soleil encore visible en chaque point de l'atmosphère traversée par le rayon. Une approximation y est délibérée, et je préfère l'écrire : le terme de diffusion multiple est modulé non par le flux au point, mais par sa moyenne sur ±50 km autour de lui. La lumière qui a rebondi deux ou trois fois avant d'arriver sous l'ombre vient d'une région large d'une centaine de kilomètres, dont une bonne part est restée au soleil ; la moduler par le flux du seul point creuserait un trou noir là où il y a un anneau de crépuscule.</li>
 
-    <li><strong>Transformé pour l'affichage.</strong> L'exposition est fixe et identique dans les deux panneaux, et la courbe de transfert est délibérément logarithmique : elle modélise les quatre diaphragmes d'adaptation de l'œil dont il est question plus haut. Un rendu littéral aurait donné un Paris cinq fois plus sombre qu'un ciel normal — ce qu'enregistre un appareil à réglage fixe, pas ce qu'a vu un témoin. Rien ne s'adapte au contenu de l'image : la même fonction partout et toujours. Une auto-exposition relèverait le panneau sombre et effacerait exactement ce que la page a à montrer ; ici le contraste entre Paris et Palma est conservé en termes <em>perçus</em>.</li>
+    <li><strong>Transformé pour l'affichage.</strong> L'exposition est fixe et identique dans les deux panneaux, et la courbe de transfert est délibérément logarithmique : elle modélise les quatre diaphragmes d'adaptation de l'œil dont il est question plus haut. Un rendu littéral aurait donné un Paris cinq fois plus sombre qu'un ciel normal, ce qu'enregistre un appareil à réglage fixe, pas ce qu'a vu un témoin. Rien ne s'adapte au contenu de l'image : la même fonction partout et toujours. Une auto-exposition relèverait le panneau sombre et effacerait exactement ce que la page a à montrer ; ici le contraste entre Paris et Palma est conservé en termes <em>perçus</em>.</li>
 
     <li><strong>Stylisé, et annoncé comme tel.</strong> La couronne suit la loi radiale de van de Hulst et Baumbach, hérissée de jets procéduraux : c'est une couronne plausible pour un maximum d'activité, pas une observation du 12 août. Les grains de Baily naissent d'un relief de limbe lunaire dont l'amplitude est réelle et le profil inventé : l'instant est vrai, le dessin ne l'est pas. Les magnitudes des planètes sont attribuées et non calculées ; toutes les étoiles ont la même couleur ; l'horizon est un plan volontairement abstrait, sans relief ni texture. Enfin l'encart téléobjectif n'applique aucune extinction atmosphérique : à Palma, à 2,6° de hauteur, sous une vingtaine de masses d'air, le vrai disque était rouge sombre et la vraie couronne bien plus faible que ce que l'encart montre. Il sert à vérifier une géométrie, pas à refaire la photométrie que le grand panneau traite déjà.</li>
   </ul>
@@ -186,7 +186,7 @@
 
   <h2>Vérifier plutôt que croire</h2>
 
-  <p>Un calcul d'éphémérides ne vaut que confronté à autre chose que lui-même. Les quatre contacts, la magnitude, l'obscuration, la hauteur et l'azimut du Soleil ont été comparés, pour les trois lieux, à des valeurs publiées relevées avant que le calcul ne soit fait. Le plus grand écart sur un instant de contact est de 3,2 secondes — sur C3 à Reykjavík, où les sources publiées ne s'accordent d'ailleurs pas entre elles à mieux qu'une dizaine de secondes.</p>
+  <p>Un calcul d'éphémérides ne vaut que confronté à autre chose que lui-même. Les quatre contacts, la magnitude, l'obscuration, la hauteur et l'azimut du Soleil ont été comparés, pour les trois lieux, à des valeurs publiées relevées avant que le calcul ne soit fait. Le plus grand écart sur un instant de contact est de 3,2 secondes. Il porte sur C3 à Reykjavík, où les sources publiées ne s'accordent d'ailleurs pas entre elles à mieux qu'une dizaine de secondes.</p>
 
   <p>Le rapport dit aussi ce qu'il ne couvre pas, et cette partie-là est la plus utile : Paris ne repose que sur une seule source à la seconde, et le point exact désigné par chaque ville n'est pas publié. Rien n'oblige à me croire sur parole.</p>
 
@@ -194,6 +194,7 @@
 
   <p class="aside">Tous les nombres de cette page sortent du même fichier, <a href="/assets/data/eclipse-2026-08-12.json">eclipse-2026-08-12.json</a> : une image toutes les vingt secondes, de cinq minutes avant C1 à cinq minutes après C4.</p>
 
+  <p class="byline">Publié par Vincent Nazzareno le <time datetime="2026-08-13">13 août 2026</time>.</p>
   <p class="backlink"><a href="/#projets">← retour aux projets</a></p>
 </main>
 

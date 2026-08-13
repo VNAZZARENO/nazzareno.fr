@@ -21,7 +21,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta property="og:type" content="article">
 </head>
-<body class="article">
+<body class="article post">
 
 <header>
   <div class="wrap">
@@ -34,10 +34,10 @@
 </header>
 
 <main class="wrap">
-  <p class="kicker">Project</p>
-  <h1>A total eclipse,<br>computed rather than illustrated</h1>
+  <p class="post-date"><time datetime="2026-08-13">Thursday 13 August 2026</time></p>
+  <h1>A total eclipse, computed rather than illustrated</h1>
   <p class="standfirst">On 12 August 2026 Paris lost 92% of its Sun and hardly anyone noticed, while in Palma de Mallorca totality played out two and a half degrees above the sea. What follows was computed, place by place, not copied from somewhere else.</p>
-  <p class="facts"><span>skyfield</span>
+  <p class="facts"><b>Labels</b> <span>skyfield</span>
     <span>JPL DE440s ephemeris</span>
     <span>12 August 2026</span>
     <span>three places</span>
@@ -136,13 +136,13 @@
 
   <h2>In Palma, the eclipse ended below the horizon</h2>
 
-  <p>Totality lasted 98.8 seconds there, at an altitude of 2.64° — two fingers held up at arm's length. That is the Spanish signature of this eclipse: almost everywhere else you tilted your head back, here you had to look out to sea.</p>
+  <p>Totality lasted 98.8 seconds there, at an altitude of 2.64°, about two fingers held up at arm's length. That is the Spanish signature of this eclipse: almost everywhere else you tilted your head back, here you had to look out to sea.</p>
 
   <p>Fourth contact, for its part, falls at 21:22:31 local time, a good half hour after sunset. So the end of the eclipse was never visible from Palma: the Sun went down still bitten into, and the rest happened below the horizon. The table gives the instant anyway, because it is the relative position of two bodies, and that does not stop existing when the Earth gets in the way.</p>
 
   <h2>The Sun's limb is darker than its centre</h2>
 
-  <p>The solar disc is not uniformly bright. Near the edge, the line of sight crosses a greater thickness of solar atmosphere and so comes to a stop higher up, in cooler layers: the limb radiates markedly less than the centre. A partial eclipse therefore does not remove light in proportion to the area it hides — and the gap changes sign along the way.</p>
+  <p>The solar disc is not uniformly bright. Near the edge, the line of sight crosses a greater thickness of solar atmosphere and so comes to a stop higher up, in cooler layers: the limb radiates markedly less than the centre. A partial eclipse therefore does not remove light in proportion to the area it hides, and the gap changes sign along the way.</p>
 
   <p>Early on, the Moon bites into the edge, which is the dark part. It takes away less light than area: at 10% obscuration, 91.4% of the flux is still there, not the 90% a uniform disc would give.</p>
 
@@ -166,7 +166,7 @@
 
   <p>skyfield applies atmospheric refraction body by body, and its model cuts off sharply below −1° of true altitude. The Sun crosses that threshold some twenty seconds before the Moon, which trails it by half a degree. For those twenty seconds one body was lifted by refraction and the other was not: the apparent separation of the two discs jumped by 0.55°, more than the sum of their radii. In Palma, where the eclipse carries on after sunset, that artefact landed in the middle of the partial phase. A picture would have shown a perfectly clear Sun, halfway through the eclipse.</p>
 
-  <p>The computation now lifts both bodies by the same angle, the one worked out for the Sun. Refraction then no longer changes the geometry, only the apparent altitude — which is what it is meant to do. A 0.44° step remains at the threshold crossing, but it affects both bodies together, and it happens below the horizon, where there is nothing left to see.</p>
+  <p>The computation now lifts both bodies by the same angle, the one worked out for the Sun. Refraction then no longer changes the geometry, only the apparent altitude, which is what it is meant to do. A 0.44° step remains at the threshold crossing, but it affects both bodies together, and it happens below the horizon, where there is nothing left to see.</p>
 
   <h2>What is computed, what is modelled</h2>
 
@@ -175,9 +175,9 @@
   <ul>
     <li><strong>Computed.</strong> The positions and apparent diameters of the Sun and the Moon, the four contact times, the magnitude, the obscuration, the Sun's altitude, and the stars and planets above the horizon. All of it comes from the JPL DE440s ephemeris read with skyfield, as topocentric apparent positions, standard atmospheric refraction included. One caveat about those stars: they are worked out for the instant of greatest eclipse alone, not frame by frame. Over the hundred seconds of totality the sky turns by about 0.4°, roughly the size of the blob that stands in for a star on screen; running the timeline through does not visibly drift them, though it is not exact either.</li>
 
-    <li><strong>Modelled from physics.</strong> The Sun's limb darkening, through the quadratic law of Pierce &amp; Slaughter (1977) taken at the wavelengths of the three sRGB primaries — that is what gives the residual flux per channel quoted above. Then Rayleigh scattering, Mie scattering and absorption by ozone, which together give the sky its luminance, and the geometry of the shadow cone, which sets how much of the Sun is still visible at every point of the atmosphere the ray crosses. One approximation in there is deliberate, and I would rather write it down: the multiple-scattering term is driven not by the flux at the point but by its average over ±50 km around it. Light that has bounced two or three times before reaching a spot under the shadow comes from a region a hundred kilometres across, much of which is still in full sun; driving that term with the flux at the point alone would dig a black hole where there is a ring of twilight.</li>
+    <li><strong>Modelled from physics.</strong> The Sun's limb darkening, through the quadratic law of Pierce &amp; Slaughter (1977) taken at the wavelengths of the three sRGB primaries: that is what gives the residual flux per channel quoted above. Then Rayleigh scattering, Mie scattering and absorption by ozone, which together give the sky its luminance, and the geometry of the shadow cone, which sets how much of the Sun is still visible at every point of the atmosphere the ray crosses. One approximation in there is deliberate, and I would rather write it down: the multiple-scattering term is driven not by the flux at the point but by its average over ±50 km around it. Light that has bounced two or three times before reaching a spot under the shadow comes from a region a hundred kilometres across, much of which is still in full sun; driving that term with the flux at the point alone would dig a black hole where there is a ring of twilight.</li>
 
-    <li><strong>Transformed for display.</strong> The exposure is fixed and the same in both panels, and the transfer curve is deliberately logarithmic: it models the four stops of eye adaptation discussed above. A literal rendering would have made Paris five times darker than an ordinary sky — which is what a camera on fixed settings records, not what anyone standing there saw. Nothing adapts to the content of the image: the same function everywhere, always. Auto-exposure would lift the dark panel and rub out precisely what the page has to show; here the contrast between Paris and Palma is preserved in <em>perceived</em> terms.</li>
+    <li><strong>Transformed for display.</strong> The exposure is fixed and the same in both panels, and the transfer curve is deliberately logarithmic: it models the four stops of eye adaptation discussed above. A literal rendering would have made Paris five times darker than an ordinary sky, which is what a camera on fixed settings records, not what anyone standing there saw. Nothing adapts to the content of the image: the same function everywhere, always. Auto-exposure would lift the dark panel and rub out precisely what the page has to show; here the contrast between Paris and Palma is preserved in <em>perceived</em> terms.</li>
 
     <li><strong>Stylised, and said to be.</strong> The corona follows the van de Hulst and Baumbach radial law, with procedural streamers on top: a plausible corona for a solar maximum, not an observation of 12 August. Baily's beads come out of a lunar limb relief whose amplitude is real and whose profile is invented: the instant is true, the pattern is not. Planet brightnesses are assigned rather than computed; every star is the same colour; the horizon is a deliberately abstract plane, with no relief and no texture. And the telephoto inset applies no atmospheric extinction: in Palma, 2.6° up and under some twenty air masses, the real disc was deep red and the real corona far fainter than the inset shows. Its job is to let you check a geometry, not to redo the photometry the wide panel already handles.</li>
   </ul>
@@ -186,7 +186,7 @@
 
   <h2>Check rather than believe</h2>
 
-  <p>An ephemeris computation is worth nothing until it is set against something other than itself. The four contacts, the magnitude, the obscuration, the altitude and the azimuth of the Sun were compared, for all three places, against published values recorded before the computation was run. The largest discrepancy on a contact time is 3.2 seconds — on C3 at Reykjavík, where the published sources do not in fact agree with each other to better than ten seconds or so.</p>
+  <p>An ephemeris computation is worth nothing until it is set against something other than itself. The four contacts, the magnitude, the obscuration, the altitude and the azimuth of the Sun were compared, for all three places, against published values recorded before the computation was run. The largest discrepancy on a contact time is 3.2 seconds. It falls on C3 at Reykjavík, where the published sources do not in fact agree with each other to better than ten seconds or so.</p>
 
   <p>The report also says what it does not cover, and that part is the more useful one: Paris rests on a single source at the second level, and the exact point each city stands for is not published. Nobody has to take my word for any of it.</p>
 
@@ -194,6 +194,7 @@
 
   <p class="aside">Every number on this page comes out of the same file, <a href="/assets/data/eclipse-2026-08-12.json">eclipse-2026-08-12.json</a>: one frame every twenty seconds, from five minutes before C1 to five minutes after C4.</p>
 
+  <p class="byline">Posted by Vincent Nazzareno on <time datetime="2026-08-13">13 August 2026</time>.</p>
   <p class="backlink"><a href="/en/#projects">← back to projects</a></p>
 </main>
 
