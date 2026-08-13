@@ -46,6 +46,8 @@
   <p>La bande de totalité traversait l'Islande, l'Atlantique et le nord de l'Espagne ; ailleurs en Europe, la Lune n'a mordu qu'un morceau du disque. Trois lieux suffisent à couvrir les trois façons de vivre la même éclipse : une partielle profonde à Paris, une totalité rasante à Palma, une totalité haute mais brève à Reykjavík. Tout est calculé avec <a href="https://rhodesmill.org/skyfield/">skyfield</a> sur l'éphéméride JPL DE440s, sans rien reprendre d'un site d'éphémérides.</p>
 
   <div id="eclipse-sim" class="sim">
+    <canvas class="sim-canvas" width="1200" height="520"
+            aria-label="Simulation du ciel pendant l'éclipse du 12 août 2026, vue depuis deux lieux."></canvas>
     <div class="scroller" tabindex="0" role="region" aria-labelledby="contacts-legende">
       <table class="contacts">
         <caption id="contacts-legende">Circonstances locales calculées pour les trois lieux.</caption>
@@ -165,6 +167,12 @@
     </nav>
   </div>
 </footer>
+
+<script type="module">
+  import { init } from '/assets/js/eclipse/main.js';
+  const racine = document.getElementById('eclipse-sim');
+  if (racine) init(racine).catch((e) => console.warn('simulateur indisponible', e));
+</script>
 
 <script data-goatcounter="https://nazzareno.goatcounter.com/count"
         async src="https://gc.zgo.at/count.js"></script>

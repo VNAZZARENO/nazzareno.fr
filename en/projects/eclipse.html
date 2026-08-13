@@ -46,6 +46,8 @@
   <p>The path of totality crossed Iceland, the Atlantic and northern Spain; everywhere else in Europe the Moon took a bite out of the disc and no more. Three places are enough to cover the three ways of living through the same eclipse: a deep partial in Paris, a grazing totality in Palma, a high but short totality in Reykjavík. Everything is computed with <a href="https://rhodesmill.org/skyfield/">skyfield</a> on the JPL DE440s ephemeris, with nothing taken from an ephemeris website.</p>
 
   <div id="eclipse-sim" class="sim">
+    <canvas class="sim-canvas" width="1200" height="520"
+            aria-label="Simulation of the sky during the 12 August 2026 eclipse, seen from two places."></canvas>
     <div class="scroller" tabindex="0" role="region" aria-labelledby="contacts-caption">
       <table class="contacts">
         <caption id="contacts-caption">Local circumstances computed for the three places.</caption>
@@ -165,6 +167,12 @@
     </nav>
   </div>
 </footer>
+
+<script type="module">
+  import { init } from '/assets/js/eclipse/main.js';
+  const racine = document.getElementById('eclipse-sim');
+  if (racine) init(racine).catch((e) => console.warn('simulateur indisponible', e));
+</script>
 
 <script data-goatcounter="https://nazzareno.goatcounter.com/count"
         async src="https://gc.zgo.at/count.js"></script>

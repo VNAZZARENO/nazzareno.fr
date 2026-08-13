@@ -618,3 +618,32 @@ table.contacts .utc {
   font-size: 1rem;
   color: var(--ink-soft);
 }
+
+/* Cache par defaut : tant que main.js n'a pas confirme un contexte WebGL2
+   utilisable, le canevas ne doit strictement rien afficher, ni gener la
+   lecture. C'est data-webgl="ok" qui le revele, jamais l'inverse — la page
+   doit rester identique, table comprise, si JS ou WebGL2 est absent. */
+.sim-canvas {
+  display: none;
+  width: 100%;
+  aspect-ratio: 12 / 5;
+  margin-bottom: 1rem;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: #0d0d0f;
+}
+.sim[data-webgl="ok"] .sim-canvas {
+  display: block;
+}
+.sim-canvas:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+/* Sous 48rem les deux panneaux (lieu gauche, lieu droit) se superposeront
+   verticalement plutot que cote a cote (tache 20) : on prepare deja le
+   format vertical du cadre. */
+@media (max-width: 48rem) {
+  .sim-canvas {
+    aspect-ratio: 4 / 5;
+  }
+}
