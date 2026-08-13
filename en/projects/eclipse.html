@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A total eclipse, computed rather than illustrated, Vincent Nazzareno</title>
+  <meta name="description" content="The eclipse of 12 August 2026 seen from Paris, Palma de Mallorca and Reykjavík: contacts, magnitude, obscuration and residual light, computed with skyfield on the JPL DE440s ephemeris.">
+  <link rel="canonical" href="https://nazzareno.fr/en/projects/eclipse.html">
+  <link rel="alternate" hreflang="fr" href="https://nazzareno.fr/projets/eclipse.html">
+  <link rel="alternate" hreflang="en" href="https://nazzareno.fr/en/projects/eclipse.html">
+  <link rel="alternate" hreflang="x-default" href="https://nazzareno.fr/projets/eclipse.html">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+  <meta property="og:title" content="A total eclipse, computed rather than illustrated, Vincent Nazzareno">
+  <meta property="og:description" content="The eclipse of 12 August 2026 seen from Paris, Palma de Mallorca and Reykjavík: contacts, magnitude, obscuration and residual light, computed with skyfield on the JPL DE440s ephemeris.">
+  <meta property="og:url" content="https://nazzareno.fr/en/projects/eclipse.html">
+  <meta property="og:image" content="https://nazzareno.fr/assets/og/eclipse-en.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Vincent Nazzareno, nazzareno.fr">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:type" content="article">
+</head>
+<body class="article">
+
+<header>
+  <div class="wrap">
+    <a class="brand" href="/en/">vincent nazzareno</a>
+    <span class="nav">
+      <a class="contact" href="mailto:contact@nazzareno.fr">contact</a>
+      <span class="lang"><a href="/projets/eclipse.html">fr</a> · en</span>
+    </span>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="kicker">Project</p>
+  <h1>A total eclipse,<br>computed rather than illustrated</h1>
+  <p class="standfirst">On 12 August 2026 Paris lost 92% of its Sun and hardly anyone noticed, while in Palma de Mallorca totality played out two and a half degrees above the sea. What follows was computed, place by place, not copied from somewhere else.</p>
+  <p class="facts"><span>skyfield</span>
+    <span>JPL DE440s ephemeris</span>
+    <span>12 August 2026</span>
+    <span>three places</span>
+    <span>no dependencies</span></p>
+
+  <p>The path of totality crossed Iceland, the Atlantic and northern Spain; everywhere else in Europe the Moon took a bite out of the disc and no more. Three places are enough to cover the three ways of living through the same eclipse: a deep partial in Paris, a grazing totality in Palma, a high but short totality in Reykjavík. Everything is computed with <a href="https://rhodesmill.org/skyfield/">skyfield</a> on the JPL DE440s ephemeris, with nothing taken from an ephemeris website.</p>
+
+  <div id="eclipse-sim" class="sim">
+    <div class="scroller" tabindex="0" role="region" aria-labelledby="contacts-caption">
+      <table class="contacts">
+        <caption id="contacts-caption">Local circumstances computed for the three places.</caption>
+        <thead>
+          <tr>
+            <th scope="col">Place</th>
+            <th scope="col">C1 <span class="gloss">first contact</span></th>
+            <th scope="col">C2 <span class="gloss">totality begins</span></th>
+            <th scope="col">C3 <span class="gloss">totality ends</span></th>
+            <th scope="col">C4 <span class="gloss">last contact</span></th>
+            <th scope="col">Magnitude</th>
+            <th scope="col">Obscuration</th>
+            <th scope="col">Sun's altitude <span class="gloss">at maximum</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Paris <span class="gloss">Europe/Paris, UTC+2</span></th>
+            <td><time datetime="2026-08-12T19:22:15+02:00">19:22:15</time> <span class="utc">17:22:15 UTC</span></td>
+            <td class="absent" colspan="2">no totality</td>
+            <td><time datetime="2026-08-12T21:09:26+02:00">21:09:26</time> <span class="utc">19:09:26 UTC</span></td>
+            <td>0.931</td>
+            <td>92.12%</td>
+            <td>7.71°</td>
+          </tr>
+          <tr>
+            <th scope="row">Palma de Mallorca <span class="gloss">Europe/Madrid, UTC+2</span></th>
+            <td><time datetime="2026-08-12T19:38:05+02:00">19:38:05</time> <span class="utc">17:38:05 UTC</span></td>
+            <td><time datetime="2026-08-12T20:31:04+02:00">20:31:04</time> <span class="utc">18:31:04 UTC</span></td>
+            <td><time datetime="2026-08-12T20:32:43+02:00">20:32:43</time> <span class="utc">18:32:43 UTC</span></td>
+            <td><time datetime="2026-08-12T21:22:31+02:00">21:22:31</time> <span class="utc">19:22:31 UTC</span></td>
+            <td>1.013</td>
+            <td>100%</td>
+            <td>2.64°</td>
+          </tr>
+          <tr>
+            <th scope="row">Reykjavík <span class="gloss">Atlantic/Reykjavik, UTC+0</span></th>
+            <td><time datetime="2026-08-12T16:47:14+00:00">16:47:14</time> <span class="utc">16:47:14 UTC</span></td>
+            <td><time datetime="2026-08-12T17:48:15+00:00">17:48:15</time> <span class="utc">17:48:15 UTC</span></td>
+            <td><time datetime="2026-08-12T17:49:21+00:00">17:49:21</time> <span class="utc">17:49:21 UTC</span></td>
+            <td><time datetime="2026-08-12T18:47:39+00:00">18:47:39</time> <span class="utc">18:47:39 UTC</span></td>
+            <td>1.002</td>
+            <td>100%</td>
+            <td>24.52°</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="sim-note">Local time on top in each cell, universal time below; the table scrolls sideways if it does not fit the screen. Totality lasted 98.8 s in Palma de Mallorca and 65.8 s in Reykjavík. Magnitude is the fraction of the solar diameter covered, obscuration the fraction of the area: the two are never equal, and it is the second one that decides how much light is left.</p>
+  </div>
+
+  <h2>In Palma, the eclipse ended below the horizon</h2>
+
+  <p>Totality lasted 98.8 seconds there, at an altitude of 2.64° — two fingers held up at arm's length. That is the Spanish signature of this eclipse: almost everywhere else you tilted your head back, here you had to look out to sea.</p>
+
+  <p>Fourth contact, for its part, falls at 21:22:31 local time, a good half hour after sunset. So the end of the eclipse was never visible from Palma: the Sun went down still bitten into, and the rest happened below the horizon. The table gives the instant anyway, because it is the relative position of two bodies, and that does not stop existing when the Earth gets in the way.</p>
+
+  <h2>The Sun's limb is darker than its centre</h2>
+
+  <p>The solar disc is not uniformly bright. Near the edge, the line of sight crosses a greater thickness of solar atmosphere and so comes to a stop higher up, in cooler layers: the limb radiates markedly less than the centre. A partial eclipse therefore does not remove light in proportion to the area it hides — and the gap changes sign along the way.</p>
+
+  <p>Early on, the Moon bites into the edge, which is the dark part. It takes away less light than area: at 10% obscuration, 91.4% of the flux is still there, not the 90% a uniform disc would give.</p>
+
+  <p>Deep in a partial, it works the other way round. The Moon covers the centre, the brightest part, and leaves only a crescent cut from the limb. At the Paris maximum, 92.12% of the disc was covered and only 5.4% of the light was left, where a uniform disc would have left 7.9%. Close to a third less than the naive answer.</p>
+
+  <p>The crossover between the two regimes falls around 33% obscuration, slightly before the lunar disc reaches the centre of the Sun. Before that point more light remains than the area suggests; after it, less.</p>
+
+  <p>Limb darkening is also stronger in the blue than in the red. At the Paris maximum 5.67% of the red flux was left against 5.00% of the blue: the little light that remained was a shade warmer than usual.</p>
+
+  <h2>And yet, in Paris, it was an ordinary afternoon</h2>
+
+  <p>Nine tenths of the Sun gone, and most people noticed nothing. The temptation is to put that down to limb darkening; that would be explaining it with a mechanism pushing the other way, since we have just seen that it takes away more light still.</p>
+
+  <p>The reason is not in the sky, it is in the eye, whose response is roughly logarithmic. Dividing the flux by eighteen is not seeing eighteen times less: it is a little over four stops, about the gap between full sun and a heavily overcast sky. The pupil opens, adaptation follows, and the brain files the scene under grey late afternoon.</p>
+
+  <p>Two mechanisms, then, pulling in opposite directions: the physics of the Sun removes more light than the geometry announces, the physiology of the eye reports far less of it. Confusing the two is the common mistake; separating them is the whole point of computing rather than illustrating. Only totality escapes both, between C2 and C3: nothing is left of the disc, and no amount of adaptation makes up for zero.</p>
+
+  <h2>Twenty seconds when the Sun was refracted and the Moon was not</h2>
+
+  <p>One detail of the computation is worth telling, because it makes concrete what "computed properly" means.</p>
+
+  <p>skyfield applies atmospheric refraction body by body, and its model cuts off sharply below −1° of true altitude. The Sun crosses that threshold some twenty seconds before the Moon, which trails it by half a degree. For those twenty seconds one body was lifted by refraction and the other was not: the apparent separation of the two discs jumped by 0.55°, more than the sum of their radii. In Palma, where the eclipse carries on after sunset, that artefact landed in the middle of the partial phase. A picture would have shown a perfectly clear Sun, halfway through the eclipse.</p>
+
+  <p>The computation now lifts both bodies by the same angle, the one worked out for the Sun. Refraction then no longer changes the geometry, only the apparent altitude — which is what it is meant to do. A 0.44° step remains at the threshold crossing, but it affects both bodies together, and it happens below the horizon, where there is nothing left to see.</p>
+
+  <h2>What is computed, what is modelled</h2>
+
+  <p>A simulation without this list is only a picture. Here is where the line falls, as things stand.</p>
+
+  <ul>
+    <li><strong>Computed.</strong> The positions and apparent diameters of the Sun and the Moon, the four contact times, the magnitude, the obscuration, the Sun's altitude, and the stars and planets above the horizon at maximum. All of it comes from the JPL DE440s ephemeris read with skyfield, as topocentric apparent positions, standard atmospheric refraction included.</li>
+    <li><strong>Modelled from physics.</strong> The Sun's limb darkening, through the quadratic law of Pierce &amp; Slaughter (1977) taken at the wavelengths of the three sRGB primaries. That is what gives the residual flux per channel quoted above. It is a model of the Sun, not a measurement of 12 August.</li>
+  </ul>
+
+  <p>A third category is missing for as long as this page draws nothing: what would be <em>rendered</em>, meaning the graphic choices that come neither from the ephemeris nor from a law of physics. It arrives with the simulator. For now the page shows numbers and nothing else, and it runs without a line of JavaScript.</p>
+
+  <h2>Check rather than believe</h2>
+
+  <p>An ephemeris computation is worth nothing until it is set against something other than itself. The four contacts, the magnitude, the obscuration, the altitude and the azimuth of the Sun were compared, for all three places, against published values recorded before the computation was run. The largest discrepancy on a contact time is 3.2 seconds — on C3 at Reykjavík, where the published sources do not in fact agree with each other to better than ten seconds or so.</p>
+
+  <p>The report also says what it does not cover, and that part is the more useful one: Paris rests on a single source at the second level, and the exact point each city stands for is not published. Nobody has to take my word for any of it.</p>
+
+  <p><a href="https://github.com/VNAZZARENO/nazzareno.fr/blob/main/tools/eclipse/VALIDATION.md">The validation report, on GitHub →</a></p>
+
+  <p class="aside">Every number on this page comes out of the same file, <a href="/assets/data/eclipse-2026-08-12.json">eclipse-2026-08-12.json</a>: one frame every twenty seconds, from five minutes before C1 to five minutes after C4.</p>
+
+  <p class="backlink"><a href="/en/#projects">← back to projects</a></p>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Vincent Nazzareno</span>
+    <nav>
+      <a href="/mentions-legales.html">legal notice (fr)</a>
+      <a href="/politique-confidentialite.html">privacy (fr)</a>
+      <a href="/projets/eclipse.html">français</a>
+    </nav>
+  </div>
+</footer>
+
+<script data-goatcounter="https://nazzareno.goatcounter.com/count"
+        async src="https://gc.zgo.at/count.js"></script>
+
+</body>
+</html>
