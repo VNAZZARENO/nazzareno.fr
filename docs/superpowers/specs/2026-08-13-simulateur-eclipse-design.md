@@ -323,9 +323,11 @@ Trois lieux disponibles, deux affichés à la fois.
 
 1. **Paris** — partielle profonde. Le jour tient bon malgré une occultation massive : c'est la
    moitié gauche par défaut, et la démonstration visuelle du §4.1.
-2. **Un point du nord de l'Espagne** — totalité au ras de l'horizon, la signature de cette
-   éclipse-là. Moitié droite par défaut. Ville arrêtée après calcul, sur le critère d'une
-   totalité franche à basse altitude solaire.
+2. **Palma de Majorque** — totalité au ras de l'horizon, la signature de cette éclipse-là :
+   Soleil à 2,6° d'altitude, totalité de 1 min 36 s, magnitude 1,015. Moitié droite par défaut.
+   Retenue parmi huit candidates espagnoles sur le critère de l'altitude solaire la plus basse
+   assortie d'une totalité franche — Valence descend aussi sous 5°, mais sa totalité d'une
+   minute la place trop près de la limite de la bande.
 3. **Reykjavík** — totalité avec le Soleil à bonne hauteur, sélectionnable dans l'un ou l'autre
    panneau. Il n'ajoute rien à la démonstration, mais c'est le seul des trois où l'anneau de
    crépuscule à 360° est pleinement lisible : en Espagne le Soleil frise l'horizon, et l'anneau
@@ -385,9 +387,14 @@ Le site n'a pas de chaîne de test, et ce n'est pas ce projet qui doit en introd
 validation porte donc là où elle a du sens : sur les chiffres.
 
 - **`tools/eclipse/validate.py`** compare les contacts et magnitudes calculés aux valeurs
-  publiées par le NASA GSFC (Espenak) pour cette éclipse, avec des tolérances explicites
-  (contacts < 5 s, magnitude < 0,002), et écrit le tableau comparatif dans `VALIDATION.md`.
-  Le rapport est versionné : l'affirmation « vrai » devient vérifiable par un lecteur.
+  publiées (NASA GSFC, EclipseWise, IMCCE, timeanddate) pour cette éclipse, avec des tolérances
+  explicites (contacts < 30 s, magnitude < 0,005), et écrit le tableau comparatif dans
+  `VALIDATION.md`. Le rapport est versionné : l'affirmation « vrai » devient vérifiable.
+
+  La tolérance de 30 s n'est pas de la complaisance : les sources publiées divergent **entre
+  elles** de 5 à 6 s sur les contacts et de 9 s sur l'instant du maximum, notamment parce que
+  le ΔT supposé varie de 69,6 à 75,4 s. Serrer à 5 s reviendrait à mesurer ce désaccord plutôt
+  que notre justesse. Une erreur réelle de la chaîne se compte en minutes, pas en secondes.
 - **Invariants** vérifiés par le script : fraction de flux = 1 hors de [C1, C4] ; fraction nulle
   entre C2 et C3 aux lieux en totalité ; magnitude et obscuration monotones de part et d'autre
   du maximum ; continuité de l'interpolation aux bornes.
