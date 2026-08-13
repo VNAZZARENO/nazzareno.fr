@@ -2,10 +2,16 @@
 
 Usage: source .venv/bin/activate && python3 -m tools.eclipse.build
 
+A lancer depuis la RACINE du depot. Le fichier produit, lui, est ecrit a la
+bonne place quel que soit le repertoire courant, mais `open_ephemeris()` cherche
+`de440s.bsp` a cote du repertoire courant: depuis ailleurs, skyfield ne le
+trouverait pas et retelechargerait 32 Mo sans rien dire.
+
 Convention du fichier produit, celle que reprendra `assets/js/eclipse/data.js`:
 `t0_utc` est l'origine des temps, `step_s` le pas, `frames[i]` decrit l'instant
-t = i * step_s, et les quatre contacts sont donnes en SECONDES depuis cette meme
-origine. Tout est donc sur un seul axe, indexable sans conversion de date.
+t = i * step_s, et les quatre contacts comme `t_max_s` sont donnes en SECONDES
+depuis cette meme origine. Tout est donc sur un seul axe, indexable sans
+conversion de date.
 """
 
 import json
@@ -155,6 +161,9 @@ def construire_site(eph, ts, site, journal):
         # Secondes depuis t0_utc, et non des dates: c'est l'axe des images.
         "contacts": {k: (None if v is None else round(v - debut, 3))
                      for k, v in contacts.items()},
+        # Meme axe que les contacts: l'instant qu'illustre `sky_at_max`, celui
+        # vers lequel la page saute et que rend la route affiche.
+        "t_max_s": round(t_max - debut, 3),
         "t0_utc": _instant(ts, t_origine, debut).utc_iso(), "step_s": PAS_S,
         "frames": images,
         "sky_at_max": {
@@ -190,7 +199,8 @@ def main():
             f"{k}={'aucun' if v is None else format(v, '.1f')}"
             for k, v in s["contacts"].items())
         print(f"{s['id']}: {len(s['frames'])} images depuis {s['t0_utc']}, "
-              f"pas {s['step_s']} s, contacts (s) {contacts}")
+              f"pas {s['step_s']} s, contacts (s) {contacts}, "
+              f"t_max_s={s['t_max_s']:.1f}")
     print("\n".join(journal))
     print(f"ecrit {SORTIE} ({SORTIE.stat().st_size // 1024} Ko)")
 

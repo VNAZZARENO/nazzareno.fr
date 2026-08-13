@@ -37,6 +37,19 @@ def test_paris_est_partielle_et_les_deux_autres_totales(donnees):
     assert par_id["reykjavik"]["contacts"]["c2"] is not None
 
 
+def test_le_maximum_est_dans_la_fenetre(donnees):
+    for site in donnees["sites"]:
+        fin = (len(site["frames"]) - 1) * site["step_s"]
+        assert 0 < site["t_max_s"] < fin
+
+
+def test_le_maximum_tombe_pendant_la_totalite(donnees):
+    for site in donnees["sites"]:
+        if site["contacts"]["c2"] is None:
+            continue
+        assert site["contacts"]["c2"] < site["t_max_s"] < site["contacts"]["c3"]
+
+
 def test_flux_entier_aux_extremites_de_la_fenetre(donnees):
     for site in donnees["sites"]:
         for image in (site["frames"][0], site["frames"][-1]):
