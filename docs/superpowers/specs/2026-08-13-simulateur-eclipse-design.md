@@ -131,11 +131,23 @@ contextes — coûteux, plafonnés par le navigateur, et sujets à désynchronis
 
 ## 4. Le modèle physique
 
-### 4.1 L'assombrissement centre-bord — le détail qui décide de tout
+### 4.1 L'assombrissement centre-bord, et l'adaptation de l'œil
 
-L'éclat du Soleil **n'est pas** proportionnel à la fraction de disque découverte : le centre du
-disque est nettement plus brillant que le bord. C'est pour cette raison qu'à 90 % d'occultation
-il fait encore presque jour, et que tout s'effondre dans les dernières secondes.
+Deux mécanismes distincts, qu'il ne faut surtout pas confondre — ils jouent en sens opposés.
+
+**Le flux tombe plus vite que l'aire découverte.** Le centre du disque solaire est nettement
+plus brillant que son bord. Or pendant une partielle profonde, la Lune couvre le centre et ne
+laisse qu'un croissant *au limbe*, c'est-à-dire la partie la plus sombre. Le flux réel passe
+donc **sous** la valeur naïve `1 − obscuration`. À 90 % d'obscuration, il reste sensiblement
+moins de 10 % de la lumière.
+
+**L'œil, lui, répond de façon logarithmique.** C'est cela, et non l'assombrissement centre-bord,
+qui explique qu'une partielle à 90 % se vive comme une journée à peine voilée. Un facteur dix
+sur le flux ne se lit pas comme un facteur dix sur la scène.
+
+La conséquence pour le rendu est directe et figure au §4.5 : l'exposition doit être **fixe et
+partagée** entre les deux panneaux. Une auto-exposition par panneau rattraperait la chute de
+lumière de l'Espagne et détruirait précisément ce que la page cherche à montrer.
 
 Loi retenue : **Hestroffer & Magnan (1998)**, `I(μ)/I(1) = μ^α(λ)`, évaluée à trois longueurs
 d'onde représentatives des primaires sRGB (≈ 465, 532, 630 nm). L'intégration de la portion non
@@ -232,6 +244,27 @@ lunaire opaque à sa taille angulaire réelle, couronne, grains de Baily et anne
 abords de C2 et C3. Position dans le cadre : en bas à droite, sur un fond neutre discret, avec
 un liseré d'un pixel. Sur mobile, il passe sous la vue ciel plutôt que par-dessus.
 
+### 4.5 Exposition et courbe de rendu
+
+Le calcul produit des luminances physiques, qui couvrent ici plus de quatre ordres de grandeur
+entre le plein jour parisien et la totalité espagnole. Il faut donc une courbe de rendu, et le
+choix de cette courbe est un choix de véracité autant que d'esthétique.
+
+- **Exposition fixe**, calibrée une fois pour que le plein jour soit correctement exposé.
+  Aucune auto-exposition, aucune adaptation temporelle.
+- **Exposition identique dans les deux panneaux**, et inchangée quand on change de lieu ou
+  d'instant. C'est la condition pour que la comparaison veuille dire quelque chose : deux
+  images à la même exposition sont comparables, deux images auto-exposées ne le sont pas.
+- **Courbe filmique** à pied doux, appliquée après l'exposition. Sa compression des hautes
+  lumières et sa remontée des basses jouent le rôle de l'adaptation logarithmique décrite au
+  §4.1 — ce qui est justement pourquoi Paris doit rester lumineux à l'écran sans qu'on triche
+  sur les valeurs sous-jacentes.
+
+Ce point est mentionné dans le contrat de vérité : ce qu'on voit n'est pas la luminance brute,
+c'est une luminance physique passée dans une courbe fixe et annoncée.
+
+### 4.6 Le disque et la couronne, dans l'encart
+
 **Couronne.** Profil radial empirique de van de Hulst / Baumbach,
 `B(r)/B☉ ≈ 10⁻⁶ (0,0532 r⁻²·⁵ + 1,425 r⁻⁷ + 2,565 r⁻¹⁷)`, `r` en rayons solaires, modulé par des
 streamers procéduraux. Son intensité monte et descend avec la fraction de flux, donc elle
@@ -273,6 +306,11 @@ obscuration, altitude solaire, planètes et étoiles visibles pendant la totalit
 **Modélisé d'après la physique** (lois publiées, pas d'ajustement à l'œil)
 : assombrissement centre-bord, diffusion Rayleigh, Mie et absorption par l'ozone, luminance du
 ciel, géométrie du cône d'ombre. Y compris l'approximation de voisinage du §4.3, nommée.
+
+**Transformé pour l'affichage** (et donc à déclarer)
+: l'exposition et la courbe filmique du §4.5. Ce qu'on voit n'est pas la luminance brute — mais
+l'exposition est fixe et commune aux deux panneaux, ce qui garantit que la comparaison reste
+honnête.
 
 **Stylisé, et annoncé comme tel**
 : la couronne — profil radial empirique et streamers procéduraux, pas une observation ; les
