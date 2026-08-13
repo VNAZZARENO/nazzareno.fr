@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Une éclipse totale, calculée plutôt qu'illustrée, Vincent Nazzareno</title>
+  <meta name="description" content="L'éclipse du 12 août 2026 vue de Paris, Palma de Majorque et Reykjavík : contacts, magnitude, obscuration et lumière résiduelle, calculés avec skyfield sur l'éphéméride JPL DE440s.">
+  <link rel="canonical" href="https://nazzareno.fr/projets/eclipse.html">
+  <link rel="alternate" hreflang="fr" href="https://nazzareno.fr/projets/eclipse.html">
+  <link rel="alternate" hreflang="en" href="https://nazzareno.fr/en/projects/eclipse.html">
+  <link rel="alternate" hreflang="x-default" href="https://nazzareno.fr/projets/eclipse.html">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+  <meta property="og:title" content="Une éclipse totale, calculée plutôt qu'illustrée, Vincent Nazzareno">
+  <meta property="og:description" content="L'éclipse du 12 août 2026 vue de Paris, Palma de Majorque et Reykjavík : contacts, magnitude, obscuration et lumière résiduelle, calculés avec skyfield sur l'éphéméride JPL DE440s.">
+  <meta property="og:url" content="https://nazzareno.fr/projets/eclipse.html">
+  <meta property="og:image" content="https://nazzareno.fr/assets/og/eclipse.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Vincent Nazzareno, nazzareno.fr">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:type" content="article">
+</head>
+<body class="article">
+
+<header>
+  <div class="wrap">
+    <a class="brand" href="/">vincent nazzareno</a>
+    <span class="nav">
+      <a class="contact" href="mailto:contact@nazzareno.fr">contact</a>
+      <span class="lang">fr · <a href="/en/projects/eclipse.html">en</a></span>
+    </span>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="kicker">Projet</p>
+  <h1>Une éclipse totale,<br>calculée plutôt qu'illustrée</h1>
+  <p class="standfirst">Le 12 août 2026, Paris a perdu 92 % de son Soleil sans que grand monde s'en aperçoive, pendant qu'à Palma de Majorque la totalité se jouait à deux degrés et demi au-dessus de la mer. Ce qui suit est calculé, lieu par lieu, pas repris d'ailleurs.</p>
+  <p class="facts"><span>skyfield</span>
+    <span>éphémérides JPL DE440s</span>
+    <span>12 août 2026</span>
+    <span>trois lieux</span>
+    <span>sans dépendance</span></p>
+
+  <p>La bande de totalité traversait l'Islande, l'Atlantique et le nord de l'Espagne ; ailleurs en Europe, la Lune n'a mordu qu'un morceau du disque. Trois lieux suffisent à couvrir les trois façons de vivre la même éclipse : une partielle profonde à Paris, une totalité rasante à Palma, une totalité haute mais brève à Reykjavík. Tout est calculé avec <a href="https://rhodesmill.org/skyfield/">skyfield</a> sur l'éphéméride JPL DE440s, sans rien reprendre d'un site d'éphémérides.</p>
+
+  <div id="eclipse-sim" class="sim">
+    <div class="scroller" tabindex="0" role="region" aria-labelledby="contacts-legende">
+      <table class="contacts">
+        <caption id="contacts-legende">Circonstances locales calculées pour les trois lieux.</caption>
+        <thead>
+          <tr>
+            <th scope="col">Lieu</th>
+            <th scope="col">C1 <span class="gloss">premier contact</span></th>
+            <th scope="col">C2 <span class="gloss">début de totalité</span></th>
+            <th scope="col">C3 <span class="gloss">fin de totalité</span></th>
+            <th scope="col">C4 <span class="gloss">dernier contact</span></th>
+            <th scope="col">Magnitude</th>
+            <th scope="col">Obscuration</th>
+            <th scope="col">Hauteur du Soleil <span class="gloss">au maximum</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Paris <span class="gloss">Europe/Paris, UTC+2</span></th>
+            <td><time datetime="2026-08-12T19:22:15+02:00">19:22:15</time> <span class="utc">17:22:15 UTC</span></td>
+            <td class="absent" colspan="2">pas de totalité</td>
+            <td><time datetime="2026-08-12T21:09:26+02:00">21:09:26</time> <span class="utc">19:09:26 UTC</span></td>
+            <td>0,931</td>
+            <td>92,12 %</td>
+            <td>7,71°</td>
+          </tr>
+          <tr>
+            <th scope="row">Palma de Majorque <span class="gloss">Europe/Madrid, UTC+2</span></th>
+            <td><time datetime="2026-08-12T19:38:05+02:00">19:38:05</time> <span class="utc">17:38:05 UTC</span></td>
+            <td><time datetime="2026-08-12T20:31:04+02:00">20:31:04</time> <span class="utc">18:31:04 UTC</span></td>
+            <td><time datetime="2026-08-12T20:32:43+02:00">20:32:43</time> <span class="utc">18:32:43 UTC</span></td>
+            <td><time datetime="2026-08-12T21:22:31+02:00">21:22:31</time> <span class="utc">19:22:31 UTC</span></td>
+            <td>1,013</td>
+            <td>100 %</td>
+            <td>2,64°</td>
+          </tr>
+          <tr>
+            <th scope="row">Reykjavík <span class="gloss">Atlantic/Reykjavik, UTC+0</span></th>
+            <td><time datetime="2026-08-12T16:47:14+00:00">16:47:14</time> <span class="utc">16:47:14 UTC</span></td>
+            <td><time datetime="2026-08-12T17:48:15+00:00">17:48:15</time> <span class="utc">17:48:15 UTC</span></td>
+            <td><time datetime="2026-08-12T17:49:21+00:00">17:49:21</time> <span class="utc">17:49:21 UTC</span></td>
+            <td><time datetime="2026-08-12T18:47:39+00:00">18:47:39</time> <span class="utc">18:47:39 UTC</span></td>
+            <td>1,002</td>
+            <td>100 %</td>
+            <td>24,52°</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="sim-note">Heure locale en haut de chaque case, temps universel en dessous ; le tableau défile horizontalement s'il ne tient pas dans l'écran. La totalité a duré 98,8 s à Palma de Majorque et 65,8 s à Reykjavík. La magnitude est la fraction du diamètre solaire couverte, l'obscuration celle de la surface : elles ne se valent jamais, et c'est la seconde qui compte pour la lumière.</p>
+  </div>
+
+  <h2>À Palma, la fin de l'éclipse s'est jouée sous l'horizon</h2>
+
+  <p>La totalité y a duré 98,8 secondes, à 2,64° de hauteur — l'épaisseur de deux doigts tendus à bout de bras. C'est la signature espagnole de cette éclipse : presque partout ailleurs on levait la tête, là il fallait regarder la mer.</p>
+
+  <p>Le quatrième contact, lui, tombe à 21 h 22 min 31 s locales, une bonne demi-heure après le coucher du Soleil. La fin de l'éclipse n'a donc jamais été visible depuis Palma : le Soleil s'est couché encore entamé, et le reste s'est passé sous l'horizon. Le tableau donne quand même l'instant, parce que c'est une position relative de deux astres et qu'elle ne cesse pas d'exister quand la Terre s'interpose.</p>
+
+  <h2>Le limbe du Soleil est plus sombre que son centre</h2>
+
+  <p>Le disque solaire n'est pas uniformément brillant. Vers le bord, la ligne de visée traverse une plus grande épaisseur d'atmosphère solaire et s'arrête donc plus haut, dans des couches plus froides : le limbe rayonne nettement moins que le centre. Une éclipse partielle ne retire par conséquent pas la lumière en proportion de la surface qu'elle masque — et l'écart change de signe en cours de route.</p>
+
+  <p>Au début, la Lune mord le bord, c'est-à-dire la partie sombre. Elle enlève moins de lumière que de surface : à 10 % d'obscuration, il reste encore 91,4 % du flux, et non les 90 % que donnerait un disque uniforme.</p>
+
+  <p>En partielle profonde, c'est l'inverse. La Lune couvre le centre, le plus brillant, et ne laisse qu'un croissant prélevé sur le limbe. Au maximum parisien, 92,12 % du disque était couvert et il ne restait que 5,4 % de la lumière, là où un disque uniforme en aurait laissé 7,9 %. Près d'un tiers de moins que le calcul naïf.</p>
+
+  <p>Le croisement entre les deux régimes tombe vers 33 % d'obscuration, un peu avant que le disque lunaire n'atteigne le centre du Soleil. Avant ce point, il reste plus de lumière que la surface ne le laisse croire ; après, il en reste moins.</p>
+
+  <p>L'assombrissement centre-bord est aussi plus marqué dans le bleu que dans le rouge. Au maximum parisien il subsistait 5,67 % du flux rouge contre 5,00 % du bleu : le peu de lumière qui restait était un peu plus chaud que d'ordinaire.</p>
+
+  <h2>Et pourtant, à Paris, c'était un après-midi ordinaire</h2>
+
+  <p>Neuf dixièmes du Soleil en moins, et la plupart des gens n'ont rien remarqué. La tentation est d'attribuer cela à l'assombrissement centre-bord ; ce serait l'expliquer par un mécanisme qui pousse dans l'autre sens, puisqu'on vient de voir qu'il retire encore de la lumière.</p>
+
+  <p>La raison n'est pas dans le ciel, elle est dans l'œil, dont la réponse est à peu près logarithmique. Diviser le flux par dix-huit, ce n'est pas voir dix-huit fois moins : c'est un peu plus de quatre crans de diaphragme, l'ordre de grandeur qui sépare un plein soleil d'un ciel bien couvert. La pupille s'ouvre, l'adaptation suit, et le cerveau classe la scène en fin d'après-midi grise.</p>
+
+  <p>Deux mécanismes, donc, qui tirent en sens contraire : la physique du Soleil retire plus de lumière que la géométrie ne l'annonce, la physiologie de l'œil en rend beaucoup moins compte. Les confondre est l'erreur commune ; les distinguer est tout l'intérêt de calculer plutôt que d'illustrer. Seule la totalité échappe aux deux, entre C2 et C3 : il ne reste rien du disque, et aucune adaptation ne rattrape zéro.</p>
+
+  <h2>Vingt secondes où le Soleil était réfracté et pas la Lune</h2>
+
+  <p>Un détail du calcul mérite d'être raconté, parce qu'il rend concret ce que « calculé correctement » veut dire.</p>
+
+  <p>skyfield applique la réfraction atmosphérique astre par astre, et son modèle la coupe net sous −1° de hauteur vraie. Or le Soleil franchit ce seuil une vingtaine de secondes avant la Lune, qui le suit d'un demi-degré. Pendant ces vingt secondes, l'un était relevé par la réfraction et l'autre pas : la séparation apparente des deux disques bondissait de 0,55°, davantage que la somme de leurs rayons. À Palma, où l'éclipse se poursuit après le coucher du Soleil, cet artefact tombait en pleine phase partielle. Une image y aurait montré un Soleil parfaitement libre, au beau milieu de l'éclipse.</p>
+
+  <p>Le calcul relève désormais les deux astres du même angle, celui calculé pour le Soleil. La réfraction ne modifie alors plus la géométrie, seulement la hauteur apparente — ce qu'elle est censée faire. Il subsiste une marche de 0,44° au franchissement du seuil, mais elle affecte les deux astres ensemble, et elle se produit sous l'horizon, là où il n'y a plus rien à voir.</p>
+
+  <h2>Ce qui est calculé, ce qui est modélisé</h2>
+
+  <p>Une simulation sans cette liste n'est qu'une image. Voici où passe la frontière, en l'état.</p>
+
+  <ul>
+    <li><strong>Calculé.</strong> Les positions et les diamètres apparents du Soleil et de la Lune, les quatre instants de contact, la magnitude, l'obscuration, la hauteur du Soleil, ainsi que les étoiles et les planètes au-dessus de l'horizon au maximum. Tout vient de l'éphéméride JPL DE440s lue avec skyfield, en positions apparentes topocentriques, réfraction atmosphérique standard comprise.</li>
+    <li><strong>Modélisé d'après la physique.</strong> L'assombrissement centre-bord du Soleil, par la loi quadratique de Pierce &amp; Slaughter (1977) prise aux longueurs d'onde des trois primaires sRGB. C'est elle qui donne le flux résiduel canal par canal cité plus haut. C'est un modèle du Soleil, pas une mesure du 12 août.</li>
+  </ul>
+
+  <p>Une troisième catégorie manque tant que cette page ne dessine rien : ce qui serait <em>rendu</em>, c'est-à-dire les choix graphiques qui ne sortent ni de l'éphéméride ni d'une loi physique. Elle viendra avec le simulateur. Pour l'instant la page ne montre que des nombres, et elle fonctionne sans une ligne de JavaScript.</p>
+
+  <h2>Vérifier plutôt que croire</h2>
+
+  <p>Un calcul d'éphémérides ne vaut que confronté à autre chose que lui-même. Les quatre contacts, la magnitude, l'obscuration, la hauteur et l'azimut du Soleil ont été comparés, pour les trois lieux, à des valeurs publiées relevées avant que le calcul ne soit fait. Le plus grand écart sur un instant de contact est de 3,2 secondes — sur C3 à Reykjavík, où les sources publiées ne s'accordent d'ailleurs pas entre elles à mieux qu'une dizaine de secondes.</p>
+
+  <p>Le rapport dit aussi ce qu'il ne couvre pas, et cette partie-là est la plus utile : Paris ne repose que sur une seule source à la seconde, et le point exact désigné par chaque ville n'est pas publié. Rien n'oblige à me croire sur parole.</p>
+
+  <p><a href="https://github.com/VNAZZARENO/nazzareno.fr/blob/main/tools/eclipse/VALIDATION.md">Le rapport de validation, sur GitHub →</a></p>
+
+  <p class="aside">Tous les nombres de cette page sortent du même fichier, <a href="/assets/data/eclipse-2026-08-12.json">eclipse-2026-08-12.json</a> : une image toutes les vingt secondes, de cinq minutes avant C1 à cinq minutes après C4.</p>
+
+  <p class="backlink"><a href="/#projets">← retour aux projets</a></p>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Vincent Nazzareno</span>
+    <nav>
+      <a href="/mentions-legales.html">mentions légales</a>
+      <a href="/politique-confidentialite.html">confidentialité</a>
+      <a href="/en/projects/eclipse.html">english</a>
+    </nav>
+  </div>
+</footer>
+
+<script data-goatcounter="https://nazzareno.goatcounter.com/count"
+        async src="https://gc.zgo.at/count.js"></script>
+
+</body>
+</html>

@@ -528,3 +528,90 @@ figure.plate figcaption a {
 .legal li + li {
   margin-top: 0.35rem;
 }
+
+/* ---- simulateur d'eclipse ---- */
+
+.sim {
+  margin: 1.5rem 0;
+}
+
+/* huit colonnes ne tiennent pas dans les 43rem de .wrap: la table defile
+   toute seule, jamais le corps de la page. tabindex la rend atteignable au
+   clavier, sans quoi le defilement serait reserve a la souris. */
+.sim .scroller {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.sim .scroller:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+table.contacts {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  margin: 1rem 0;
+}
+table.contacts caption {
+  font-family: var(--serif);
+  font-size: 0.875rem;
+  color: var(--ink-soft);
+  text-align: left;
+  padding-bottom: 0.6rem;
+  /* la legende appartient a la table, donc elle se replierait sur la largeur
+     de la table (900 px) et non sur celle de la fenetre: sur un telephone, la
+     moitie partirait hors champ. On la borne a la largeur visible et on
+     l'epingle a gauche pour qu'elle reste lisible quand la table defile. */
+  position: sticky;
+  left: 0;
+  max-width: min(100vw, 43rem);
+}
+table.contacts th,
+table.contacts td {
+  border-bottom: 1px solid var(--rule);
+  padding: 0.5rem 0.6rem;
+  text-align: right;
+  vertical-align: top;
+  white-space: nowrap;
+}
+table.contacts th:first-child,
+table.contacts td:first-child {
+  text-align: left;
+  font-family: var(--serif);
+}
+table.contacts thead th {
+  color: var(--ink-soft);
+  font-weight: 500;
+  vertical-align: bottom;
+}
+table.contacts td.absent {
+  color: var(--ink-soft);
+  text-align: center;
+  font-style: italic;
+}
+
+/* glose d'en-tete et fuseau: lus a voix haute avec la cellule, discrets a l'oeil */
+table.contacts .gloss {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+  white-space: normal;
+  max-width: 9rem;
+}
+table.contacts thead .gloss {
+  margin-top: 0.15rem;
+}
+table.contacts .utc {
+  display: block;
+  font-size: 0.6875rem;
+  color: var(--ink-soft);
+}
+.sim .sim-note {
+  font-size: 1rem;
+  color: var(--ink-soft);
+}
