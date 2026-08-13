@@ -1406,9 +1406,8 @@ git commit -m "Integrer la page eclipse au site et au sitemap"
   "sites": [{
     "id": "essai", "name_fr": "Essai", "name_en": "Test",
     "lat": 0.0, "lon": 0.0, "elevation_m": 0.0, "tz": "UTC",
-    "contacts": {"c1": "2026-08-12T17:00:00Z", "c2": null, "c3": null,
-                 "c4": "2026-08-12T17:00:40Z"},
-    "t0_utc": "2026-08-12T17:00:00Z", "step_s": 20,
+    "contacts": {"c1": 0, "c2": null, "c3": null, "c4": 40},
+    "t0_utc": "2026-08-12T17:00:00Z", "step_s": 20, "t_max_s": 20,
     "frames": [
       [10.0, 30.0, 10.0, 29.0, 0.26, 0.27, 0.0, 0.0, 1.0, 1.0, 1.0, 1.5e8, 380000.0],
       [20.0, 32.0, 20.0, 31.0, 0.26, 0.27, 0.5, 0.4, 0.5, 0.5, 0.5, 1.5e8, 380000.0],
@@ -1466,7 +1465,7 @@ test('borne les temps hors fenetre au lieu d extrapoler', () => {
   assert.equal(stateAt(site, 1e6).sunAlt, 34);
 });
 
-test('les contacts sont convertis en secondes depuis t0', () => {
+test('les contacts sont deja en secondes depuis t0', () => {
   assert.equal(site.contacts.c1, 0);
   assert.equal(site.contacts.c4, 40);
   assert.equal(site.contacts.c2, null);
@@ -1497,21 +1496,13 @@ const CHAMPS = [
 // plus court, sinon un passage par 360 deg produirait un demi-tour complet.
 const AZIMUTS = new Set([0, 2]);
 
-function secondesDepuis(t0Iso, iso) {
-  if (iso === null || iso === undefined) return null;
-  return (Date.parse(iso) - Date.parse(t0Iso)) / 1000;
-}
-
+// Les contacts et t_max_s arrivent deja en secondes depuis t0_utc: c'est
+// build.py qui les a rebases, precisement pour que le navigateur n'ait aucune
+// chaine de date a analyser pour se reperer dans les images.
 export function parseEclipse(brut) {
   return {
     ...brut,
-    sites: brut.sites.map((s) => ({
-      ...s,
-      t0Ms: Date.parse(s.t0_utc),
-      contacts: Object.fromEntries(
-        Object.entries(s.contacts).map(([k, v]) => [k, secondesDepuis(s.t0_utc, v)]),
-      ),
-    })),
+    sites: brut.sites.map((s) => ({ ...s, t0Ms: Date.parse(s.t0_utc) })),
   };
 }
 
