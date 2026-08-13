@@ -170,14 +170,19 @@
 
   <h2>What is computed, what is modelled</h2>
 
-  <p>A simulation without this list is only a picture. Here is where the line falls, as things stand.</p>
+  <p>A simulation without this list is only a picture. Now that the page draws, the line falls in four places.</p>
 
   <ul>
-    <li><strong>Computed.</strong> The positions and apparent diameters of the Sun and the Moon, the four contact times, the magnitude, the obscuration, the Sun's altitude, and the stars and planets above the horizon at maximum. All of it comes from the JPL DE440s ephemeris read with skyfield, as topocentric apparent positions, standard atmospheric refraction included.</li>
-    <li><strong>Modelled from physics.</strong> The Sun's limb darkening, through the quadratic law of Pierce &amp; Slaughter (1977) taken at the wavelengths of the three sRGB primaries. That is what gives the residual flux per channel quoted above. It is a model of the Sun, not a measurement of 12 August.</li>
+    <li><strong>Computed.</strong> The positions and apparent diameters of the Sun and the Moon, the four contact times, the magnitude, the obscuration, the Sun's altitude, and the stars and planets above the horizon. All of it comes from the JPL DE440s ephemeris read with skyfield, as topocentric apparent positions, standard atmospheric refraction included. One caveat about those stars: they are worked out for the instant of greatest eclipse alone, not frame by frame. Over the hundred seconds of totality the sky turns by about 0.4°, roughly the size of the blob that stands in for a star on screen; running the timeline through does not visibly drift them, though it is not exact either.</li>
+
+    <li><strong>Modelled from physics.</strong> The Sun's limb darkening, through the quadratic law of Pierce &amp; Slaughter (1977) taken at the wavelengths of the three sRGB primaries — that is what gives the residual flux per channel quoted above. Then Rayleigh scattering, Mie scattering and absorption by ozone, which together give the sky its luminance, and the geometry of the shadow cone, which sets how much of the Sun is still visible at every point of the atmosphere the ray crosses. One approximation in there is deliberate, and I would rather write it down: the multiple-scattering term is driven not by the flux at the point but by its average over ±50 km around it. Light that has bounced two or three times before reaching a spot under the shadow comes from a region a hundred kilometres across, much of which is still in full sun; driving that term with the flux at the point alone would dig a black hole where there is a ring of twilight.</li>
+
+    <li><strong>Transformed for display.</strong> The exposure is fixed and the same in both panels, and the transfer curve is deliberately logarithmic: it models the four stops of eye adaptation discussed above. A literal rendering would have made Paris five times darker than an ordinary sky — which is what a camera on fixed settings records, not what anyone standing there saw. Nothing adapts to the content of the image: the same function everywhere, always. Auto-exposure would lift the dark panel and rub out precisely what the page has to show; here the contrast between Paris and Palma is preserved in <em>perceived</em> terms.</li>
+
+    <li><strong>Stylised, and said to be.</strong> The corona follows the van de Hulst and Baumbach radial law, with procedural streamers on top: a plausible corona for a solar maximum, not an observation of 12 August. Baily's beads come out of a lunar limb relief whose amplitude is real and whose profile is invented: the instant is true, the pattern is not. Planet brightnesses are assigned rather than computed; every star is the same colour; the horizon is a deliberately abstract plane, with no relief and no texture. And the telephoto inset applies no atmospheric extinction: in Palma, 2.6° up and under some twenty air masses, the real disc was deep red and the real corona far fainter than the inset shows. Its job is to let you check a geometry, not to redo the photometry the wide panel already handles.</li>
   </ul>
 
-  <p>A third category is missing for as long as this page draws nothing: what would be <em>rendered</em>, meaning the graphic choices that come neither from the ephemeris nor from a law of physics. It arrives with the simulator. For now the page shows numbers and nothing else, and it runs without a line of JavaScript.</p>
+  <p>The page still works without a line of JavaScript, and without WebGL 2: the simulator then steps aside for the fallback image it produced itself, and the contacts table stays whole.</p>
 
   <h2>Check rather than believe</h2>
 

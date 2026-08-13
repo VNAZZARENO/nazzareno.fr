@@ -42,12 +42,16 @@ export async function init(racine) {
   const canvas = racine.querySelector('canvas.sim-canvas');
   if (!canvas) return;
 
-  // Route de service commandee par la barre d'adresse, sans le moindre effet
-  // — ni cout — sur la page ordinaire : ?poster=1 fabrique l'image de repli
-  // AVEC le simulateur lui-meme, plutot que de dessiner a cote une
-  // illustration qui divergerait au premier changement de shader.
+  // Deux routes de service, toutes deux commandees par la barre d'adresse et
+  // sans le moindre effet — ni cout — sur la page ordinaire.
+  //   ?poster=1 fabrique l'image de repli AVEC le simulateur lui-meme, plutot
+  //             que de dessiner a cote une illustration qui divergerait au
+  //             premier changement de shader.
+  //   ?debug=1  affiche le compteur d'images et l'etat courant, de quoi
+  //             verifier de visu que la page ne dessine rien au repos.
   const parametres = new URLSearchParams(location.search);
   const modePoster = parametres.get('poster') === '1';
+  const modeDebug = parametres.get('debug') === '1';
 
   const gl = createContext(canvas, { preserveDrawingBuffer: modePoster });
   if (!gl) return; // pas de WebGL2 utilisable : on reste sur le HTML statique
@@ -194,11 +198,26 @@ export async function init(racine) {
     };
   }
 
+  // ---- instrumentation ?debug=1 -------------------------------------------
+  // Le compteur d'appels de dessin passe par gl.drawArrays lui-meme plutot que
+  // par un nombre ecrit a la main dans dessiner() : il compte ce que le pilote
+  // a reellement recu, encart et LUTs compris. Le remplacement de la methode
+  // n'existe que sous ?debug=1, jamais en production.
+  let appelsDessin = 0;
+  if (modeDebug) {
+    const dessinOriginal = gl.drawArrays.bind(gl);
+    gl.drawArrays = (mode, premier, nombre) => {
+      appelsDessin++;
+      dessinOriginal(mode, premier, nombre);
+    };
+  }
+
   // Deux panneaux, deux lieux, UN instant absolu. Chaque site convertit cet
   // instant en ses propres secondes locales via son t0_utc ; c'est la seule
   // chose qui rend la comparaison honnete. Tout le reste sort tel quel des
   // ephemerides : positions, rayons, distances et flux.
   function dessiner() {
+    appelsDessin = 0;
     const sites = [siteDe(etat.siteGauche), siteDe(etat.siteDroit)];
     const cadres = zones();
     for (let i = 0; i < 2; i++) {
@@ -241,10 +260,65 @@ export async function init(racine) {
     }
     // Compteur de verification du drapeau dirty, actif seulement derriere
     // un flag explicite : jamais de cout ni de bruit en production.
-    if (window.__ECLIPSE_DEBUG__) {
+    if (modeDebug || window.__ECLIPSE_DEBUG__) {
       window.__eclipseDessins = (window.__eclipseDessins || 0) + 1;
     }
   }
+
+  // ---- superposition de debogage ------------------------------------------
+  // Images par seconde, appels de dessin de la derniere image, taille de la
+  // memoire tampon, et les valeurs courantes des deux panneaux. C'est de quoi
+  // constater de visu l'engagement principal du projet : au repos, le compteur
+  // d'images par seconde tombe a zero et le total cesse de monter.
+  function creerDebug() {
+    const boite = document.createElement('div');
+    boite.className = 'sim-debug';
+    boite.setAttribute('aria-hidden', 'true'); // doublon des <output>, pas une information de plus
+    racine.append(boite);
+
+    let total = 0;
+    let derniersAppels = 0;
+    const horodatages = []; // instants des dessins de la derniere seconde
+
+    const ligne = (id) => {
+      const site = siteDe(id);
+      const t = secondesLocales(site, etat.instantMs);
+      const e = stateAt(site, t);
+      return `${site.id.padEnd(9)} t=${t.toFixed(0).padStart(4)}s`
+        + ` h=${e.sunAlt.toFixed(2)}° az=${e.sunAz.toFixed(2)}°`
+        + ` mag=${e.magnitude.toFixed(3)} obs=${(e.obscuration * 100).toFixed(2)}%`
+        + ` flux=${e.fluxR.toExponential(2)}/${e.fluxG.toExponential(2)}/${e.fluxB.toExponential(2)}`;
+    };
+
+    function ecrire() {
+      const maintenant = performance.now();
+      while (horodatages.length && maintenant - horodatages[0] > 1000) horodatages.shift();
+      boite.textContent = [
+        `${horodatages.length} img/s · ${total} image(s) dessinee(s) au total`,
+        `${derniersAppels} appel(s) de dessin a la derniere image`,
+        `tampon ${canvas.width}×${canvas.height} · dpr ${(window.devicePixelRatio || 1).toFixed(2)}`,
+        `regard ${etat.azimutRegard >= 0 ? '+' : ''}${etat.azimutRegard.toFixed(1)}° · ${etat.enLecture ? 'lecture' : 'arret'}`,
+        ligne(etat.siteGauche),
+        ligne(etat.siteDroit),
+      ].join('\n');
+    }
+
+    // La fenetre glissante doit retomber a zero quand plus rien n'est dessine,
+    // donc il faut un reveil periodique independant du rendu. Ce minuteur est
+    // le seul travail recurrent de toute la page, et il n'existe que sous
+    // ?debug=1 : la mesure du repos ne doit pas etre faite par ce qui l'empeche.
+    setInterval(ecrire, 250);
+    ecrire();
+
+    return (appels) => {
+      total++;
+      derniersAppels = appels;
+      horodatages.push(performance.now());
+      ecrire();
+    };
+  }
+
+  const noterDessin = modeDebug ? creerDebug() : null;
 
   // ---- route ?poster=1 -----------------------------------------------------
   // Une seule image, encodee en PNG et telechargee. C'est cette image-la qui
@@ -277,6 +351,7 @@ export async function init(racine) {
     if (etat.sale && (modePoster || (etat.visible && !document.hidden))) {
       dessiner();
       etat.sale = false;
+      if (noterDessin) noterDessin(appelsDessin);
       if (modePoster && !posterExporte) exporterPoster();
     }
     requestAnimationFrame(boucle);

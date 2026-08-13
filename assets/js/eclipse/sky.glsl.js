@@ -340,9 +340,10 @@ vec3 sol(vec3 p) {
 // SIMPLIFICATION ASSUMEE, a noter explicitement: uAstres vient de sky_at_max,
 // calcule par les ephemerides JPL a l'instant du maximum d'eclipse SEULEMENT
 // -- pas image par image. Sur les ~100 s de la totalite le ciel tourne
-// d'environ 0,4 deg, tres en dessous du rayon de la tache gaussienne
-// ci-dessous (RAYON_ASTRE): rejouer toute la fenetre ne fait donc pas deriver
-// les astres de facon perceptible, meme si ce n'est pas non plus exact.
+// d'environ 0,4 deg, soit l'ordre de grandeur de la tache gaussienne ci-dessous
+// (RAYON_ASTRE = 0,35 deg d'ecart-type, donc une tache large de l'ordre du
+// degre a l'ecran): rejouer toute la fenetre ne fait donc pas deriver les
+// astres de facon perceptible, meme si ce n'est pas non plus exact.
 //
 // Chaque astre est une petite tache gaussienne placee directement dans
 // l'espace ECRAN (azimut, hauteur), pas dans l'espace 3D: c'est exactement la

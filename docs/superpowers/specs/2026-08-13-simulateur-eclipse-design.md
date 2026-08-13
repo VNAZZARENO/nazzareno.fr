@@ -313,8 +313,22 @@ Objectif : au repos, la page ne doit rien coûter de plus qu'un article du site.
   onglet inactif.
 - **`prefers-reduced-motion`** : pas de lecture automatique, une image rendue par changement de
   la frise, aucune animation continue.
-- **Budget** : JSON + JS + shaders ≈ 60–90 Ko compressés. Aucune requête vers un tiers, aucun
-  script externe, cohérent avec le reste du site.
+- **Budget** : JSON + JS + shaders, **92 576 octets compressés** — mesuré, pas estimé. Aucune
+  requête vers un tiers, aucun script externe, cohérent avec le reste du site.
+
+  Cette ligne annonçait « ≈ 60–90 Ko » ; la mesure de la tâche 24, simulateur complet, la
+  dépasse et le chiffre remplace donc la fourchette. Le JSON pèse 50 476 octets gzippés
+  (`gzip -c assets/data/eclipse-2026-08-12.json | wc -c`). Les onze modules JS, shaders
+  compris, pèsent 37 004 octets concaténés puis gzippés
+  (`cat assets/js/eclipse/*.js | gzip -c | wc -c`) — mais ils sont servis en onze fichiers
+  distincts, et la somme des onze gzip individuels, seule mesure de ce qui passe réellement
+  sur le réseau, vaut 42 100 octets. Total : **92 576 octets**, soit 90,4 Kio, environ 0,5 %
+  au-dessus de l'ancien plafond.
+
+  Le dépassement vient pour l'essentiel de la superposition `?debug=1` de la tâche 24, qui
+  ajoute quelque 2,3 Ko compressés à `main.js` et voyage chez tout le monde alors qu'elle ne
+  sert qu'au développement. C'est un coût assumé et déclaré, pas un oubli. Il n'y a plus de
+  marge : toute donnée ajoutée au JSON demande de rouvrir ce budget explicitement.
 
 Point de vigilance : au nord de l'Espagne le Soleil est très bas, donc les chemins optiques sont
 longs et rasants. La répartition non linéaire des pas doit être vérifiée sur ce cas précis, qui
