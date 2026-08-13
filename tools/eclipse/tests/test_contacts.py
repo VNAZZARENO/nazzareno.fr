@@ -41,3 +41,20 @@ def test_aucun_contact_si_les_disques_ne_se_touchent_jamais():
 def test_les_contacts_sont_ordonnes():
     c = find_contacts(separation_totale, 0.0, 200.0, r_sun=0.26, r_moon=0.27)
     assert c["c1"] < c["c2"] < c["c3"] < c["c4"]
+
+
+def test_totalite_plus_courte_que_le_pas_de_grille_est_detectee():
+    # Totalite d'environ 4 s au milieu d'une fenetre de 8 h: bien plus courte
+    # que le pas de la grille grossiere (28800/2000 = 14.4 s). Le centre est
+    # place exactement entre deux echantillons de la grille (14400 + pas/2)
+    # pour garantir qu'aucun echantillon ne tombe dans la fenetre de totalite:
+    # sans raffinement du minimum, la grille enjambe la totalite et le calcul
+    # repond faussement "partielle".
+    centre = 14407.2
+
+    def separation(t):
+        return abs(t - centre) * 0.005
+    c = find_contacts(separation, 0.0, 28800.0, r_sun=0.26, r_moon=0.27)
+    assert c["c2"] is not None, "totalite courte ratee: minimum non raffine"
+    assert c["c3"] is not None
+    assert c["c2"] < centre < c["c3"]
