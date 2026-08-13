@@ -270,10 +270,22 @@ choix de cette courbe est un choix de véracité autant que d'esthétique.
 - **Exposition identique dans les deux panneaux**, et inchangée quand on change de lieu ou
   d'instant. C'est la condition pour que la comparaison veuille dire quelque chose : deux
   images à la même exposition sont comparables, deux images auto-exposées ne le sont pas.
-- **Courbe filmique** à pied doux, appliquée après l'exposition. Sa compression des hautes
-  lumières et sa remontée des basses jouent le rôle de l'adaptation logarithmique décrite au
-  §4.1 — ce qui est justement pourquoi Paris doit rester lumineux à l'écran sans qu'on triche
-  sur les valeurs sous-jacentes.
+- **Une courbe de transfert qui modélise l'œil**, appliquée après l'exposition, nettement plus
+  logarithmique qu'une courbe filmique ordinaire.
+
+Ce dernier point a été tranché après avoir vu le rendu. Une courbe filmique classique (Hable),
+sur une exposition calibrée en plein jour, affichait Paris cinq fois plus sombre qu'un ciel
+normal — physiquement exact, le rapport de luminance rendu égale le flux calculé à la précision
+de mesure près. Mais c'est le rendu de ce qu'enregistrerait un appareil photo à réglage fixe,
+et la page, elle, raconte ce qu'a vu un témoin. Les deux ne coïncident pas : à 92 %
+d'obscuration, un témoin voyait une soirée ordinaire parce que **son œil adapte environ quatre
+diaphragmes**, ce que l'appareil ne fait pas.
+
+Rendre l'image littérale aurait donc obligé à réécrire le texte pour parler d'un appareil photo,
+en abandonnant le seul fait qui rend le §4.1 intéressant. La courbe compresse donc comme l'œil
+compresse — et reste **fixe et commune aux deux panneaux**, de sorte que l'écart entre Paris et
+Palma est conservé en termes *perçus* plutôt que linéaires. Ce n'est pas une auto-exposition :
+rien ne s'adapte au contenu de l'image, la même fonction est appliquée partout et toujours.
 
 Ce point est mentionné dans le contrat de vérité : ce qu'on voit n'est pas la luminance brute,
 c'est une luminance physique passée dans une courbe fixe et annoncée.
