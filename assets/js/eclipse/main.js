@@ -5,19 +5,31 @@
 // drapeau `sale`. La boucle rAF est la seule a l'abaisser, et seulement apres
 // avoir dessine.
 //
-// A ce stade, dessiner() rend UN panneau plein cadre, avec l'eclipse : la Lune
-// et les distances des ephemerides sont passees au shader, qui evalue l'ombre
-// en chaque point du rayon. Les deux panneaux et les commandes arrivent a la
-// tache 20.
+// A ce stade, dessiner() rend DEUX panneaux, un par lieu, au meme instant
+// absolu : c'est la demonstration de la page. Le decoupage du cadre est ici,
+// le cablage des commandes est dans ui.js, le rendu d'un ciel dans sky.js.
 
 import { createContext } from './gl.js';
 import { loadEclipse, stateAt } from './data.js';
 import { buildLuts } from './luts.js';
 import { createSky } from './sky.js';
+import { createUi, secondesLocales } from './ui.js';
 
 const URL_DONNEES = '/assets/data/eclipse-2026-08-12.json';
 const SITE_GAUCHE = 'paris';
 const SITE_DROIT = 'espagne';
+
+// Ecart d'azimut applique au regard, relativement au Soleil de CHAQUE lieu.
+// Zero (regarder le Soleil en face) rendrait Palma presque noir a la totalite :
+// le Soleil y est a 2,64° de hauteur, l'axe de l'ombre est donc quasi
+// horizontal, et l'anneau crepusculaire se trouve sur les cotes, pas devant.
+// A 35° le Soleil reste franchement dans le champ (108° de large par panneau en
+// paysage, donc au cinquieme gauche du cadre) et les deux tiers droits montrent
+// le ciel encore eclaire hors de l'ombre : a Palma on voit le cone sombre a
+// gauche et le crepuscule s'allumer a droite, a Paris le meme cadrage montre
+// une fin de journee ordinaire. C'est cette comparaison-la que la page doit
+// rendre, pas un rectangle noir.
+const ECART_REGARD_DEG = 35;
 
 export async function init(racine) {
   const canvas = racine.querySelector('canvas.sim-canvas');
@@ -42,20 +54,22 @@ export async function init(racine) {
   const luts = buildLuts(gl);
   const dessinerCiel = createSky(gl);
 
-  // Le site est resolu a chaque image depuis `etat`, et non capture une fois
-  // pour toutes : la tache 20 changera `etat.siteGauche` depuis un selecteur,
-  // et il ne doit y avoir aucun etat de site fige ailleurs.
-  const siteVise = () => eclipse.sites.find((s) => s.id === etat.siteGauche)
-    ?? eclipse.sites[0];
+  // Les sites sont resolus a chaque image depuis `etat`, et non captures une
+  // fois pour toutes : les selecteurs de ui.js ecrivent `etat.siteGauche` et
+  // `etat.siteDroit`, et il ne doit y avoir aucun etat de site fige ailleurs.
+  const siteDe = (id) => eclipse.sites.find((s) => s.id === id) ?? eclipse.sites[0];
 
-  // Etat du simulateur. Rien ne le pilote encore (taches 20+) : on ne fait
-  // que le porter, pour que les prochaines taches n'aient qu'a le lire/ecrire
-  // sans retoucher ce fichier.
+  // Etat du simulateur. `instantMs` est un instant ABSOLU (epoch UTC) et non
+  // des secondes locales : c'est la seule facon de mettre deux lieux dont les
+  // t0_utc different de plusieurs dizaines de minutes sur la meme frise. La
+  // valeur d'ouverture est le maximum d'eclipse du panneau de droite, soit
+  // Palma a 18:31:45 UTC : la page s'ouvre sur ce qu'elle a a montrer.
+  const droitInitial = siteDe(SITE_DROIT);
   const etat = {
     siteGauche: SITE_GAUCHE,
     siteDroit: SITE_DROIT,
-    tSecondes: 0,
-    azimutRegard: 0,
+    instantMs: droitInitial.t0Ms + droitInitial.t_max_s * 1000,
+    azimutRegard: ECART_REGARD_DEG,
     enLecture: false,
     visible: false,
     sale: true, // premier rendu obligatoire
@@ -63,9 +77,8 @@ export async function init(racine) {
 
   const reduireMouvement = window.matchMedia('(prefers-reduced-motion: reduce)');
   // enLecture reste false tant que l'utilisateur n'a rien demande : pas de
-  // lecture automatique, avec ou sans prefers-reduced-motion. On ecoute quand
-  // meme le changement pour que la tache 20 puisse s'y fier sans reecrire
-  // cette logique.
+  // lecture automatique, avec ou sans prefers-reduced-motion. ui.js arrete en
+  // plus une lecture en cours si la preference apparait.
   const surChangementMouvement = () => { etat.sale = true; };
   reduireMouvement.addEventListener('change', surChangementMouvement);
 
@@ -109,30 +122,59 @@ export async function init(racine) {
   // style.css) : getBoundingClientRect() y renverrait 0x0 et figerait la
   // memoire tampon a 1x1 pixel. On revele donc le canevas avant de le
   // dimensionner, jamais apres.
+  // Les commandes sont cablees avant de reveler le simulateur : les selecteurs
+  // sont remplis depuis le JSON, donc jamais vides a l'ecran.
+  createUi({ racine, canvas, eclipse, etat, onChange: () => { etat.sale = true; } });
+
   racine.dataset.webgl = 'ok';
   window.addEventListener('resize', redimensionner);
   redimensionner();
 
-  // Un seul panneau, plein cadre ; le second arrive a la tache 20. Le flux
-  // n'est plus force a 1 : il vient de stateAt, donc du pipeline hors ligne,
-  // et la Lune est desormais passee au shader, qui evalue l'ombre le long du
-  // rayon. Tout ce qui est envoye ici sort tel quel des ephemerides.
+  // Decoupage du cadre en deux panneaux. En paysage ils sont cote a cote, et
+  // sous 48rem la feuille de style bascule le cadre en 4/5 : le cadre devient
+  // plus haut que large et les panneaux s'empilent. On lit donc la forme de la
+  // memoire tampon plutot que de dupliquer le point de rupture en JS.
+  // L'origine des zones est en bas a gauche (comme gl.viewport), d'ou le
+  // panneau « gauche » place EN HAUT quand on empile.
+  // Le partage est exact (floor + reste) : les deux zones couvrent tous les
+  // pixels, sans gouttiere, donc aucun gl.clear n'est necessaire.
+  function zones() {
+    const l = canvas.width;
+    const h = canvas.height;
+    if (l >= h) {
+      const coupe = Math.floor(l / 2);
+      return [{ x: 0, y: 0, w: coupe, h }, { x: coupe, y: 0, w: l - coupe, h }];
+    }
+    const coupe = Math.floor(h / 2);
+    return [{ x: 0, y: coupe, w: l, h: h - coupe }, { x: 0, y: 0, w: l, h: coupe }];
+  }
+
+  // Deux panneaux, deux lieux, UN instant absolu. Chaque site convertit cet
+  // instant en ses propres secondes locales via son t0_utc ; c'est la seule
+  // chose qui rend la comparaison honnete. Tout le reste sort tel quel des
+  // ephemerides : positions, rayons, distances et flux.
   function dessiner() {
-    const site = siteVise();
-    const instant = stateAt(site, etat.tSecondes);
-    dessinerCiel({
-      sunAz: instant.sunAz,
-      sunAlt: instant.sunAlt,
-      moonAz: instant.moonAz,
-      moonAlt: instant.moonAlt,
-      rSun: instant.rSun,
-      rMoon: instant.rMoon,
-      dSunKm: instant.dSunKm,
-      dMoonKm: instant.dMoonKm,
-      fluxR: instant.fluxR, fluxG: instant.fluxG, fluxB: instant.fluxB,
-      azimutRegard: instant.sunAz + etat.azimutRegard,
-      altitudeObs: site.elevation_m,
-    }, { x: 0, y: 0, w: canvas.width, h: canvas.height }, luts);
+    const sites = [siteDe(etat.siteGauche), siteDe(etat.siteDroit)];
+    const cadres = zones();
+    for (let i = 0; i < 2; i++) {
+      const site = sites[i];
+      const instant = stateAt(site, secondesLocales(site, etat.instantMs));
+      dessinerCiel({
+        sunAz: instant.sunAz,
+        sunAlt: instant.sunAlt,
+        moonAz: instant.moonAz,
+        moonAlt: instant.moonAlt,
+        rSun: instant.rSun,
+        rMoon: instant.rMoon,
+        dSunKm: instant.dSunKm,
+        dMoonKm: instant.dMoonKm,
+        fluxR: instant.fluxR, fluxG: instant.fluxG, fluxB: instant.fluxB,
+        // L'ecart de regard est partage : applique a l'azimut solaire propre a
+        // chaque lieu, il cadre les deux ciels de la meme facon.
+        azimutRegard: instant.sunAz + etat.azimutRegard,
+        altitudeObs: site.elevation_m,
+      }, cadres[i], luts);
+    }
     // Compteur de verification du drapeau dirty, actif seulement derriere
     // un flag explicite : jamais de cout ni de bruit en production.
     if (window.__ECLIPSE_DEBUG__) {

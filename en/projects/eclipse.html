@@ -46,8 +46,36 @@
   <p>The path of totality crossed Iceland, the Atlantic and northern Spain; everywhere else in Europe the Moon took a bite out of the disc and no more. Three places are enough to cover the three ways of living through the same eclipse: a deep partial in Paris, a grazing totality in Palma, a high but short totality in Reykjavík. Everything is computed with <a href="https://rhodesmill.org/skyfield/">skyfield</a> on the JPL DE440s ephemeris, with nothing taken from an ephemeris website.</p>
 
   <div id="eclipse-sim" class="sim">
-    <canvas class="sim-canvas" width="1200" height="520"
-            aria-label="Simulation of the sky during the 12 August 2026 eclipse, seen from two places."></canvas>
+    <canvas class="sim-canvas" width="1200" height="520" tabindex="0"
+            aria-label="Simulation of the sky during the 12 August 2026 eclipse, seen from two places. The left and right arrow keys turn the view."></canvas>
+
+    <div class="sim-controls"
+         data-mot-lecture="Play" data-mot-pause="Pause"
+         data-mot-soleil="Sun" data-mot-magnitude="magnitude"
+         data-mot-obscuration="obscuration"
+         data-mot-hors="outside the computed window">
+      <div class="sim-lieux">
+        <p class="champ">
+          <label for="sim-place-left">Left-hand place</label>
+          <select id="sim-place-left" data-panneau="gauche"></select>
+        </p>
+        <p class="champ">
+          <label for="sim-place-right">Right-hand place</label>
+          <select id="sim-place-right" data-panneau="droit"></select>
+        </p>
+      </div>
+      <p class="sim-frise">
+        <button type="button" data-role="lecture" aria-pressed="false">Play</button>
+        <label class="sr-only" for="sim-instant">Time through the eclipse</label>
+        <input type="range" id="sim-instant" data-role="frise"
+               min="0" max="1000" step="1" value="0">
+      </p>
+      <p class="sim-lectures">
+        <output data-panneau="gauche" for="sim-place-left sim-instant" aria-live="polite"></output>
+        <output data-panneau="droit" for="sim-place-right sim-instant" aria-live="polite"></output>
+      </p>
+    </div>
+
     <div class="scroller" tabindex="0" role="region" aria-labelledby="contacts-caption">
       <table class="contacts">
         <caption id="contacts-caption">Local circumstances computed for the three places.</caption>
