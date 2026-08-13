@@ -146,6 +146,24 @@ header .nav {
   gap: 1rem;
   flex: none;
 }
+/* le groupe de gauche cede la place en premier : c'est le nom qui se tronque,
+   jamais le lien projets ni le bouton contact. */
+header .nav-start {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+header .section {
+  color: var(--ink-soft);
+  white-space: nowrap;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 1px;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+header .section:hover,
+header .section:focus-visible {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
 header .lang {
   color: var(--ink-soft);
   white-space: nowrap;
@@ -171,13 +189,27 @@ header .contact:focus-visible {
   border-color: var(--accent);
   color: var(--paper);
 }
+/* sous 30rem, quatre elements ne tiennent plus : le nom de famille tombe
+   plutot que de finir en points de suspension. */
+@media (max-width: 30rem) {
+  header .brand-rest {
+    display: none;
+  }
+}
 @media (max-width: 26rem) {
   header .wrap {
     gap: 0.6rem;
     font-size: 0.75rem;
+    /* le ruban seul deborde de la gouttiere du corps de page : quatre elements
+       sur 320 px ne passent pas autrement. */
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
   header .nav {
-    gap: 0.65rem;
+    gap: 0.6rem;
+  }
+  header .contact {
+    padding: 0.3rem 0.6rem;
   }
 }
 
