@@ -396,8 +396,11 @@ footer a:hover {
 
 /* ---- articles projet ---- */
 
+/* La marge laterale vient de .wrap, mais ce selecteur est plus specifique et
+   la remettait a zero: sur mobile, le texte de toutes les pages projet
+   touchait le bord de l'ecran. */
 .article main {
-  padding: 3.25rem 0 4rem;
+  padding: 3.25rem 1.5rem 4rem;
   display: flex;
   flex-direction: column;
   gap: 1.1rem;
@@ -527,4 +530,277 @@ figure.plate figcaption a {
 }
 .legal li + li {
   margin-top: 0.35rem;
+}
+
+/* ---- simulateur d'eclipse ---- */
+
+.sim {
+  margin: 1.5rem 0;
+  /* reference de positionnement de la superposition ?debug=1, et d'elle seule */
+  position: relative;
+}
+
+/* huit colonnes ne tiennent pas dans les 43rem de .wrap: la table defile
+   toute seule, jamais le corps de la page. tabindex la rend atteignable au
+   clavier, sans quoi le defilement serait reserve a la souris. */
+.sim .scroller {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.sim .scroller:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+table.contacts {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  margin: 1rem 0;
+}
+table.contacts caption {
+  font-family: var(--serif);
+  font-size: 0.875rem;
+  color: var(--ink-soft);
+  text-align: left;
+  padding-bottom: 0.6rem;
+  /* la legende appartient a la table, donc elle se replierait sur la largeur
+     de la table (900 px) et non sur celle de la fenetre: sur un telephone, la
+     moitie partirait hors champ. On la borne a la largeur visible et on
+     l'epingle a gauche pour qu'elle reste lisible quand la table defile. */
+  position: sticky;
+  left: 0;
+  max-width: min(100vw, 43rem);
+}
+table.contacts th,
+table.contacts td {
+  border-bottom: 1px solid var(--rule);
+  padding: 0.5rem 0.6rem;
+  text-align: right;
+  vertical-align: top;
+  white-space: nowrap;
+}
+table.contacts th:first-child,
+table.contacts td:first-child {
+  text-align: left;
+  font-family: var(--serif);
+}
+table.contacts thead th {
+  color: var(--ink-soft);
+  font-weight: 500;
+  vertical-align: bottom;
+}
+table.contacts td.absent {
+  color: var(--ink-soft);
+  text-align: center;
+  font-style: italic;
+}
+
+/* glose d'en-tete et fuseau: lus a voix haute avec la cellule, discrets a l'oeil */
+table.contacts .gloss {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+  white-space: normal;
+  max-width: 9rem;
+}
+table.contacts thead .gloss {
+  margin-top: 0.15rem;
+}
+table.contacts .utc {
+  display: block;
+  font-size: 0.6875rem;
+  color: var(--ink-soft);
+}
+.sim .sim-note {
+  font-size: 1rem;
+  color: var(--ink-soft);
+}
+
+/* Cache par defaut : tant que main.js n'a pas confirme un contexte WebGL2
+   utilisable, le canevas ne doit strictement rien afficher, ni gener la
+   lecture. C'est data-webgl="ok" qui le revele, jamais l'inverse — la page
+   doit rester identique, table comprise, si JS ou WebGL2 est absent. */
+.sim-canvas {
+  display: none;
+  width: 100%;
+  aspect-ratio: 12 / 5;
+  /* Le glisse horizontal sur le canevas tourne le regard ; le glisse vertical
+     doit rester au defilement de la page, sinon on emprisonne le doigt. */
+  touch-action: pan-y;
+  margin-bottom: 1rem;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: #0d0d0f;
+}
+.sim[data-webgl="ok"] .sim-canvas {
+  display: block;
+}
+
+/* Le poster est l'exacte image miroir du canevas : visible par defaut, cache
+   des que data-webgl="ok" revele le simulateur. Sans JavaScript, sans WebGL2
+   ou sans l'extension de filtrage flottant, c'est lui qui montre ce que la
+   page a a dire ; le tableau des contacts, lui, reste la dans tous les cas.
+   loading="lazy" dans le balisage evite le telechargement quand le simulateur
+   demarre avant que l'image n'approche du champ. */
+.sim-poster {
+  display: block;
+  margin: 0 0 1rem;
+}
+.sim-poster img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: #0d0d0f;
+}
+.sim-poster figcaption {
+  margin-top: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+.sim[data-webgl="ok"] .sim-poster {
+  display: none;
+}
+
+/* Superposition ?debug=1. Aucune page publique ne la porte : elle n'est creee
+   qu'a la demande, par main.js. */
+.sim-debug {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 2;
+  max-width: calc(100% - 1rem);
+  overflow-x: auto;
+  padding: 0.4rem 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  line-height: 1.5;
+  white-space: pre;
+  color: #d7f5c8;
+  background: rgba(0, 0, 0, 0.72);
+  border-radius: 3px;
+  pointer-events: none;
+}
+.sim-canvas:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+/* Sous 48rem les deux panneaux (lieu gauche, lieu droit) s'empilent
+   verticalement plutot que cote a cote : main.js lit la forme du cadre et
+   decoupe en consequence, il n'y a donc qu'un seul point de rupture, ici. */
+@media (max-width: 48rem) {
+  .sim-canvas {
+    aspect-ratio: 4 / 5;
+  }
+}
+
+/* Commandes du simulateur. Comme le canevas, elles n'existent que si main.js a
+   confirme un contexte WebGL2 : sans JavaScript la page reste exactement celle
+   des taches 10 et 11, tableau compris. */
+.sim-controls {
+  display: none;
+}
+.sim[data-webgl="ok"] .sim-controls {
+  display: block;
+  margin-bottom: 1.25rem;
+  /* laisse l'agent utilisateur peindre les commandes natives dans le bon
+     schema : c'est surtout la piste du curseur de frise qui en depend. */
+  color-scheme: light dark;
+}
+
+.sim-controls .sim-lieux,
+.sim-controls .sim-lectures {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem 1.25rem;
+}
+.sim-controls .champ {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.sim-controls label {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  color: var(--ink-soft);
+}
+.sim-controls select,
+.sim-controls button {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  color: var(--ink);
+  background: var(--paper);
+  /* var(--rule) sert de filet de separation partout ailleurs sur le site, et il
+     ne vaut que 1,3 sur le papier : sur un bord de commande c'est en dessous
+     du 3 exige par WCAG 1.4.11, alors que ce trait est la SEULE chose qui dise
+     ou commence le bouton. --ink-soft donne 5,3 en clair et 5,8 en sombre. */
+  border: 1px solid var(--ink-soft);
+  border-radius: 3px;
+  padding: 0.3rem 0.45rem;
+  max-width: 100%;
+}
+.sim-controls button {
+  cursor: pointer;
+  min-width: 6rem;
+}
+.sim-controls select:hover,
+.sim-controls button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.sim-controls :focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.sim-controls .sim-frise {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.75rem 0 0;
+}
+.sim-controls input[type="range"] {
+  flex: 1 1 auto;
+  min-width: 0;
+  accent-color: var(--accent);
+}
+
+.sim-controls .sim-lectures {
+  margin: 0.75rem 0 0;
+}
+.sim-controls output {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+@media (max-width: 48rem) {
+  .sim-controls .sim-lieux,
+  .sim-controls .sim-lectures {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Visible des lecteurs d'ecran, invisible a l'oeil : reserve aux etiquettes
+   dont le role est evident visuellement mais pas dans l'arbre d'accessibilite. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }

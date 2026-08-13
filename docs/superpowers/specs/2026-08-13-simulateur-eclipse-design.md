@@ -135,11 +135,26 @@ contextes — coûteux, plafonnés par le navigateur, et sujets à désynchronis
 
 Deux mécanismes distincts, qu'il ne faut surtout pas confondre — ils jouent en sens opposés.
 
-**Le flux tombe plus vite que l'aire découverte.** Le centre du disque solaire est nettement
-plus brillant que son bord. Or pendant une partielle profonde, la Lune couvre le centre et ne
-laisse qu'un croissant *au limbe*, c'est-à-dire la partie la plus sombre. Le flux réel passe
-donc **sous** la valeur naïve `1 − obscuration`. À 90 % d'obscuration, il reste sensiblement
-moins de 10 % de la lumière.
+**Le flux ne suit pas l'aire découverte — et il s'en écarte dans les deux sens.** Le centre du
+disque solaire est nettement plus brillant que son bord, ce qui produit deux régimes opposés :
+
+- **Au début de l'éclipse**, la Lune mord le disque par le *limbe*, sa partie la plus sombre.
+  Elle retire donc moins de lumière que d'aire, et il reste **plus** que `1 − obscuration`.
+- **En partielle profonde**, la Lune couvre le centre et ne laisse qu'un croissant au limbe.
+  Il reste alors **moins** que `1 − obscuration`. À Paris, au maximum de 92,12 % d'obscuration,
+  il reste 5,4 % du flux vert, contre 7,9 % pour un disque uniforme.
+
+**Où se fait le basculement, et pourquoi on ne peut pas le nommer.** Il est tentant de le
+placer là où le centre du Soleil passe sous le disque lunaire — `d < r☾`, soit exactement une
+magnitude de 0,5. C'est une heuristique, pas un théorème : le croisement est le point où les
+deux *intégrales* s'égalisent, et rien n'oblige ce point à coïncider avec un repère géométrique
+simple. Mesuré sur les données réelles, il tombe vers **33 % d'obscuration**, soit une magnitude
+d'environ 0,44 ; la magnitude 0,5 correspond, elle, à 39 % d'obscuration, déjà au-delà.
+
+Le test d'invariant en tient compte : il vérifie le régime profond au-dessus de la magnitude
+0,5 et le régime initial au-dessous de 0,4, en laissant délibérément la bande intermédiaire
+non asserée — puisque c'est là que se trouve le croisement. Les deux bornes sont donc des
+majorants sûrs, pas la position du basculement.
 
 **L'œil, lui, répond de façon logarithmique.** C'est cela, et non l'assombrissement centre-bord,
 qui explique qu'une partielle à 90 % se vive comme une journée à peine voilée. Un facteur dix
@@ -255,10 +270,22 @@ choix de cette courbe est un choix de véracité autant que d'esthétique.
 - **Exposition identique dans les deux panneaux**, et inchangée quand on change de lieu ou
   d'instant. C'est la condition pour que la comparaison veuille dire quelque chose : deux
   images à la même exposition sont comparables, deux images auto-exposées ne le sont pas.
-- **Courbe filmique** à pied doux, appliquée après l'exposition. Sa compression des hautes
-  lumières et sa remontée des basses jouent le rôle de l'adaptation logarithmique décrite au
-  §4.1 — ce qui est justement pourquoi Paris doit rester lumineux à l'écran sans qu'on triche
-  sur les valeurs sous-jacentes.
+- **Une courbe de transfert qui modélise l'œil**, appliquée après l'exposition, nettement plus
+  logarithmique qu'une courbe filmique ordinaire.
+
+Ce dernier point a été tranché après avoir vu le rendu. Une courbe filmique classique (Hable),
+sur une exposition calibrée en plein jour, affichait Paris cinq fois plus sombre qu'un ciel
+normal — physiquement exact, le rapport de luminance rendu égale le flux calculé à la précision
+de mesure près. Mais c'est le rendu de ce qu'enregistrerait un appareil photo à réglage fixe,
+et la page, elle, raconte ce qu'a vu un témoin. Les deux ne coïncident pas : à 92 %
+d'obscuration, un témoin voyait une soirée ordinaire parce que **son œil adapte environ quatre
+diaphragmes**, ce que l'appareil ne fait pas.
+
+Rendre l'image littérale aurait donc obligé à réécrire le texte pour parler d'un appareil photo,
+en abandonnant le seul fait qui rend le §4.1 intéressant. La courbe compresse donc comme l'œil
+compresse — et reste **fixe et commune aux deux panneaux**, de sorte que l'écart entre Paris et
+Palma est conservé en termes *perçus* plutôt que linéaires. Ce n'est pas une auto-exposition :
+rien ne s'adapte au contenu de l'image, la même fonction est appliquée partout et toujours.
 
 Ce point est mentionné dans le contrat de vérité : ce qu'on voit n'est pas la luminance brute,
 c'est une luminance physique passée dans une courbe fixe et annoncée.
@@ -286,8 +313,22 @@ Objectif : au repos, la page ne doit rien coûter de plus qu'un article du site.
   onglet inactif.
 - **`prefers-reduced-motion`** : pas de lecture automatique, une image rendue par changement de
   la frise, aucune animation continue.
-- **Budget** : JSON + JS + shaders ≈ 60–90 Ko compressés. Aucune requête vers un tiers, aucun
-  script externe, cohérent avec le reste du site.
+- **Budget** : JSON + JS + shaders, **92 576 octets compressés** — mesuré, pas estimé. Aucune
+  requête vers un tiers, aucun script externe, cohérent avec le reste du site.
+
+  Cette ligne annonçait « ≈ 60–90 Ko » ; la mesure de la tâche 24, simulateur complet, la
+  dépasse et le chiffre remplace donc la fourchette. Le JSON pèse 50 476 octets gzippés
+  (`gzip -c assets/data/eclipse-2026-08-12.json | wc -c`). Les onze modules JS, shaders
+  compris, pèsent 37 004 octets concaténés puis gzippés
+  (`cat assets/js/eclipse/*.js | gzip -c | wc -c`) — mais ils sont servis en onze fichiers
+  distincts, et la somme des onze gzip individuels, seule mesure de ce qui passe réellement
+  sur le réseau, vaut 42 100 octets. Total : **92 576 octets**, soit 90,4 Kio, environ 0,5 %
+  au-dessus de l'ancien plafond.
+
+  Le dépassement vient pour l'essentiel de la superposition `?debug=1` de la tâche 24, qui
+  ajoute quelque 2,3 Ko compressés à `main.js` et voyage chez tout le monde alors qu'elle ne
+  sert qu'au développement. C'est un coût assumé et déclaré, pas un oubli. Il n'y a plus de
+  marge : toute donnée ajoutée au JSON demande de rouvrir ce budget explicitement.
 
 Point de vigilance : au nord de l'Espagne le Soleil est très bas, donc les chemins optiques sont
 longs et rasants. La répartition non linéaire des pas doit être vérifiée sur ce cas précis, qui
@@ -323,9 +364,11 @@ Trois lieux disponibles, deux affichés à la fois.
 
 1. **Paris** — partielle profonde. Le jour tient bon malgré une occultation massive : c'est la
    moitié gauche par défaut, et la démonstration visuelle du §4.1.
-2. **Un point du nord de l'Espagne** — totalité au ras de l'horizon, la signature de cette
-   éclipse-là. Moitié droite par défaut. Ville arrêtée après calcul, sur le critère d'une
-   totalité franche à basse altitude solaire.
+2. **Palma de Majorque** — totalité au ras de l'horizon, la signature de cette éclipse-là :
+   Soleil à 2,6° d'altitude, totalité de 1 min 36 s, magnitude 1,015. Moitié droite par défaut.
+   Retenue parmi huit candidates espagnoles sur le critère de l'altitude solaire la plus basse
+   assortie d'une totalité franche — Valence descend aussi sous 5°, mais sa totalité d'une
+   minute la place trop près de la limite de la bande.
 3. **Reykjavík** — totalité avec le Soleil à bonne hauteur, sélectionnable dans l'un ou l'autre
    panneau. Il n'ajoute rien à la démonstration, mais c'est le seul des trois où l'anneau de
    crépuscule à 360° est pleinement lisible : en Espagne le Soleil frise l'horizon, et l'anneau
@@ -385,12 +428,27 @@ Le site n'a pas de chaîne de test, et ce n'est pas ce projet qui doit en introd
 validation porte donc là où elle a du sens : sur les chiffres.
 
 - **`tools/eclipse/validate.py`** compare les contacts et magnitudes calculés aux valeurs
-  publiées par le NASA GSFC (Espenak) pour cette éclipse, avec des tolérances explicites
-  (contacts < 5 s, magnitude < 0,002), et écrit le tableau comparatif dans `VALIDATION.md`.
-  Le rapport est versionné : l'affirmation « vrai » devient vérifiable par un lecteur.
-- **Invariants** vérifiés par le script : fraction de flux = 1 hors de [C1, C4] ; fraction nulle
-  entre C2 et C3 aux lieux en totalité ; magnitude et obscuration monotones de part et d'autre
-  du maximum ; continuité de l'interpolation aux bornes.
+  publiées (NASA GSFC, EclipseWise, IMCCE, timeanddate) pour cette éclipse, avec des tolérances
+  explicites (contacts < 30 s, magnitude < 0,005), et écrit le tableau comparatif dans
+  `VALIDATION.md`. Le rapport est versionné : l'affirmation « vrai » devient vérifiable.
+
+  La tolérance de 30 s n'est pas de la complaisance : les sources publiées divergent **entre
+  elles** de 5 à 6 s sur les contacts et de 9 s sur l'instant du maximum, notamment parce que
+  le ΔT supposé varie de 69,6 à 75,4 s. Serrer à 5 s reviendrait à mesurer ce désaccord plutôt
+  que notre justesse. Une erreur réelle de la chaîne se compte en minutes, pas en secondes.
+- **Invariants** vérifiés sur les données réellement produites : fraction de flux = 1 hors de
+  [C1, C4] ; fraction nulle entre C2 et C3 aux lieux en totalité ; cohérence de la magnitude et
+  de l'obscuration ; et surtout les **deux régimes** de l'assombrissement centre-bord du §4.1,
+  vérifiés séparément de part et d'autre de la magnitude 0,5.
+
+- **Un piège de réfraction, découvert au calcul.** skyfield annule la réfraction sous −1° de
+  hauteur vraie. Le Soleil franchit ce seuil une vingtaine de secondes avant la Lune : pendant
+  ces secondes, l'un est réfracté et l'autre non, et la séparation des deux disques bondit de
+  0,55°, davantage que la somme de leurs rayons. À Palma, où C4 tombe une demi-heure après le
+  coucher du Soleil, l'artefact tombait en pleine phase partielle et produisait une image de
+  Soleil intact. Les deux astres sont donc soulevés du **même** angle, celui du Soleil : la
+  réfraction ne doit pas toucher la géométrie relative, seule la hauteur apparente. Les astres
+  du ciel, eux, sont éloignés les uns des autres et reçoivent chacun la leur.
 - **Surcouche `?debug=1`** dans la page : images par seconde, nombre d'appels de dessin, valeurs
   courantes. Sert aussi bien au réglage visuel qu'à la vérification de la §5.
 - **Vérifications manuelles** consignées : les deux thèmes, mobile et bureau, sans JavaScript,

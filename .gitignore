@@ -1,2 +1,8 @@
 .previews/
 Pasted*
+
+.venv/
+*.bsp
+hip_main.dat
+__pycache__/
+.pytest_cache/
