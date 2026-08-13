@@ -135,11 +135,19 @@ contextes — coûteux, plafonnés par le navigateur, et sujets à désynchronis
 
 Deux mécanismes distincts, qu'il ne faut surtout pas confondre — ils jouent en sens opposés.
 
-**Le flux tombe plus vite que l'aire découverte.** Le centre du disque solaire est nettement
-plus brillant que son bord. Or pendant une partielle profonde, la Lune couvre le centre et ne
-laisse qu'un croissant *au limbe*, c'est-à-dire la partie la plus sombre. Le flux réel passe
-donc **sous** la valeur naïve `1 − obscuration`. À 90 % d'obscuration, il reste sensiblement
-moins de 10 % de la lumière.
+**Le flux ne suit pas l'aire découverte — et il s'en écarte dans les deux sens.** Le centre du
+disque solaire est nettement plus brillant que son bord, ce qui produit deux régimes opposés :
+
+- **Au début de l'éclipse**, la Lune mord le disque par le *limbe*, sa partie la plus sombre.
+  Elle retire donc moins de lumière que d'aire, et il reste **plus** que `1 − obscuration`.
+- **En partielle profonde**, la Lune couvre le centre et ne laisse qu'un croissant au limbe.
+  Il reste alors **moins** que `1 − obscuration`. À 90 % d'obscuration, le calcul donne 7,1 %
+  de lumière résiduelle en vert, pas 10 %.
+
+Le basculement se produit exactement quand le centre du Soleil passe sous le disque lunaire,
+c'est-à-dire quand `d < r☾`, ce qui équivaut à une magnitude de 0,5 — soit environ 34 %
+d'obscuration. Ce critère est exact, pas empirique, et c'est lui que le test d'invariant
+emploie pour vérifier les deux régimes séparément.
 
 **L'œil, lui, répond de façon logarithmique.** C'est cela, et non l'assombrissement centre-bord,
 qui explique qu'une partielle à 90 % se vive comme une journée à peine voilée. Un facteur dix
@@ -395,9 +403,19 @@ validation porte donc là où elle a du sens : sur les chiffres.
   elles** de 5 à 6 s sur les contacts et de 9 s sur l'instant du maximum, notamment parce que
   le ΔT supposé varie de 69,6 à 75,4 s. Serrer à 5 s reviendrait à mesurer ce désaccord plutôt
   que notre justesse. Une erreur réelle de la chaîne se compte en minutes, pas en secondes.
-- **Invariants** vérifiés par le script : fraction de flux = 1 hors de [C1, C4] ; fraction nulle
-  entre C2 et C3 aux lieux en totalité ; magnitude et obscuration monotones de part et d'autre
-  du maximum ; continuité de l'interpolation aux bornes.
+- **Invariants** vérifiés sur les données réellement produites : fraction de flux = 1 hors de
+  [C1, C4] ; fraction nulle entre C2 et C3 aux lieux en totalité ; cohérence de la magnitude et
+  de l'obscuration ; et surtout les **deux régimes** de l'assombrissement centre-bord du §4.1,
+  vérifiés séparément de part et d'autre de la magnitude 0,5.
+
+- **Un piège de réfraction, découvert au calcul.** skyfield annule la réfraction sous −1° de
+  hauteur vraie. Le Soleil franchit ce seuil une vingtaine de secondes avant la Lune : pendant
+  ces secondes, l'un est réfracté et l'autre non, et la séparation des deux disques bondit de
+  0,55°, davantage que la somme de leurs rayons. À Palma, où C4 tombe une demi-heure après le
+  coucher du Soleil, l'artefact tombait en pleine phase partielle et produisait une image de
+  Soleil intact. Les deux astres sont donc soulevés du **même** angle, celui du Soleil : la
+  réfraction ne doit pas toucher la géométrie relative, seule la hauteur apparente. Les astres
+  du ciel, eux, sont éloignés les uns des autres et reçoivent chacun la leur.
 - **Surcouche `?debug=1`** dans la page : images par seconde, nombre d'appels de dessin, valeurs
   courantes. Sert aussi bien au réglage visuel qu'à la vérification de la §5.
 - **Vérifications manuelles** consignées : les deux thèmes, mobile et bureau, sans JavaScript,
