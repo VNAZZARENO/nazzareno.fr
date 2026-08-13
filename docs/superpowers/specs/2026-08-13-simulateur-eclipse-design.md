@@ -23,10 +23,11 @@ Trois qualités, dans cet ordre de priorité en cas de conflit :
 ### Dans le périmètre
 
 - Une éclipse : celle du 12 août 2026.
-- Trois lieux, présélectionnés (§7).
-- Une frise de temps couvrant C1 → C4, lecture automatique et pilotage manuel.
-- Vue principale : le ciel depuis le sol, avec balayage horizontal du regard.
-- Encart : vue téléobjectif des deux disques à leur taille angulaire réelle.
+- Trois lieux présélectionnés (§7), **affichés deux à la fois, côte à côte, au même instant**.
+- Une frise de temps unique, commune aux deux panneaux, couvrant C1 → C4, en lecture
+  automatique ou en pilotage manuel.
+- Par panneau : le ciel depuis le sol, avec balayage horizontal du regard.
+- Par panneau : un encart téléobjectif des deux disques à leur taille angulaire réelle.
 - Version française et version anglaise.
 - Dégradation complète sans JavaScript et sans WebGL2.
 
@@ -188,7 +189,12 @@ Trois LUT, construites une seule fois au chargement, en rendu vers texture :
 |---|---|---|
 | Transmittance | 256 × 64 | altitude, cosinus de l'angle zénithal de visée |
 | Diffusion multiple | 32 × 32 | altitude, cosinus de l'angle zénithal solaire |
-| Flux ↔ séparation | 256 × 1, RGB | séparation angulaire normalisée |
+| Flux ↔ séparation | 256 × 32, RGB | séparation `d / r☉`, rapport des rayons `r☾ / r☉` |
+
+Les trois LUT sont **indépendantes du lieu** et donc construites une seule fois pour les deux
+panneaux. C'est la raison pour laquelle la table flux ↔ séparation est bidimensionnelle : le
+rapport `r☾ / r☉` diffère d'un lieu à l'autre et au fil du temps, et une table 1D obligerait à
+en reconstruire une par panneau.
 
 **Approximation assumée** : la LUT de diffusion multiple suppose un Soleil uniforme. Sous
 l'ombre, elle est modulée par une fraction de flux *moyennée sur le voisinage* plutôt que
@@ -198,6 +204,19 @@ qui éclaire un point sous l'ombre vient d'une région de cet ordre de grandeur.
 compromis délibéré, et il figure dans le contrat de vérité (§6).
 
 ### 4.4 Le cadre
+
+**Deux panneaux côte à côte, une frise commune.** Le cadre est coupé en deux moitiés, chacune
+montrant un lieu au même instant. C'est la démonstration centrale de la page : à la même
+seconde, Paris est encore en plein jour pendant que l'Espagne est dans la totalité. La §4.1 y
+devient évidente sans qu'on ait besoin de l'expliquer.
+
+Chaque moitié porte son propre sélecteur de lieu parmi les trois. Appariement par défaut :
+**Paris à gauche, Espagne à droite**. Le balayage du regard est *partagé* : un seul décalage
+d'azimut, appliqué relativement à la direction du Soleil propre à chaque lieu, de sorte que les
+deux vues restent comparables. Sous 48 rem, les panneaux s'empilent verticalement.
+
+Le coût en pixels est celui d'une vue unique, puisque chaque panneau occupe la moitié de la
+largeur. Deux appels de dessin au lieu d'un, mais les trois LUT sont partagées.
 
 **Vue ciel.** Caméra au sol, champ large (~120°) en projection équidistante : l'azimut est
 appliqué linéairement à l'abscisse et l'altitude linéairement à l'ordonnée. L'horizon reste donc
@@ -262,14 +281,20 @@ l'horizon, délibérément abstrait.
 
 ## 7. Les trois lieux
 
-Choisis pour couvrir trois régimes distincts :
+Trois lieux disponibles, deux affichés à la fois.
 
-1. **Reykjavík** — totalité, Soleil à une hauteur confortable. Le cas de référence.
+1. **Paris** — partielle profonde. Le jour tient bon malgré une occultation massive : c'est la
+   moitié gauche par défaut, et la démonstration visuelle du §4.1.
 2. **Un point du nord de l'Espagne** — totalité au ras de l'horizon, la signature de cette
-   éclipse-là. Ville arrêtée après calcul, sur le critère d'une totalité franche à basse
-   altitude solaire.
-3. **Paris** — partielle profonde. Le cas pédagogique : le jour tient bon malgré une occultation
-   massive, ce qui démontre visuellement le §4.1.
+   éclipse-là. Moitié droite par défaut. Ville arrêtée après calcul, sur le critère d'une
+   totalité franche à basse altitude solaire.
+3. **Reykjavík** — totalité avec le Soleil à bonne hauteur, sélectionnable dans l'un ou l'autre
+   panneau. Il n'ajoute rien à la démonstration, mais c'est le seul des trois où l'anneau de
+   crépuscule à 360° est pleinement lisible : en Espagne le Soleil frise l'horizon, et l'anneau
+   se confond en partie avec le crépuscule ordinaire.
+
+Le couple **Paris | Espagne** est l'état par défaut au chargement, et celui que rend le poster
+de repli.
 
 Aucun chiffre de magnitude, de durée ou d'altitude n'est écrit à la main dans les pages : tous
 sont repris du JSON produit par le calcul.
@@ -279,8 +304,12 @@ sont repris du JSON produit par le calcul.
 - La frise est un `<input type="range">` natif : clavier fonctionnel sans code supplémentaire.
 - Le balayage du regard est atteignable au clavier (flèches gauche/droite quand le canvas a le
   focus), avec un `:focus-visible` explicite.
-- Un `<output>` en `aria-live="polite"` annonce heure locale, altitude solaire, magnitude et
-  obscuration, à une cadence limitée pour ne pas noyer un lecteur d'écran.
+- Les sélecteurs de lieu sont des `<select>` natifs, un par panneau, chacun étiqueté par le nom
+  du panneau (« lieu de gauche », « lieu de droite »).
+- Un `<output>` en `aria-live="polite"` **par panneau** annonce heure locale, altitude solaire,
+  magnitude et obscuration, à une cadence limitée pour ne pas noyer un lecteur d'écran. C'est
+  aussi ce qui rend la comparaison accessible sans voir l'image : les deux valeurs sont
+  énoncées au même instant.
 - Le canvas porte un `aria-label` décrivant la scène et son état.
 - **Sans WebGL2, ou sans JavaScript** : une image poster **et** le tableau chiffré des contacts
   pour les trois lieux. Le poster est produit par le simulateur lui-même — une route `?poster=1`
