@@ -5,9 +5,10 @@
 // drapeau `sale`. La boucle rAF est la seule a l'abaisser, et seulement apres
 // avoir dessine.
 //
-// A ce stade, dessiner() rend UN panneau plein cadre, sans Lune : un ciel
-// ordinaire, pour verifier le modele de diffusion avant d'y ajouter l'eclipse
-// (tache 18). Les deux panneaux et les commandes arrivent a la tache 20.
+// A ce stade, dessiner() rend UN panneau plein cadre, avec l'eclipse : la Lune
+// et les distances des ephemerides sont passees au shader, qui evalue l'ombre
+// en chaque point du rayon. Les deux panneaux et les commandes arrivent a la
+// tache 20.
 
 import { createContext } from './gl.js';
 import { loadEclipse, stateAt } from './data.js';
@@ -25,13 +26,27 @@ export async function init(racine) {
   const gl = createContext(canvas);
   if (!gl) return; // pas de WebGL2 utilisable : on reste sur le HTML statique
 
+  // La LUT de flux est en RGB32F et le shader du ciel l'echantillonne en
+  // filtrage lineaire (256 texels seulement pour toute la separation, et le
+  // bord de l'ombre n'en couvre que quelques-uns : le plus proche voisin y
+  // ferait des marches bien visibles). Sans cette extension, une texture
+  // flottante filtree en lineaire est INCOMPLETE et toute lecture rend du
+  // noir : le ciel disparaitrait entierement, sans la moindre erreur WebGL.
+  // On prefere donc renoncer, exactement comme pour WebGL2 lui-meme.
+  if (!gl.getExtension('OES_texture_float_linear')) return;
+
   const eclipse = await loadEclipse(URL_DONNEES);
 
   // Les LUT ne dependent ni du lieu ni de l'instant : une seule construction,
   // partagee par tous les panneaux, faite avant la premiere image.
   const luts = buildLuts(gl);
   const dessinerCiel = createSky(gl);
-  const siteGauche = eclipse.sites.find((s) => s.id === SITE_GAUCHE);
+
+  // Le site est resolu a chaque image depuis `etat`, et non capture une fois
+  // pour toutes : la tache 20 changera `etat.siteGauche` depuis un selecteur,
+  // et il ne doit y avoir aucun etat de site fige ailleurs.
+  const siteVise = () => eclipse.sites.find((s) => s.id === etat.siteGauche)
+    ?? eclipse.sites[0];
 
   // Etat du simulateur. Rien ne le pilote encore (taches 20+) : on ne fait
   // que le porter, pour que les prochaines taches n'aient qu'a le lire/ecrire
@@ -98,18 +113,25 @@ export async function init(racine) {
   window.addEventListener('resize', redimensionner);
   redimensionner();
 
-  // Tache 17 : un seul panneau, plein cadre, et pas d'eclipse. Le flux visible
-  // est force a 1 -- c'est-a-dire le Soleil entier -- pour que ce point de
-  // controle ne juge que le modele de diffusion. La Lune arrive a la tache 18,
-  // le second panneau a la tache 20.
+  // Un seul panneau, plein cadre ; le second arrive a la tache 20. Le flux
+  // n'est plus force a 1 : il vient de stateAt, donc du pipeline hors ligne,
+  // et la Lune est desormais passee au shader, qui evalue l'ombre le long du
+  // rayon. Tout ce qui est envoye ici sort tel quel des ephemerides.
   function dessiner() {
-    const instant = stateAt(siteGauche, etat.tSecondes);
+    const site = siteVise();
+    const instant = stateAt(site, etat.tSecondes);
     dessinerCiel({
       sunAz: instant.sunAz,
       sunAlt: instant.sunAlt,
-      fluxR: 1, fluxG: 1, fluxB: 1,
+      moonAz: instant.moonAz,
+      moonAlt: instant.moonAlt,
+      rSun: instant.rSun,
+      rMoon: instant.rMoon,
+      dSunKm: instant.dSunKm,
+      dMoonKm: instant.dMoonKm,
+      fluxR: instant.fluxR, fluxG: instant.fluxG, fluxB: instant.fluxB,
       azimutRegard: instant.sunAz + etat.azimutRegard,
-      altitudeObs: siteGauche.elevation_m,
+      altitudeObs: site.elevation_m,
     }, { x: 0, y: 0, w: canvas.width, h: canvas.height }, luts);
     // Compteur de verification du drapeau dirty, actif seulement derriere
     // un flag explicite : jamais de cout ni de bruit en production.

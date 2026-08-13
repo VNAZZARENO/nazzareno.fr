@@ -20,6 +20,7 @@
 //    relevrait le lieu sombre et effacerait exactement ce qu'il y a a voir.
 
 import { ATMOSPHERE } from './atmosphere.glsl.js';
+import { LUT_D, LUT_RATIO, RATIO_MIN, RATIO_MAX, D_MAX } from './flux.js';
 
 // Exposition FIXE, calibree une fois pour toutes. L'ancrage est le sol
 // ensoleille au zenith -- albedo 0.10, eclaire par le Soleil direct -- qu'on
@@ -40,10 +41,16 @@ out vec4 sortie;
 
 uniform vec4 uZone;             // x, y, largeur, hauteur du panneau, en pixels
 uniform vec3 uSoleil;           // direction unitaire vers le Soleil
-uniform vec3 uFlux;             // flux solaire visible par canal (1 = disque entier)
+uniform vec3 uLune;             // direction unitaire vers la Lune
+uniform vec3 uFlux;             // flux visible CHEZ L'OBSERVATEUR (1 = disque entier)
+uniform float uRSoleil;         // rayon apparent du Soleil, en radians
+uniform float uRLune;           // rayon apparent de la Lune, en radians
+uniform float uDSoleilKm;       // distance du Soleil, en KILOMETRES (source: JPL)
+uniform float uDLuneKm;         // distance de la Lune, en KILOMETRES (source: JPL)
 uniform float uAzimutCentre;    // azimut vise au centre du panneau, en radians
 uniform float uAltitudeObs;     // altitude de l'observateur, en metres
 uniform sampler2D uTransmittance;
+uniform sampler2D uFluxLut;
 
 ${ATMOSPHERE}
 
@@ -63,6 +70,15 @@ const int PAS_AMBIANT = 8;      // pas de l'estimation du ciel vu par le sol
 const float ALBEDO_SOL = 0.10;
 const float EXPOSITION = ${EXPOSITION.toFixed(1)};
 const float PI = 3.14159265;
+
+// Parametrage de la LUT de flux, repris tel quel de flux.js -- ces valeurs ne
+// sont pas recopiees a la main, elles sont interpolees depuis le module qui
+// construit la table. Si elle change de taille ou de bornes, le shader suit.
+const float LUT_D = ${LUT_D}.0;
+const float LUT_RATIO = ${LUT_RATIO}.0;
+const float RATIO_MIN = ${RATIO_MIN.toFixed(6)};
+const float RATIO_MAX = ${RATIO_MAX.toFixed(6)};
+const float D_MAX = ${D_MAX.toFixed(6)};
 
 // Transmittance depuis un point d'altitude alt jusqu'au sommet de
 // l'atmosphere, dans la direction de cosinus zenithal cosZenith. Le
@@ -84,6 +100,72 @@ float intersectionSol(vec3 p, vec3 dir) {
   if (disc < 0.0) return -1.0;
   float t = -b - sqrt(disc);
   return t > 0.0 ? t : -1.0;
+}
+
+// Position de l'observateur dans le repere planetocentrique du raymarch.
+// C'est l'origine a laquelle tous les deplacements de fluxAuPoint sont
+// rapportes -- y compris ceux du ciel estime depuis un point du sol, qui part
+// d'une autre origine mais reste evalue dans le meme cone d'ombre.
+vec3 positionObservateur() {
+  return vec3(0.0, R_SOL + uAltitudeObs, 0.0);
+}
+
+// Fraction du disque solaire encore visible DEPUIS UN POINT DONNE de
+// l'atmosphere, par canal. C'est le coeur de toute la page.
+//
+// Une eclipse ne se rend pas en attenuant le Soleil chez l'observateur: sous
+// l'ombre, la lumiere du ciel vient d'AILLEURS -- d'une atmosphere hors de
+// l'ombre, a des dizaines de kilometres. C'est exactement ce qui produit
+// l'anneau de crepuscule tout autour de l'horizon, signature visuelle de la
+// totalite. Il faut donc connaitre la fraction visible en chaque point du
+// rayon, pas seulement au point de vue.
+//
+// Formulation, exacte au premier ordre et tres bon marche: un deplacement
+// Delta du point d'echantillonnage par rapport a l'observateur decale la
+// direction apparente de la Lune de -Delta_perp / D_lune, et celle du Soleil
+// de -Delta_perp / D_soleil. Comme D_lune vaut environ 3.8e5 km contre 1.5e8
+// km pour D_soleil, c'est la Lune qui domine. La separation apparente en P
+// vaut donc
+//     |(u_soleil - u_lune) + Delta_perp * (1/D_lune - 1/D_soleil)|
+// Le cone d'ombre, sa largeur d'une centaine de kilometres au sol et son
+// inclinaison tombent de cette seule expression, sans aucune geometrie ad hoc.
+//
+// Deux precisions qui ne sont pas des oublis:
+//
+// 1. Les distances arrivent en KILOMETRES (elles viennent du JSON, donc des
+//    ephemerides du JPL) alors que le raymarch travaille en METRES. D'ou le
+//    facteur 1000 ci-dessous: s'en passer changerait la taille de l'ombre de
+//    trois ordres de grandeur.
+//
+// 2. d est calcule comme la longueur de la difference de deux vecteurs
+//    unitaires: c'est une CORDE, pas un angle. Pour des angles de l'ordre du
+//    degre les deux coincident a mieux que 1e-5 en relatif, tres au-dessous de
+//    la resolution de la LUT. L'identification est deliberee.
+//
+// La conversion separation -> flux est faite par la LUT de flux, construite
+// avec le meme modele d'assombrissement centre-bord que le pipeline hors ligne
+// a utilise pour l'observateur: atmosphere et observateur sont donc eclaires
+// par rigoureusement le meme Soleil.
+vec3 fluxAuPoint(vec3 p) {
+  vec3 delta = p - positionObservateur();
+  // Composante perpendiculaire a la ligne de visee. Soleil et Lune sont a
+  // moins d'un degre l'un de l'autre: une seule reference suffit.
+  vec3 perp = delta - uSoleil * dot(delta, uSoleil);
+
+  float parallaxe = 1.0 / (uDLuneKm * 1000.0) - 1.0 / (uDSoleilKm * 1000.0);
+  float d = length((uSoleil - uLune) + perp * parallaxe);
+
+  // Echantillonnage au CENTRE des texels: flux.js place la valeur d'indice i
+  // en d = i/(LUT_D-1) * D_MAX, donc la coordonnee normalisee doit etre
+  // remise a l'echelle (LUT_D-1)/LUT_D et decalee d'un demi-texel. Sans cela
+  // la table entiere serait lue avec un biais d'un demi-texel.
+  float x = clamp(d / (uRSoleil * D_MAX), 0.0, 1.0);
+  float y = clamp((uRLune / uRSoleil - RATIO_MIN) / (RATIO_MAX - RATIO_MIN), 0.0, 1.0);
+  vec2 uv = vec2(
+    (x * (LUT_D - 1.0) + 0.5) / LUT_D,
+    (y * (LUT_RATIO - 1.0) + 0.5) / LUT_RATIO
+  );
+  return texture(uFluxLut, uv).rgb;
 }
 
 // Diffusion simple le long d'un rayon. Rend la lumiere diffusee vers
@@ -120,7 +202,10 @@ vec3 diffusion(vec3 origine, vec3 dir, float portee, int pas, out vec3 transmitt
     // qu'une simple somme au point milieu laisse voir dans les degrades.
     vec3 attenuation = exp(-sigmaE * dt);
     vec3 apport = (sigmaS - sigmaS * attenuation) / sigmaE;
-    lumiere += transmittance * apport * versSoleil * uFlux;
+    // Le flux est evalue ICI, au point d'echantillonnage, et non chez
+    // l'observateur: c'est cette seule ligne qui fait la difference entre un
+    // ciel uniformement attenue et une vraie eclipse.
+    lumiere += transmittance * apport * versSoleil * fluxAuPoint(p);
     transmittance *= attenuation;
   }
   return lumiere;
@@ -132,6 +217,10 @@ vec3 diffusion(vec3 origine, vec3 dir, float portee, int pas, out vec3 transmitt
 vec3 sol(vec3 p) {
   vec3 n = normalize(p);
   float cosSoleil = dot(n, uSoleil);
+  // Ici, et ici seulement, on garde le flux de l'observateur: le sol visible
+  // est a l'altitude de l'observateur et a quelques kilometres au plus, donc
+  // la fraction locale y est la sienne. C'est aussi la valeur exacte issue du
+  // pipeline hors ligne, qu'on ne va pas remplacer par une lecture de LUT.
   vec3 direct = transmittanceVers(0.0, cosSoleil) * max(cosSoleil, 0.0) * uFlux;
 
   // Eclairement du ciel, approxime au premier ordre par un ciel uniforme ayant
@@ -173,7 +262,7 @@ void main() {
   // Repere local: y vers le zenith, x vers l'est, z vers le nord, l'azimut
   // etant compte depuis le nord vers l'est comme dans les donnees.
   vec3 dir = vec3(cos(hauteur) * sin(azimut), sin(hauteur), cos(hauteur) * cos(azimut));
-  vec3 origine = vec3(0.0, R_SOL + uAltitudeObs, 0.0);
+  vec3 origine = positionObservateur();
 
   float versSol = intersectionSol(origine, dir);
   float portee = versSol > 0.0 ? versSol : intersectionSphere(origine, dir, R_ATMO);
