@@ -1,0 +1,16 @@
+{
+  "eclipse": {"id": "test", "label_fr": "test", "label_en": "test"},
+  "source": {"ephemeris": "test", "software": "test"},
+  "sites": [{
+    "id": "essai", "name_fr": "Essai", "name_en": "Test",
+    "lat": 0.0, "lon": 0.0, "elevation_m": 0.0, "tz": "UTC",
+    "contacts": {"c1": 0, "c2": null, "c3": null, "c4": 40},
+    "t0_utc": "2026-08-12T17:00:00Z", "step_s": 20, "t_max_s": 20,
+    "frames": [
+      [10.0, 30.0, 10.0, 29.0, 0.26, 0.27, 0.0, 0.0, 1.0, 1.0, 1.0, 1.5e8, 380000.0],
+      [20.0, 32.0, 20.0, 31.0, 0.26, 0.27, 0.5, 0.4, 0.5, 0.5, 0.5, 1.5e8, 380000.0],
+      [350.0, 34.0, 350.0, 33.0, 0.26, 0.27, 1.0, 1.0, 0.0, 0.0, 0.0, 1.5e8, 380000.0]
+    ],
+    "sky_at_max": {"planets": [], "stars": [], "star_catalogue_available": true}
+  }]
+}
