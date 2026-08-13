@@ -602,6 +602,210 @@ figure.plate figcaption a {
   margin-top: 0;
 }
 
+/* Route de service ?disque=<id> : le canevas seul, carre, plein cadre. Comme
+   ?poster=1 et ?debug=1, elle n'est atteignable que par la barre d'adresse et
+   ne coute rien a la page ordinaire -- c'est main.js qui pose la classe. Elle
+   sert a produire assets/img/eclipse-disque-*.webp avec le shader de l'encart
+   lui-meme, plutot qu'a redessiner a cote trois images qui divergeraient au
+   premier changement de shader. */
+body.vue-disque > header,
+body.vue-disque > footer,
+body.vue-disque main > *:not(#eclipse-sim),
+body.vue-disque #eclipse-sim > *:not(.sim-canvas) {
+  display: none;
+}
+/* main.wrap et non main : .post main.wrap est plus specifique et rendrait
+   sinon ses 46rem, laissant le canevas au milieu d'une page vide. */
+body.vue-disque main.wrap {
+  max-width: none;
+  padding: 0;
+  gap: 0;
+}
+/* .sim porte margin: 1.5rem 0, qui decalerait le canevas vers le bas et ferait
+   sortir sa derniere bande du cadre de capture. */
+body.vue-disque #eclipse-sim {
+  margin: 0;
+}
+body.vue-disque .sim-canvas {
+  aspect-ratio: 1 / 1;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+/* ---- les trois disques au maximum ----
+
+   Trois carres a la MEME echelle: c'est la comparaison qui porte l'information
+   (le croissant parisien, les deux totalites), donc aucun des trois n'est
+   recadre pour mieux remplir son cases. Ils debordent la colonne de prose de
+   40rem pour occuper les 46rem du billet, et s'empilent sous 46rem. */
+.disques {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 1.4rem 0 0.75rem;
+  max-width: none;
+}
+@media (max-width: 46rem) {
+  .disques {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+.disque {
+  margin: 0;
+}
+.disque img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: #000;
+}
+.disque figcaption {
+  margin-top: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.disque figcaption b {
+  display: block;
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.disque figcaption span {
+  display: block;
+}
+.disques-note {
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+/* ---- figures calculees ----
+
+   SVG en ligne, produit par tools/eclipse/figures.py. En ligne et non en
+   <img> : c'est la seule forme qui herite des variables CSS de la page, donc
+   qui existe vraiment dans les DEUX schemas de couleur.
+
+   Les couleurs de serie ne sont pas --accent. Mesure au validateur de palette,
+   le vert bouteille du site tombe sous le plancher de chroma et se lit comme du
+   gris des qu'il porte une courbe. Le couple ci-dessous passe les cinq
+   controles (bande de clarte, chroma, separation daltonienne, plancher en
+   vision normale, contraste >= 3:1) sur le papier ET sur l'encre. */
+
+.fig {
+  margin: 1.4rem 0;
+  max-width: 40rem;
+}
+.fig-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  --serie-a: #0f8f63;
+}
+@media (prefers-color-scheme: dark) {
+  .fig-svg { --serie-a: #199e70; }
+}
+
+.fig-grille {
+  stroke: var(--rule);
+  stroke-width: 1;
+}
+.fig-axe {
+  stroke: var(--ink-soft);
+  stroke-width: 1;
+}
+.fig-trait {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.fig-a { stroke: var(--serie-a); }
+/* Trace de contexte : gris de retrait, pas une seconde couleur de serie. Le
+   mettre a egalite chromatique avec la courbe reelle ferait croire a deux
+   mesures concurrentes, alors que l'une est le sujet et l'autre le repere. */
+.fig-repere,
+.fig-repere-trait {
+  fill: none;
+  stroke: var(--ink-soft);
+  stroke-width: 1.5;
+}
+.fig-repere { stroke-width: 1.5; }
+
+.fig-tick,
+.fig-note,
+.fig-serie {
+  font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  font-size: 12px;
+}
+/* Le texte porte les jetons d'encre, jamais la couleur de la serie : c'est la
+   marque a cote de lui qui porte l'identite. */
+.fig-tick { fill: var(--ink-soft); }
+.fig-tick-y { text-anchor: end; }
+.fig-tick-x { text-anchor: middle; }
+.fig-note { fill: var(--ink); }
+.fig-serie { fill: var(--ink); font-size: 12.5px; }
+.fig-titre { fill: var(--ink-soft); font-family: var(--mono); font-size: 12px; }
+
+/* Anneau dans la couleur du fond plutot qu'un contour : c'est ce qui detache
+   le point quand il tombe pile sur une courbe. */
+.fig-point {
+  fill: var(--ink);
+  stroke: var(--paper);
+  stroke-width: 2;
+}
+
+.fig figcaption {
+  margin-top: 0.55rem;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.fig figcaption em { font-style: italic; }
+
+/* Vue tabulaire de chaque figure. Repliee par defaut, et <details> n'exige pas
+   une ligne de JavaScript : la page tient sa promesse jusque dans les figures. */
+.fig-data {
+  margin-top: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+}
+.fig-data summary {
+  cursor: pointer;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+}
+.fig-data summary:hover { color: var(--ink); }
+.fig-data :focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.fig-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+}
+.fig-table th,
+.fig-table td {
+  border-bottom: 1px solid var(--rule);
+  padding: 0.3rem 0.5rem;
+  text-align: right;
+  white-space: nowrap;
+}
+.fig-table thead th {
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.fig-table th:first-child,
+.fig-table td:first-child { text-align: left; }
+
 /* ---- pages légales ---- */
 
 .legal main {

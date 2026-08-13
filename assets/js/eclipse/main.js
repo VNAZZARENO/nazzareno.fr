@@ -49,11 +49,18 @@ export async function init(racine) {
   //             premier changement de shader.
   //   ?debug=1  affiche le compteur d'images et l'etat courant, de quoi
   //             verifier de visu que la page ne dessine rien au repos.
+  //   ?disque=<id> rend le SEUL encart teleobjectif, plein cadre et carre, au
+  //             maximum du lieu demande. C'est la route qui produit les trois
+  //             images de disque de la page : elles sortent donc du meme shader
+  //             que l'encart du simulateur, et ne peuvent pas en diverger.
   const parametres = new URLSearchParams(location.search);
   const modePoster = parametres.get('poster') === '1';
   const modeDebug = parametres.get('debug') === '1';
+  const idDisque = parametres.get('disque');
 
-  const gl = createContext(canvas, { preserveDrawingBuffer: modePoster });
+  const gl = createContext(canvas, {
+    preserveDrawingBuffer: modePoster || Boolean(idDisque),
+  });
   if (!gl) return; // pas de WebGL2 utilisable : on reste sur le HTML statique
 
   // La LUT de flux est en RGB32F et le shader du ciel l'echantillonne en
@@ -83,8 +90,10 @@ export async function init(racine) {
   // t0_utc different de plusieurs dizaines de minutes sur la meme frise. La
   // valeur d'ouverture est le maximum d'eclipse du panneau de droite, soit
   // Palma a 18:31:45 UTC : la page s'ouvre sur ce qu'elle a a montrer.
-  const idGauche = modePoster ? POSTER_GAUCHE : SITE_GAUCHE;
-  const idDroit = modePoster ? POSTER_DROIT : SITE_DROIT;
+  // La route ?disque impose le lieu aux DEUX panneaux : dessiner() n'en lit
+  // qu'un seul, mais rien ne doit dependre de savoir lequel.
+  const idGauche = idDisque || (modePoster ? POSTER_GAUCHE : SITE_GAUCHE);
+  const idDroit = idDisque || (modePoster ? POSTER_DROIT : SITE_DROIT);
   const droitInitial = siteDe(idDroit);
   const etat = {
     siteGauche: idGauche,
@@ -130,7 +139,7 @@ export async function init(racine) {
   function tailleCible() {
     const rect = canvas.getBoundingClientRect();
     const dpr = window.devicePixelRatio || 1;
-    const echelle = modePoster ? dpr : Math.min(dpr, 1.5) * 0.7;
+    const echelle = (modePoster || idDisque) ? dpr : Math.min(dpr, 1.5) * 0.7;
     return {
       largeur: Math.max(1, Math.round(rect.width * echelle)),
       hauteur: Math.max(1, Math.round(rect.height * echelle)),
@@ -154,6 +163,10 @@ export async function init(racine) {
   createUi({ racine, canvas, eclipse, etat, onChange: () => { etat.sale = true; } });
 
   racine.dataset.webgl = 'ok';
+  // Route de service : la feuille de style efface tout le reste de la page et
+  // rend le canevas carre. Pose APRES data-webgl, sans quoi le canevas serait
+  // encore display:none au moment de le dimensionner.
+  if (idDisque) document.body.classList.add('vue-disque');
   window.addEventListener('resize', redimensionner);
   redimensionner();
 
@@ -218,6 +231,25 @@ export async function init(racine) {
   // ephemerides : positions, rayons, distances et flux.
   function dessiner() {
     appelsDessin = 0;
+
+    // Route ?disque : l'encart seul, sur toute la surface. Pas de ciel, pas de
+    // second panneau. C'est le meme appel que celui du simulateur, avec la meme
+    // source d'ephemerides -- seule la zone change.
+    if (idDisque) {
+      const site = siteDe(idDisque);
+      const instant = stateAt(site, secondesLocales(site, etat.instantMs));
+      dessinerEncart({
+        sunAz: instant.sunAz,
+        sunAlt: instant.sunAlt,
+        moonAz: instant.moonAz,
+        moonAlt: instant.moonAlt,
+        rSun: instant.rSun,
+        rMoon: instant.rMoon,
+        fluxR: instant.fluxR, fluxG: instant.fluxG, fluxB: instant.fluxB,
+      }, { x: 0, y: 0, w: canvas.width, h: canvas.height });
+      return;
+    }
+
     const sites = [siteDe(etat.siteGauche), siteDe(etat.siteDroit)];
     const cadres = zones();
     for (let i = 0; i < 2; i++) {
@@ -345,14 +377,16 @@ export async function init(racine) {
   }
 
   function boucle() {
-    // En mode poster on ne consulte ni l'observateur d'intersection ni la
-    // visibilite de l'onglet : l'image doit sortir meme si le canevas est hors
-    // ecran ou l'onglet en arriere-plan pendant la capture.
-    if (etat.sale && (modePoster || (etat.visible && !document.hidden))) {
+    // En mode poster ou disque on ne consulte ni l'observateur d'intersection ni
+    // la visibilite de l'onglet : l'image doit sortir meme si le canevas est
+    // hors ecran ou l'onglet en arriere-plan pendant la capture.
+    if (etat.sale && (modePoster || idDisque || (etat.visible && !document.hidden))) {
       dessiner();
       etat.sale = false;
       if (noterDessin) noterDessin(appelsDessin);
       if (modePoster && !posterExporte) exporterPoster();
+      // Repere pour la capture automatisee : l'image est a l'ecran.
+      if (idDisque) racine.dataset.disque = 'pret';
     }
     requestAnimationFrame(boucle);
   }
