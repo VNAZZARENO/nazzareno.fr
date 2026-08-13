@@ -396,8 +396,11 @@ footer a:hover {
 
 /* ---- articles projet ---- */
 
+/* La marge laterale vient de .wrap, mais ce selecteur est plus specifique et
+   la remettait a zero: sur mobile, le texte de toutes les pages projet
+   touchait le bord de l'ecran. */
 .article main {
-  padding: 3.25rem 0 4rem;
+  padding: 3.25rem 1.5rem 4rem;
   display: flex;
   flex-direction: column;
   gap: 1.1rem;
