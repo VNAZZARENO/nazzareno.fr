@@ -18,6 +18,11 @@ Fac-simile consulte le **13 aout 2026** :
 <https://articles.adsabs.harvard.edu/pdf/1977SoPh...51...25P>
 (notice : <https://ui.adsabs.harvard.edu/abs/1977SoPh...51...25P/abstract>).
 
+Le fac-simile est une numerisation en mode image, sans couche de texte : les
+tables ont donc ete relues a l'oeil sur un rendu a 600 dpi. A plus basse
+resolution la 5e decimale se confond (un `8` se lit `4`) — qui rouvre ce
+fichier pour verifier un chiffre doit rendre la page a 600 dpi, pas moins.
+
 Observations faites au telescope solaire McMath du Kitt Peak National
 Observatory, 14 journees entre mars 1974 et janvier 1975, corrigees de la
 lumiere diffusee et du seeing. C'est le jeu de coefficients de reference pour
@@ -54,7 +59,8 @@ limbe. La normalisation au centre est automatique puisque
 
 ### Lignes retenues de la Table III
 
-Trois longueurs d'onde de la table, choisies au plus proche des primaires sRGB.
+Critere de choix : pour chacune des trois cibles 610 / 550 / 470 nm, la longueur
+d'onde tabulee la plus proche. Rien d'autre.
 
 | canal | λ (Å) | λ (nm) | A(2) | B(2) | C(2) | u1 | u2 |
 |---|---|---|---|---|---|---|---|
@@ -62,11 +68,18 @@ Trois longueurs d'onde de la table, choisies au plus proche des primaires sRGB.
 | vert  | 5522.00 | 552.200 | 0.29462 | 0.98032 | −0.27494 | **0.43044** | **0.27494** |
 | bleu  | 4683.06 | 468.306 | 0.21495 | 0.99746 | −0.21241 | **0.57264** | **0.21241** |
 
-Les trois lignes verifient `A + B + C = 1.00000` exactement, ce qui sert de
-controle de transcription. (La ligne 4719.00 Å, autre candidate pour le bleu, a
-ete ecartee : sa somme vaut 1.00040 dans le fac-simile, signe d'un chiffre
-douteux a la numerisation. La ligne 5199.30 Å est manifestement corrompue,
-somme 2.00000.)
+Le bleu est le choix le moins bien cale des trois : la table est clairsemee
+dans cette region, et 4683.06 Å ne l'emporte sur 4719.00 Å que de 0.2 nm.
+Par ailleurs la primaire bleue sRGB a une longueur d'onde dominante plutot
+voisine de 465 nm que de 470 nm ; sous ce critere-la c'est 4615.10 Å qui serait
+la plus proche. Mais les trois lignes candidates donnent un limbe compris entre
+0.21391 et 0.21495, soit un demi-pour-cent d'ecart relatif : l'arbitrage ne
+change rien en pratique.
+
+Les trois lignes retenues verifient `A + B + C = 1.00000` exactement, ce qui
+sert de controle de transcription — utile sur un fac-simile de 1977. La ligne
+5199.30 Å, elle, est manifestement corrompue a la numerisation : elle porte
+`B(2) = 1.97674` et somme a 2.00000. Elle n'est pas utilisee ici.
 
 Ce sont ces trois paires `(u1, u2)`, dans cet ordre (rouge, vert, bleu), qui
 constituent `SRGB_LIMB_COEFFS` dans `tools/eclipse/limb.py`. Le miroir
