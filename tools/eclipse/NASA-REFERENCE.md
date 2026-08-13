@@ -245,7 +245,7 @@ plus basse possible. Valeurs relevees pour departager les huit candidates,
 toutes tirees de T&D afin que la comparaison porte sur une seule methode ; la
 duree est l'intervalle C2–C3 lu sur la page.
 
-| ville | hauteur du Soleil au maximum | duree de la totalite | magnitude |
+| ville | hauteur apparente du Soleil au maximum | duree de la totalite | magnitude |
 |---|---|---|---|
 | Oviedo | 10.3° | 1 min 49 s | 1.015 |
 | Leon | 9.7° | 1 min 45 s | 1.013 |
@@ -263,11 +263,12 @@ Barcelone, Paris) ne font pas. WP-fr recense en outre Oviedo, Leon, Burgos,
 Zaragoza et Palma parmi les localites de la totalite ; Valence, Valladolid et
 Palencia n'y figurent pas, cette table n'etant pas exhaustive. L'IGN confirme les
 deux villes basses sur ses propres fiches communales : Palma 2.4° et 1 min 36 s,
-Valence 4.4° et 0 min 60 s (sic).
+Valence 4.4° et 0 min 60 s (sic) — hauteurs geometriques, a ne pas comparer
+directement a la colonne ci-dessus, qui est apparente.
 
 Palma est retenue parce qu'elle est la seule a cumuler les deux : la hauteur de
-Soleil la plus basse de la liste (2.6° au maximum selon T&D, 2.4° selon l'IGN,
-contre 4.5° a Valence et 8.3° a Burgos) **et** une totalite franche — 1 min 36 s,
+Soleil la plus basse de la liste (2.6° de hauteur apparente au maximum, contre
+4.5° a Valence et 8.3° a Burgos) **et** une totalite franche — 1 min 36 s,
 magnitude 1.015, la plus forte des huit candidates a egalite avec Oviedo, donc
 bien a l'interieur du trajet et non sur son bord. Valence, la seule autre a
 passer sous les cinq degres, a une totalite marginale : 1 min 00 s et magnitude
@@ -307,11 +308,16 @@ astronomique. Toute valeur ecrite dans ces deux cases serait fausse.
 
 Instant du maximum et grandeurs au maximum :
 
-| ville | maximum (UTC) | magnitude | obscuration | hauteur du Soleil | azimut |
-|---|---|---|---|---|---|
-| Paris | `2026-08-12T18:17:21Z` | 0.931 (T&D) | 92.1 % / 92.2 % — voir plus bas | 7.7° (T&D) | 284° (T&D) |
-| Reykjavik | `2026-08-12T17:48:48Z` | 1.002 (T&D) | 100 % (totale) | 24.5° (T&D) | 253° (T&D) |
-| Palma | `2026-08-12T18:31:54Z` | 1.015 (T&D) | 100.0 % (IGN) | 2.4° (IGN) / 2.6° (T&D) | 287.3° (IGN) |
+| ville | maximum (UTC) | magnitude | obscuration | hauteur apparente du Soleil | hauteur geometrique | azimut |
+|---|---|---|---|---|---|---|
+| Paris | `2026-08-12T18:17:21Z` | 0.931 (T&D) | 92.1 % / 92.2 % — voir plus bas | 7.7° (T&D) | non publiee | 284° (T&D) |
+| Reykjavik | `2026-08-12T17:48:48Z` | 1.002 (T&D) | 100 % (totale) | 24.5° (T&D) | non publiee | 253° (T&D) |
+| Palma | `2026-08-12T18:31:54Z` | 1.015 (T&D) | 100.0 % (IGN) | 2.6° (T&D) | 2.4° (IGN) | 287.3° (IGN) |
+
+Les deux colonnes de hauteur ne sont pas deux estimations concurrentes d'une
+meme grandeur : voir « Hauteur du Soleil : deux grandeurs, pas deux valeurs »
+ci-dessous. La colonne de reference pour un rendu visuel est la hauteur
+**apparente**.
 
 Pages T&D utilisees, consultees le 13 aout 2026 :
 
@@ -328,8 +334,8 @@ ci-dessus est un simple decalage de fuseau.
 **Palma.** La fiche IGN — source officielle espagnole, calculs de l'Observatorio
 Astronomico Nacional — donne, en heure legale : debut 19:38.1, debut de totalite
 20:31.1, maximum 20:31.9, fin de totalite 20:32.7, coucher du Soleil 20:49.4, fin
-21:22.6 ; duree de la totalite 1 min 36 s, obscuration 100.0 %, hauteur 2.4°,
-azimut 287.3°. Soit en UTC : C1 17:38:06, C2 18:31:06, maximum 18:31:54,
+21:22.6 ; duree de la totalite 1 min 36 s, obscuration 100.0 %, hauteur 2.4°
+(geometrique, voir plus bas), azimut 287.3°. Soit en UTC : C1 17:38:06, C2 18:31:06, maximum 18:31:54,
 C3 18:32:42, C4 19:22:36. **C2, le maximum et C3 tombent a la seconde sur les
 valeurs T&D** ; C1 et C4 s'en ecartent de 2 s. Attention toutefois : l'IGN publie
 au dixieme de minute, soit une quantification de 6 s — la concordance a la
@@ -338,6 +344,42 @@ seconde est en partie un effet de l'arrondi.
 WP-fr (donc vigiacosmos.es) donne pour Palma 19:37:59 / 20:31:00 / 20:32:36,
 c'est-a-dire **5 a 6 s en avance** sur T&D et l'IGN sur les trois contacts. Un
 ecart de cet ordre est exactement ce que la tolerance de 5 s va rencontrer.
+
+#### Hauteur du Soleil : deux grandeurs, pas deux valeurs
+
+Ce fichier signalait initialement, a Palma, un desaccord inexplique sur la
+hauteur du Soleil au maximum : 2.4° a l'IGN contre 2.6° chez T&D. **Ce n'etait
+pas un desaccord.** Les deux sources publient deux grandeurs differentes du meme
+instant :
+
+- **T&D publie la hauteur apparente**, refraction atmospherique comprise — celle
+  a laquelle on voit reellement le Soleil ;
+- **l'IGN publie la hauteur geometrique**, sans refraction — la direction vraie
+  de l'astre.
+
+Pres de l'horizon la refraction releve l'image du Soleil d'environ un quart de
+degre ; l'ecart de 0.2° entre les deux chiffres est de cet ordre. Aucune des deux
+valeurs n'est fausse, et il n'y a pas a arbitrer entre elles : il faut savoir
+laquelle on lit. Precision d'honnetete : **ni l'une ni l'autre des deux pages ne
+declare sa convention** — l'attribution ci-dessus est une conclusion, pas une
+citation.
+
+Comment cela a ete etabli, en toute transparence sur la provenance : **par notre
+propre chaine de calcul**, donc pas par une source publiee. Elle donne pour Palma
+au maximum 2.644° de hauteur apparente et 2.389° de hauteur geometrique,
+c'est-a-dire les deux chiffres publies a 0.05° pres chacun ; et appliquer
+`skyfield.earthlib.refract` a la valeur de l'IGN redonne celle de T&D. Le meme
+schema se retrouve aux deux autres sites, ou le Soleil est assez haut pour que la
+distinction s'efface : Paris 7.713° calcule contre 7.7° chez T&D, Reykjavik
+24.523° contre 24.5°.
+
+Ces trois nombres calcules sont donnes **comme explication de deux valeurs
+publiees, jamais comme valeurs de reference**. Ils ne remplacent ni ne corrigent
+quoi que ce soit dans les tables ci-dessus, qui restent integralement recopiees
+de sources externes. C'est aussi pourquoi `tools/eclipse/VALIDATION.md` classe la
+ligne IGN de la hauteur en « info » et l'exclut de son verdict : comparer notre
+hauteur apparente a une hauteur geometrique publiee reviendrait a comparer deux
+grandeurs distinctes.
 
 **Reykjavik.** IS-sol donne 16:47 / 17:48:19 / 17:48:48 / 17:49:18 / 18:47 : le
 debut de totalite tombe a 1 s de T&D, le maximum et la fin de totalite a la
@@ -379,7 +421,7 @@ minute pres, mais ne constitue pas une verification a la seconde.
 - **Hauteur du Soleil aux contacts pour Palma cote IGN.** Seule celle du maximum
   est donnee.
 
-#### Trois pieges de transcription
+#### Quatre pieges de transcription
 
 1. **Le ΔT n'est pas le meme d'une source a l'autre** : 75.4 s (GSFC), 72.4 s
    (EW), 75.319 s (IMCCE), 69.6 s (T&D), non precise (IGN). C'est un decalage
@@ -397,6 +439,14 @@ minute pres, mais ne constitue pas une verification a la seconde.
    rapport de surfaces. A Paris, magnitude 0.931 et obscuration ~92 % coexistent
    sans se contredire. La clef `magnitude` du dictionnaire de `validate.py` doit
    recevoir la magnitude, pas l'obscuration.
+4. **Pres de l'horizon, « hauteur du Soleil » est ambigu tant que la source ne
+   dit pas si la refraction est comprise.** A Palma l'ecart entre hauteur
+   apparente et hauteur geometrique vaut 0.25° sur une hauteur de 2.6°, soit
+   pres de 10 % : il ne se noie dans aucune tolerance raisonnable. A Reykjavik,
+   Soleil a 24.5°, il devient invisible. C'est donc exactement aux sites qui
+   nous interessent le plus — ceux ou l'eclipse se joue au ras de l'horizon —
+   que le piege se referme. Qui reverifie ces nombres doit d'abord etablir la
+   convention de chaque source, avant de conclure a une erreur.
 
 Enfin, un detail qui compte pour le rendu : **a Palma, C4 (19:22:36 UTC) survient
 apres le coucher du Soleil (20:49.4 en heure legale, soit 18:49:24 UTC, IGN ;
