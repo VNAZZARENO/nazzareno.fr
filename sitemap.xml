@@ -13,6 +13,17 @@
   </url>
 
   <url>
+    <loc>https://nazzareno.fr/projets/eclipse.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://nazzareno.fr/projets/eclipse.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nazzareno.fr/en/projects/eclipse.html"/>
+  </url>
+  <url>
+    <loc>https://nazzareno.fr/en/projects/eclipse.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://nazzareno.fr/projets/eclipse.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nazzareno.fr/en/projects/eclipse.html"/>
+  </url>
+
+  <url>
     <loc>https://nazzareno.fr/projets/recherche-de-signaux.html</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://nazzareno.fr/projets/recherche-de-signaux.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://nazzareno.fr/en/projects/signal-research.html"/>
