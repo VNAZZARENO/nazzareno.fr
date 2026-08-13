@@ -36,7 +36,7 @@
 <main class="wrap">
   <p class="post-date"><time datetime="2026-08-13">Thursday 13 August 2026</time></p>
   <h1>A total eclipse, computed rather than illustrated</h1>
-  <p class="standfirst">On 12 August 2026 Paris lost 92% of its Sun and hardly anyone noticed, while in Palma de Mallorca totality played out two and a half degrees above the sea. What follows was computed, place by place, not copied from somewhere else.</p>
+  <p class="standfirst">On 12 August 2026 Paris lost 92% of its Sun and hardly anyone noticed, while in Palma de Mallorca totality played out two and a half degrees above the sea.</p>
   <p class="facts"><b>Labels</b> <span>skyfield</span>
     <span>JPL DE440s ephemeris</span>
     <span>12 August 2026</span>
@@ -158,7 +158,7 @@
 
   <p>The reason is not in the sky, it is in the eye, whose response is roughly logarithmic. Dividing the flux by eighteen is not seeing eighteen times less: it is a little over four stops, about the gap between full sun and a heavily overcast sky. The pupil opens, adaptation follows, and the brain files the scene under a grey end of day.</p>
 
-  <p>Two mechanisms, then, pulling in opposite directions: the physics of the Sun removes more light than the geometry announces, the physiology of the eye reports far less of it. Confusing the two is the common mistake; separating them is the whole point of computing rather than illustrating. Only totality escapes both, between C2 and C3: nothing is left of the disc, and no amount of adaptation makes up for zero.</p>
+  <p>Two mechanisms, then, pulling in opposite directions: the physics of the Sun removes more light than the geometry announces, the physiology of the eye lets far less of it show. Confusing the two is the common mistake; separating them is the whole point of computing rather than illustrating. Only totality escapes both, between C2 and C3: nothing is left of the disc, and no amount of adaptation makes up for zero.</p>
 
   <h2>Twenty seconds when the Sun was refracted and the Moon was not</h2>
 
@@ -170,10 +170,10 @@
 
   <h2>What is computed, what is modelled</h2>
 
-  <p>A simulation without this list is only a picture. Now that the page draws, the line falls in four places.</p>
+  <p>A simulation without this list is only a picture. Now that the page draws, the line between computation and model falls in four places.</p>
 
   <ul>
-    <li><strong>Computed.</strong> The positions and apparent diameters of the Sun and the Moon, the four contact times, the magnitude, the obscuration, the Sun's altitude, and the stars and planets above the horizon. All of it comes from the JPL DE440s ephemeris read with skyfield, as topocentric apparent positions, standard atmospheric refraction included. One caveat about those stars: they are worked out for the instant of greatest eclipse alone, not frame by frame. Over the hundred seconds of totality the sky turns by about 0.4°, roughly the size of the blob that stands in for a star on screen; running the timeline through does not visibly drift them, though it is not exact either.</li>
+    <li><strong>Computed.</strong> The positions and apparent diameters of the Sun and the Moon, the four contact times, the magnitude, the obscuration, the Sun's altitude, and the stars and planets above the horizon. All of it comes from the JPL DE440s ephemeris read with skyfield, as topocentric apparent positions, standard atmospheric refraction included. One caveat about the stars and planets: they are worked out for the instant of greatest eclipse alone, not frame by frame. Over the hundred seconds of totality the sky turns by about 0.4°, roughly the size of the blob that stands in for a star on screen; running the timeline through does not visibly drift them, though it is not exact either.</li>
 
     <li><strong>Modelled from physics.</strong> The Sun's limb darkening, through the quadratic law of Pierce &amp; Slaughter (1977) taken at the wavelengths of the three sRGB primaries: that is what gives the residual flux per channel quoted above. Then Rayleigh scattering, Mie scattering and absorption by ozone, which together give the sky its luminance, and the geometry of the shadow cone, which sets how much of the Sun is still visible at every point of the atmosphere the ray crosses. One approximation in there is deliberate, and I would rather write it down: the multiple-scattering term is driven not by the flux at the point but by its average over ±50 km around it. Light that has bounced two or three times before reaching a spot under the shadow comes from a region a hundred kilometres across, much of which is still in full sun; driving that term with the flux at the point alone would dig a black hole where there is a ring of twilight.</li>
 

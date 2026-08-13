@@ -36,7 +36,7 @@
 <main class="wrap">
   <p class="post-date"><time datetime="2026-08-13">jeudi 13 août 2026</time></p>
   <h1>Une éclipse totale, calculée plutôt qu'illustrée</h1>
-  <p class="standfirst">Le 12 août 2026, Paris a perdu 92 % de son Soleil sans que grand monde s'en aperçoive, pendant qu'à Palma de Majorque la totalité se jouait à deux degrés et demi au-dessus de la mer. Ce qui suit est calculé, lieu par lieu, pas repris d'ailleurs.</p>
+  <p class="standfirst">Le 12 août 2026, Paris a perdu 92 % de son Soleil sans que grand monde s'en aperçoive, pendant qu'à Palma de Majorque la totalité se jouait à deux degrés et demi au-dessus de la mer.</p>
   <p class="facts"><b>Mots-clés</b> <span>skyfield</span>
     <span>éphémérides JPL DE440s</span>
     <span>12 août 2026</span>
@@ -131,7 +131,7 @@
         </tbody>
       </table>
     </div>
-    <p class="sim-note">Heure locale en haut de chaque case, temps universel en dessous ; le tableau défile horizontalement s'il ne tient pas dans l'écran. La totalité a duré 98,8 s à Palma de Majorque et 65,8 s à Reykjavík. La magnitude est la fraction du diamètre solaire couverte, l'obscuration celle de la surface : elles ne se valent jamais, et c'est la seconde qui compte pour la lumière.</p>
+    <p class="sim-note">Heure locale en haut de chaque case, temps universel en dessous ; le tableau défile horizontalement s'il ne tient pas dans l'écran. La totalité a duré 98,8 s à Palma de Majorque et 65,8 s à Reykjavík. La magnitude est la fraction du diamètre solaire couverte, l'obscuration celle de la surface : elles ne sont jamais égales, et c'est la seconde qui compte pour la lumière.</p>
   </div>
 
   <h2>À Palma, la fin de l'éclipse s'est jouée sous l'horizon</h2>
@@ -158,7 +158,7 @@
 
   <p>La raison n'est pas dans le ciel, elle est dans l'œil, dont la réponse est à peu près logarithmique. Diviser le flux par dix-huit, ce n'est pas voir dix-huit fois moins : c'est un peu plus de quatre crans de diaphragme, l'ordre de grandeur qui sépare un plein soleil d'un ciel bien couvert. La pupille s'ouvre, l'adaptation suit, et le cerveau classe la scène en fin de journée grise.</p>
 
-  <p>Deux mécanismes, donc, qui tirent en sens contraire : la physique du Soleil retire plus de lumière que la géométrie ne l'annonce, la physiologie de l'œil en rend beaucoup moins compte. Les confondre est l'erreur commune ; les distinguer est tout l'intérêt de calculer plutôt que d'illustrer. Seule la totalité échappe aux deux, entre C2 et C3 : il ne reste rien du disque, et aucune adaptation ne rattrape zéro.</p>
+  <p>Deux mécanismes, donc, qui tirent en sens contraire : la physique du Soleil retire plus de lumière que la géométrie ne l'annonce, la physiologie de l'œil en laisse voir beaucoup moins. Les confondre est l'erreur commune ; les distinguer est tout l'intérêt de calculer plutôt que d'illustrer. Seule la totalité échappe aux deux, entre C2 et C3 : il ne reste rien du disque, et aucune adaptation ne rattrape zéro.</p>
 
   <h2>Vingt secondes où le Soleil était réfracté et pas la Lune</h2>
 
@@ -166,14 +166,14 @@
 
   <p>skyfield applique la réfraction atmosphérique astre par astre, et son modèle la coupe net sous −1° de hauteur vraie. Or le Soleil franchit ce seuil une vingtaine de secondes avant la Lune, qui le suit d'un demi-degré. Pendant ces vingt secondes, l'un était relevé par la réfraction et l'autre pas : la séparation apparente des deux disques bondissait de 0,55°, davantage que la somme de leurs rayons. À Palma, où l'éclipse se poursuit après le coucher du Soleil, cet artefact tombait en pleine phase partielle. Une image y aurait montré un Soleil parfaitement libre, au beau milieu de l'éclipse.</p>
 
-  <p>Le calcul relève désormais les deux astres du même angle, celui calculé pour le Soleil. La réfraction ne modifie alors plus la géométrie, seulement la hauteur apparente, ce qu'elle est censée faire. Il subsiste une marche de 0,44° au franchissement du seuil, mais elle affecte les deux astres ensemble, et elle se produit sous l'horizon, là où il n'y a plus rien à voir.</p>
+  <p>Le calcul remonte désormais les deux astres du même angle, celui calculé pour le Soleil. La réfraction ne modifie alors plus la géométrie, seulement la hauteur apparente, ce qu'elle est censée faire. Il subsiste une marche de 0,44° au franchissement du seuil, mais elle affecte les deux astres ensemble, et elle se produit sous l'horizon, là où il n'y a plus rien à voir.</p>
 
   <h2>Ce qui est calculé, ce qui est modélisé</h2>
 
-  <p>Une simulation sans cette liste n'est qu'une image. Maintenant que la page dessine, la frontière passe en quatre endroits.</p>
+  <p>Une simulation sans cette liste n'est qu'une image. Maintenant que la page dessine, la frontière entre le calcul et le modèle passe en quatre endroits.</p>
 
   <ul>
-    <li><strong>Calculé.</strong> Les positions et les diamètres apparents du Soleil et de la Lune, les quatre instants de contact, la magnitude, l'obscuration, la hauteur du Soleil, ainsi que les étoiles et les planètes au-dessus de l'horizon. Tout vient de l'éphéméride JPL DE440s lue avec skyfield, en positions apparentes topocentriques, réfraction atmosphérique standard comprise. Une réserve sur les astres : ils sont calculés pour le seul instant du maximum d'éclipse, et non image par image. Sur la centaine de secondes de la totalité, le ciel tourne d'environ 0,4°, l'ordre de grandeur de la tache qui figure une étoile à l'écran ; parcourir la frise ne les fait donc pas dériver de façon perceptible, sans que ce soit exact pour autant.</li>
+    <li><strong>Calculé.</strong> Les positions et les diamètres apparents du Soleil et de la Lune, les quatre instants de contact, la magnitude, l'obscuration, la hauteur du Soleil, ainsi que les étoiles et les planètes au-dessus de l'horizon. Tout vient de l'éphéméride JPL DE440s lue avec skyfield, en positions apparentes topocentriques, réfraction atmosphérique standard comprise. Une réserve sur les étoiles et les planètes : elles sont calculées pour le seul instant du maximum d'éclipse, et non image par image. Sur la centaine de secondes de la totalité, le ciel tourne d'environ 0,4°, l'ordre de grandeur de la tache qui figure une étoile à l'écran ; parcourir la frise ne les fait donc pas dériver de façon perceptible, sans que ce soit exact pour autant.</li>
 
     <li><strong>Modélisé d'après la physique.</strong> L'assombrissement centre-bord du Soleil, par la loi quadratique de Pierce &amp; Slaughter (1977) prise aux longueurs d'onde des trois primaires sRGB : c'est elle qui donne le flux résiduel canal par canal cité plus haut. Puis la diffusion Rayleigh, la diffusion de Mie et l'absorption par l'ozone, dont sort la luminance du ciel, et la géométrie du cône d'ombre, qui fixe la fraction de Soleil encore visible en chaque point de l'atmosphère traversée par le rayon. Une approximation y est délibérée, et je préfère l'écrire : le terme de diffusion multiple est modulé non par le flux au point, mais par sa moyenne sur ±50 km autour de lui. La lumière qui a rebondi deux ou trois fois avant d'arriver sous l'ombre vient d'une région large d'une centaine de kilomètres, dont une bonne part est restée au soleil ; la moduler par le flux du seul point creuserait un trou noir là où il y a un anneau de crépuscule.</li>
 
