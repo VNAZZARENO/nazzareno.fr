@@ -1,4 +1,4 @@
-// Fragment shader du ciel: diffusion simple, en projection equidistante.
+// Fragment shader du ciel, en projection equidistante.
 //
 // Trois decisions structurent ce fichier, et elles ne sont pas negociables au
 // coup par coup:
@@ -10,28 +10,25 @@
 //    degres de hauteur elle vaut 23 %, ce qui ne se voit pas sur un ciel.
 //
 // 2. La diffusion est integree le long du rayon de visee seulement: la
-//    transmittance vers le Soleil est lue dans la LUT plutot que marchee. Un
+//    transmittance vers le Soleil est lue dans la LUT plutot que marchee, et
+//    les ordres superieurs a 1 viennent eux aussi d'une LUT (tache 19). Un
 //    rayon secondaire par pas couterait 32 fois plus cher pour une image que
 //    personne ne saurait distinguer.
 //
-// 3. L'exposition est FIXE. Pas d'auto-exposition, pas d'adaptation
-//    temporelle. La page montrera deux lieux cote a cote et le sujet meme de
-//    la page est que l'un s'assombrit et pas l'autre: une auto-exposition
-//    relevrait le lieu sombre et effacerait exactement ce qu'il y a a voir.
+// 3. L'exposition est FIXE, et la courbe de transfert aussi. Pas
+//    d'auto-exposition, pas d'adaptation temporelle, pas de dependance au
+//    contenu de l'image. La page montre deux lieux cote a cote et le sujet
+//    meme de la page est que l'un s'assombrit et pas l'autre: une
+//    auto-exposition relevrait le lieu sombre et effacerait exactement ce
+//    qu'il y a a voir.
 
-import { ATMOSPHERE } from './atmosphere.glsl.js';
+import { ATMOSPHERE, TRANSMITTANCE_LUT } from './atmosphere.glsl.js';
 import { LUT_D, LUT_RATIO, RATIO_MIN, RATIO_MAX, D_MAX } from './flux.js';
 
-// Exposition FIXE, calibree une fois pour toutes. L'ancrage est le sol
-// ensoleille au zenith -- albedo 0.10, eclaire par le Soleil direct -- qu'on
-// place vers un gris moyen (sRGB 0.60 environ). On ancre volontairement sur ce
-// terme-la et pas sur le ciel: le Soleil direct est deja exact, alors que la
-// luminance du ciel augmentera encore quand la diffusion multiple arrivera
-// (tache 19). Calibrer sur le ciel obligerait a tout redecaler ensuite.
-// A 40, le plein jour ne sature nulle part (0 % de pixels ecretes de 0 a 60
-// degres de hauteur solaire) et il reste de la marge pour cet apport a venir.
-// Les unites sont arbitraires: l'irradiance solaire hors atmosphere vaut 1 par
-// canal, donc ce nombre n'a de sens que relativement a elle.
+// Exposition FIXE, calibree une fois pour toutes: elle ne fait que porter la
+// luminance physique dans le domaine ou la courbe de transfert travaille. Les
+// unites sont arbitraires -- l'irradiance solaire hors atmosphere vaut 1 par
+// canal -- donc ce nombre n'a de sens que relativement a elle.
 const EXPOSITION = 40.0;
 
 export const SKY_FS = `#version 300 es
@@ -49,10 +46,11 @@ uniform float uDSoleilKm;       // distance du Soleil, en KILOMETRES (source: JP
 uniform float uDLuneKm;         // distance de la Lune, en KILOMETRES (source: JPL)
 uniform float uAzimutCentre;    // azimut vise au centre du panneau, en radians
 uniform float uAltitudeObs;     // altitude de l'observateur, en metres
-uniform sampler2D uTransmittance;
+uniform sampler2D uMultiScatter;
 uniform sampler2D uFluxLut;
 
 ${ATMOSPHERE}
+${TRANSMITTANCE_LUT}
 
 // Champ de vision. On borne la hauteur a 90 degres et on en deduit la largeur,
 // de sorte que l'echelle reste la meme sur les deux axes quel que soit le
@@ -67,9 +65,7 @@ const float HORIZON = 0.22;
 
 const int PAS = 32;             // pas du raymarch principal
 const int PAS_AMBIANT = 8;      // pas de l'estimation du ciel vu par le sol
-const float ALBEDO_SOL = 0.10;
 const float EXPOSITION = ${EXPOSITION.toFixed(1)};
-const float PI = 3.14159265;
 
 // Parametrage de la LUT de flux, repris tel quel de flux.js -- ces valeurs ne
 // sont pas recopiees a la main, elles sont interpolees depuis le module qui
@@ -80,26 +76,14 @@ const float RATIO_MIN = ${RATIO_MIN.toFixed(6)};
 const float RATIO_MAX = ${RATIO_MAX.toFixed(6)};
 const float D_MAX = ${D_MAX.toFixed(6)};
 
-// Transmittance depuis un point d'altitude alt jusqu'au sommet de
-// l'atmosphere, dans la direction de cosinus zenithal cosZenith. Le
-// parametrage est exactement celui de luts.js: x = (cosZenith + 1) / 2,
-// y = alt / (R_ATMO - R_SOL). Les visees plongeantes traversent le sol et la
-// LUT y rend une transmittance nulle -- l'ombre de la planete est gratuite.
-vec3 transmittanceVers(float alt, float cosZenith) {
-  vec2 uv = vec2(cosZenith * 0.5 + 0.5, alt / (R_ATMO - R_SOL));
-  return texture(uTransmittance, clamp(uv, 0.0, 1.0)).rgb;
-}
-
-// Distance a la PREMIERE intersection avec le sol, ou -1 si le rayon le
-// manque. intersectionSphere ne rend que la racine lointaine, celle qui sert au
-// sommet de l'atmosphere; pour le sol c'est l'entree qu'on veut.
-float intersectionSol(vec3 p, vec3 dir) {
-  float b = dot(p, dir);
-  float c = dot(p, p) - R_SOL * R_SOL;
-  float disc = b * b - c;
-  if (disc < 0.0) return -1.0;
-  float t = -b - sqrt(disc);
-  return t > 0.0 ? t : -1.0;
+// Somme de tous les ordres de diffusion superieurs a 1, lue dans la LUT
+// construite par luts.js. Parametrage identique a la construction:
+// x = (cosSoleil + 1) / 2, y = alt / (R_ATMO - R_SOL). La valeur rendue est
+// une luminance PAR UNITE de coefficient de diffusion: c'est a l'appelant de
+// la multiplier par sigma_s local.
+vec3 diffusionMultiple(float alt, float cosSoleil) {
+  vec2 uv = vec2(cosSoleil * 0.5 + 0.5, alt / (R_ATMO - R_SOL));
+  return texture(uMultiScatter, clamp(uv, 0.0, 1.0)).rgb;
 }
 
 // Position de l'observateur dans le repere planetocentrique du raymarch.
@@ -168,9 +152,43 @@ vec3 fluxAuPoint(vec3 p) {
   return texture(uFluxLut, uv).rgb;
 }
 
-// Diffusion simple le long d'un rayon. Rend la lumiere diffusee vers
-// l'observateur, et par transmittance l'attenuation totale du rayon -- c'est
-// elle qui donne la perspective aerienne quand le rayon finit au sol.
+// Rayon du voisinage dont provient la lumiere diffusee plusieurs fois.
+// Cinquante kilometres est l'ordre de grandeur du libre parcours d'un photon
+// qui a deja rebondi deux ou trois fois dans la basse atmosphere, et c'est
+// aussi l'ordre de grandeur de la demi-largeur de l'ombre lunaire: les deux
+// coincident, et c'est precisement ce qui rend l'anneau de crepuscule visible.
+const float RAYON_VOISINAGE = 50000.0;
+
+// Flux solaire MOYEN sur le voisinage du point, par canal.
+//
+// APPROXIMATION DELIBEREE, et declaree comme telle sur la page. La LUT de
+// diffusion multiple suppose un Soleil UNIFORME sur tout le voisinage, ce
+// qu'une eclipse viole exactement: sous l'ombre, la lumiere qui a rebondi
+// plusieurs fois vient d'une region large d'une centaine de kilometres, dont
+// une partie est hors de l'ombre. Moduler ce terme par le flux AU POINT
+// eteindrait donc le ciel bien trop vite. On le module par une moyenne sur
+// quatre points decales de +/- 50 km horizontalement, ce qui restitue le bon
+// comportement -- l'ombre ne devient jamais un trou noir -- sans pretendre a
+// une resolution du transfert radiatif sous un Soleil non uniforme.
+vec3 fluxVoisinage(vec3 p) {
+  vec3 n = normalize(p);
+  // Deux directions horizontales orthogonales en p. La reference (le nord du
+  // repere) n'est jamais colineaire a n: n pointe vers le zenith local, donc
+  // presque +y.
+  vec3 e1 = normalize(cross(n, vec3(0.0, 0.0, 1.0)));
+  vec3 e2 = cross(n, e1);
+  return 0.25 * (
+      fluxAuPoint(p + e1 * RAYON_VOISINAGE)
+    + fluxAuPoint(p - e1 * RAYON_VOISINAGE)
+    + fluxAuPoint(p + e2 * RAYON_VOISINAGE)
+    + fluxAuPoint(p - e2 * RAYON_VOISINAGE)
+  );
+}
+
+// Diffusion le long d'un rayon: ordre 1 avec les vraies phases, ordres
+// superieurs par la LUT. Rend la lumiere diffusee vers l'observateur, et par
+// transmittance l'attenuation totale du rayon -- c'est elle qui donne la
+// perspective aerienne quand le rayon finit au sol.
 vec3 diffusion(vec3 origine, vec3 dir, float portee, int pas, out vec3 transmittance) {
   float cosTheta = dot(dir, uSoleil);
   float phaseR = phaseRayleigh(cosTheta);
@@ -194,18 +212,26 @@ vec3 diffusion(vec3 origine, vec3 dir, float portee, int pas, out vec3 transmitt
     float h = max(0.0, length(p) - R_SOL);
     vec3 d = densites(h);
     vec3 sigmaE = max(extinction(h), vec3(1e-9));
-    vec3 sigmaS = BETA_RAYLEIGH * d.x * phaseR + BETA_MIE * d.y * phaseM;
-    vec3 versSoleil = transmittanceVers(h, dot(normalize(p), uSoleil));
+    float cosSoleil = dot(normalize(p), uSoleil);
+    vec3 versSoleil = transmittanceVers(h, cosSoleil);
+
+    // Ordre 1: le Soleil direct, avec les vraies fonctions de phase. Le flux
+    // est evalue ICI, au point d'echantillonnage, et non chez l'observateur:
+    // c'est cette seule ligne qui fait la difference entre un ciel
+    // uniformement attenue et une vraie eclipse.
+    vec3 source = versSoleil * fluxAuPoint(p)
+                * (BETA_RAYLEIGH * d.x * phaseR + BETA_MIE * d.y * phaseM);
+    // Ordres superieurs: la LUT rend deja une luminance ambiante, il ne reste
+    // qu'a la diffuser vers l'oeil avec le sigma_s local. Sa modulation par le
+    // flux passe par le VOISINAGE (voir fluxVoisinage): ces photons-la ont
+    // parcouru des dizaines de kilometres avant d'arriver ici.
+    source += diffusionMultiple(h, cosSoleil) * diffusionTotale(h) * fluxVoisinage(p);
 
     // Integration analytique de la diffusion sur le pas (Hillaire 2020):
     // exacte a extinction constante sur le segment, elle supprime le banding
     // qu'une simple somme au point milieu laisse voir dans les degrades.
     vec3 attenuation = exp(-sigmaE * dt);
-    vec3 apport = (sigmaS - sigmaS * attenuation) / sigmaE;
-    // Le flux est evalue ICI, au point d'echantillonnage, et non chez
-    // l'observateur: c'est cette seule ligne qui fait la difference entre un
-    // ciel uniformement attenue et une vraie eclipse.
-    lumiere += transmittance * apport * versSoleil * fluxAuPoint(p);
+    lumiere += transmittance * (source - source * attenuation) / sigmaE;
     transmittance *= attenuation;
   }
   return lumiere;
@@ -233,17 +259,56 @@ vec3 sol(vec3 p) {
   return ALBEDO_SOL / PI * (direct + PI * zenith);
 }
 
-// Courbe filmique de Hable ("Uncharted 2"), retenue pour son pied souple: elle
-// releve les ombres et comprime les hautes lumieres. C'est elle qui tient ici
-// le role de la reponse a peu pres logarithmique de l'oeil, que l'exposition
-// fixe ne peut pas rendre.
-vec3 hable(vec3 x) {
-  const float A = 0.15, B = 0.50, C = 0.10, D = 0.20, E = 0.02, F = 0.30;
-  return ((x * (A * x + C * B) + D * E) / (x * (A * x + B) + D * F)) - E / F;
-}
+// Courbe de transfert: la reponse de l'OEIL, pas celle d'un appareil photo.
+//
+// Ce que le calcul produit est une luminance physique. Une courbe filmique
+// ordinaire (Hable) sur une exposition calibree en plein jour la restituait
+// litteralement: Paris a son maximum rendait cinq fois plus sombre qu'un ciel
+// normal, ce qui est exact -- et faux comme image. C'est ce qu'enregistrerait
+// un appareil a reglage fixe; la page, elle, raconte ce qu'a vu un temoin, et
+// a 92 % d'obscuration un temoin voyait une soiree ordinaire parce que son oeil
+// adapte environ quatre diaphragmes. Voir la spec, section 4.5.
+//
+// Forme retenue: log(1 + K*L), normalisee. C'est la compression de
+// Weber-Fechner, la reponse la plus simple qui soit reellement celle d'un oeil,
+// et elle a les proprietes qu'il faut: monotone, exactement nulle en zero, et
+// elle n'atteint 1 qu'en BLANC, tres au-dessus de tout ce que ce ciel produit
+// -- donc aucune haute lumiere ne s'ecrete, meme en plein Soleil.
+//
+// K = 1000 est calibre sur une seule mesure: entre Paris en plein Soleil et
+// Paris au maximum, la scene perd 5,1 diaphragmes; la courbe n'en laisse que
+// 0,95 a l'ecran. Elle reproduit donc les quatre diaphragmes d'adaptation de
+// l'oeil, ce qui est exactement ce qu'on lui demande -- et pas un reglage a
+// vue. BLANC = 160 ne fait que placer le plein jour vers sRGB 0,80.
+//
+// Un seul jeu de constantes, applique a TOUS les instants et aux DEUX
+// panneaux. Rien ne s'adapte au contenu de l'image: ce n'est pas une
+// auto-exposition, c'est une fonction fixe et annoncee.
+const float K_OEIL = 1000.0;
+const float BLANC = 160.0;
+const vec3 LUMA = vec3(0.2126, 0.7152, 0.0722);
+const float DESATURATION = 0.55;
 
+// La courbe s'applique a la LUMINANCE, et les trois canaux sont ensuite remis
+// dans leur rapport d'origine. Appliquee canal par canal, une courbe aussi
+// logarithmique ecraserait les rapports entre canaux et pousserait tout vers
+// le blanc: le ciel haut de Paris, dont le bleu vaut quatre fois le rouge en
+// luminance physique, ne le vaudrait plus que 1,25 fois a l'ecran -- du gris.
+// Sur la luminance seule, le rapport survit, et l'anneau de crepuscule de la
+// totalite garde son bleu profond.
+//
+// Conserver le rapport des canaux TEL QUEL ne marche pas non plus: un ciel
+// bleu profond a B/Y = 2,2, et une fois sa luminance remontee a 0,52 le canal
+// bleu vaudrait 1,12 -- hors du gamut sRGB, sur plus de la moitie de l'image.
+// On desature donc d'autant plus que le pixel est clair, ce que fait aussi
+// l'oeil: les noirs gardent toute leur couleur, les hautes lumieres tirent
+// vers le blanc. C'est une fonction du pixel lui-meme, pas de l'image: rien
+// ici ne regarde le contenu du cadre.
 vec3 tonalite(vec3 lumiere) {
-  return hable(lumiere) / hable(vec3(11.2));
+  float luminance = max(dot(lumiere, LUMA), 1e-9);
+  float compressee = log(1.0 + K_OEIL * luminance) / log(1.0 + K_OEIL * BLANC);
+  vec3 chroma = lumiere / luminance;
+  return compressee * pow(chroma, vec3(1.0 - DESATURATION * compressee));
 }
 
 vec3 versSRGB(vec3 c) {

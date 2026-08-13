@@ -36,6 +36,7 @@ export function createSky(gl) {
     azimutCentre: lieu('uAzimutCentre'),
     altitudeObs: lieu('uAltitudeObs'),
     transmittance: lieu('uTransmittance'),
+    multiScatter: lieu('uMultiScatter'),
     fluxLut: lieu('uFluxLut'),
   };
 
@@ -81,6 +82,10 @@ export function createSky(gl) {
     gl.activeTexture(gl.TEXTURE1);
     gl.bindTexture(gl.TEXTURE_2D, luts.flux);
     gl.uniform1i(u.fluxLut, 1);
+
+    gl.activeTexture(gl.TEXTURE2);
+    gl.bindTexture(gl.TEXTURE_2D, luts.multiscatter);
+    gl.uniform1i(u.multiScatter, 2);
     // L'unite active revient a zero: les liaisons de texture restent en place,
     // seule la cible des prochains bindTexture est remise ou l'appelant
     // l'attend.
