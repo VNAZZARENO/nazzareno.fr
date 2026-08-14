@@ -7,7 +7,7 @@ Forbes-Rigobon recalculé sur S&P 500 × CAC 40, démontré par simulation, corr
 figures SVG calculées et un explorateur interactif.
 
 **Architecture:** Trois étages comme la page éclipse : calcul hors ligne
-(`tools/contagion/`, numpy pur, données Stooq gelées dans le dépôt) → artefacts versionnés
+(`tools/contagion/`, numpy pur, données Yahoo Finance gelées dans le dépôt via yfinance) → artefacts versionnés
 (`assets/data/contagion.json`, SVG injectés entre repères dans les deux pages HTML) →
 navigateur (deux modules ES sans dépendance, parité testée sous node).
 
@@ -16,10 +16,16 @@ node --test, HTML/CSS/JS du site (aucun bundler, aucune dépendance externe).
 
 **Spec:** `docs/superpowers/specs/2026-08-14-contagion-design.md`
 
-**Écarts à la spec, assumés ici :** (1) `requirements.txt` sans pandas — numpy et le module
-csv de la stdlib suffisent, une dépendance lourde de moins ; (2) le JSON exporté ne porte pas
+**Écarts à la spec, assumés ici :** (1) pas de dépendance pandas en propre — yfinance
+l'apporte et `data.py` consomme son DataFrame, mais tout le reste (returns, deciles,
+rolling, export, figures) est numpy + stdlib ; (2) le JSON exporté ne porte pas
 le vecteur de dates (spec §4.3) — l'explorateur n'en a pas besoin, seules les bornes de la
 période vont dans `meta`, ce qui tient le budget de taille.
+
+**Révision du 14 août 2026 :** la tâche 1 visait Stooq ; la sonde a montré `^spx` disparu
+(remplacé par un CFD limité à 2013) et un mur anti-robot. Sur décision de Vincent, la
+source est Yahoo Finance via yfinance (`^GSPC`, `^FCHI`), la doctrine de gel inchangée.
+La tâche 1 ci-dessous est la version révisée.
 
 **Conventions transverses, valables pour toutes les tâches :**
 
@@ -38,11 +44,11 @@ période vont dans `meta`, ce qui tient le budget de taille.
 
 ---
 
-### Task 1: Données Stooq — sonde, gel, manifeste
+### Task 1: Données Yahoo Finance — sonde, gel, manifeste (version révisée)
 
-Le seul risque externe du projet, donc la première tâche. On vérifie que Stooq sert bien le
-S&P 500 et le CAC 40 en profondeur suffisante, on gèle les CSV dans le dépôt, on écrit le
-manifeste.
+Le seul risque externe du projet, donc la première tâche. On vérifie que yfinance sert
+bien `^GSPC` et `^FCHI` en profondeur suffisante, on gèle les CSV dans le dépôt, on écrit
+le manifeste.
 
 **Files:**
 - Create: `tools/contagion/__init__.py` (vide)
@@ -52,20 +58,21 @@ manifeste.
 - Create: `tools/contagion/tests/__init__.py` (vide)
 - Test: `tools/contagion/tests/test_data.py`
 
-- [ ] **Step 1: Sonder les symboles Stooq**
+- [ ] **Step 1: Installer et sonder**
 
 ```bash
-curl -s "https://stooq.com/q/d/l/?s=%5Espx&i=d" | head -3
-curl -s "https://stooq.com/q/d/l/?s=%5Espx&i=d" | tail -2
-curl -s "https://stooq.com/q/d/l/?s=%5Ecac&i=d" | head -3
-curl -s "https://stooq.com/q/d/l/?s=%5Ecac&i=d" | wc -l
+source .venv/bin/activate && pip install yfinance numpy matplotlib
+python3 - <<'EOF'
+import yfinance
+for s in ("^GSPC", "^FCHI"):
+    h = yfinance.Ticker(s).history(period="max", auto_adjust=False)
+    print(s, len(h), h.index[0].date(), "->", h.index[-1].date())
+EOF
 ```
 
-Attendu : en-tête `Date,Open,High,Low,Close,Volume`, premières lignes des années 1990 ou
-avant, plusieurs milliers de lignes pour `^cac`. Si `^cac` renvoie « No data » ou un
-historique < 25 ans, essayer `%5Efchi`, puis, en dernier repli, choisir un autre indice
-européen à historique long disponible chez Stooq (DAX `%5Edax`) et **s'arrêter pour faire
-valider le changement de couple** (spec §4.1) avant de continuer.
+Attendu : plusieurs milliers de lignes chacun, `^GSPC` depuis les années 1920,
+`^FCHI` depuis ~1990. Si l'un des deux manque ou s'arrête avant 25 ans d'historique,
+**s'arrêter et faire valider un changement de source** (spec §4.1) avant de continuer.
 
 - [ ] **Step 2: Écrire le test (échoue faute de données gelées)**
 
@@ -93,7 +100,8 @@ def test_manifeste_et_sommes():
     for nom, attendu in manifeste["fichiers"].items():
         sha = hashlib.sha256((DOSSIER / nom).read_bytes()).hexdigest()
         assert sha == attendu["sha256"], nom
-        assert attendu["url"].startswith("https://stooq.com/")
+        assert attendu["symbole"] in ("^GSPC", "^FCHI")
+        assert attendu["source"].startswith("Yahoo Finance via yfinance")
     assert "telecharge_utc" in manifeste
 
 
@@ -119,31 +127,38 @@ Expected: FAIL (dossier `data/` absent).
 # tools/contagion/requirements.txt
 numpy
 matplotlib
+yfinance
 ```
 
 ```python
 # tools/contagion/data.py
-"""Telecharge les CSV Stooq une fois et les gele dans le depot.
+"""Telecharge les clotures Yahoo Finance une fois et les gele dans le depot.
 
 Usage: source .venv/bin/activate && python3 -m tools.contagion.data
 
 A ne relancer que pour geler un nouveau jeu: la page est datee, pas vivante.
-Le manifeste enregistre URL, horodatage et sommes SHA-256, pour que le calcul
-soit rejouable sur exactement les memes octets.
+Le manifeste enregistre symbole, source, horodatage et sommes SHA-256, pour
+que le calcul soit rejouable sur exactement les memes octets. Le CSV est
+reecrit par nos soins (Date,Open,High,Low,Close,Volume): le gel porte sur des
+octets que NOUS avons produits, pas sur un format tiers susceptible de bouger.
 """
 import datetime
 import hashlib
 import json
+import math
 import pathlib
-import urllib.request
+
+import yfinance
 
 RACINE = pathlib.Path(__file__).resolve().parents[2]
 DOSSIER = RACINE / "tools" / "contagion" / "data"
 
-SYMBOLES = {
-    "spx.csv": "https://stooq.com/q/d/l/?s=%5Espx&i=d",
-    "cac.csv": "https://stooq.com/q/d/l/?s=%5Ecac&i=d",   # adapter selon la sonde
-}
+SYMBOLES = {"spx.csv": "^GSPC", "cac.csv": "^FCHI"}
+
+
+def _case(valeur):
+    return "" if valeur is None or (isinstance(valeur, float) and math.isnan(valeur)) \
+        else f"{valeur:.6f}"
 
 
 def main():
@@ -151,15 +166,22 @@ def main():
     manifeste = {"telecharge_utc":
                  datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
                  "fichiers": {}}
-    for nom, url in SYMBOLES.items():
-        octets = urllib.request.urlopen(url, timeout=60).read()
-        premiere = octets.split(b"\n", 1)[0]
-        if not premiere.startswith(b"Date,"):
-            raise SystemExit(f"{nom}: reponse inattendue ({premiere[:60]!r})")
+    for nom, symbole in SYMBOLES.items():
+        histo = yfinance.Ticker(symbole).history(period="max", auto_adjust=False)
+        histo = histo.dropna(subset=["Close"])
+        if len(histo) < 5000:
+            raise SystemExit(f"{symbole}: {len(histo)} lignes seulement")
+        lignes = ["Date,Open,High,Low,Close,Volume"]
+        for ts, l in histo.iterrows():
+            lignes.append(",".join([ts.date().isoformat(), _case(l["Open"]),
+                                    _case(l["High"]), _case(l["Low"]),
+                                    _case(l["Close"]), str(int(l["Volume"] or 0))]))
+        octets = ("\n".join(lignes) + "\n").encode("utf-8")
         (DOSSIER / nom).write_bytes(octets)
         manifeste["fichiers"][nom] = {
-            "url": url, "sha256": hashlib.sha256(octets).hexdigest(),
-            "octets": len(octets)}
+            "symbole": symbole,
+            "source": f"Yahoo Finance via yfinance {yfinance.__version__}",
+            "sha256": hashlib.sha256(octets).hexdigest(), "octets": len(octets)}
         print(nom, len(octets), "octets")
     (DOSSIER / "manifeste.json").write_text(
         json.dumps(manifeste, indent=2, ensure_ascii=False) + "\n")
@@ -180,7 +202,7 @@ Expected: PASS (2 tests).
 
 ```bash
 git add tools/contagion/
-git commit  # "Donnees Stooq gelees pour la page contagion, avec manifeste"
+git commit  # "Donnees Yahoo Finance gelees pour la page contagion, avec manifeste"
 ```
 
 ---
@@ -825,7 +847,7 @@ def construire():
     rx6 = [round(float(v), 6) for v in rx]
     ry6 = [round(float(v), 6) for v in ry]
     donnees = {
-        "meta": {"source": "stooq.com, clotures quotidiennes, voir tools/contagion/data",
+        "meta": {"source": "Yahoo Finance via yfinance, clotures quotidiennes, voir tools/contagion/data",
                  "series": "S&P 500 (x), CAC 40 (y), rendements log en moyenne mobile 2 j",
                  "debut": dates[0], "fin": dates[-1], "n": len(rx6)},
         "rx": rx6, "ry": ry6,

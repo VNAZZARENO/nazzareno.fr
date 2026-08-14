@@ -86,15 +86,17 @@ pratique, et la page le dit : c'est l'objet du §5, figure 4, et de la liste d'h
 
 ### 4.1 Source et gel
 
-CSV quotidiens **Stooq** (stooq.com), S&P 500 (`^spx`) et CAC 40 (symbole à confirmer à
-l'implémentation, `^cac` attendu). Téléchargés une fois par `tools/contagion/data.py`, gelés
-dans `tools/contagion/data/` avec, dans un fichier de manifeste : URL exactes, date et heure
-de téléchargement, sommes SHA-256. La page ne charge rien depuis un tiers ; le dépôt contient
-tout ce qu'il faut pour rejouer le calcul.
+Clôtures quotidiennes **Yahoo Finance via yfinance**, S&P 500 (`^GSPC`, historique
+jusqu'aux années 1920) et CAC 40 (`^FCHI`, depuis 1990). Téléchargées une fois par
+`tools/contagion/data.py`, gelées en CSV dans `tools/contagion/data/` avec, dans un fichier
+de manifeste : symboles, source et version de yfinance, date et heure de téléchargement,
+sommes SHA-256. La page ne charge rien depuis un tiers ; le dépôt contient tout ce qu'il
+faut pour rejouer le calcul.
 
-Si la profondeur d'historique du CAC 40 chez Stooq s'avère insuffisante (moins de ~25 ans),
-repli documenté : autre miroir des mêmes cours, ou autre indice européen à historique long,
-au prix d'une reformulation du couple. Ce risque est traité en premier (§11).
+*Historique de la décision :* la spec visait d'abord Stooq ; la sonde de la première tâche
+a montré que `^spx` n'y existe plus (remplacé par un CFD limité à 2013, qui tue l'épisode
+2008) et que le site s'est mis derrière un mur anti-robot. Bascule sur yfinance validée par
+Vincent le 14 août 2026.
 
 ### 4.2 Rendements et synchronisation
 
@@ -174,7 +176,7 @@ Miroir de `tools/eclipse/`, une responsabilité par fichier :
 
 ```
 tools/contagion/
-  data.py        # téléchargement Stooq, gel, manifeste avec sommes SHA-256
+  data.py        # téléchargement yfinance, gel, manifeste avec sommes SHA-256
   returns.py     # rendements log par calendrier propre, moyenne mobile 2 jours, appariement
   bias.py        # la formule du §3 : conditionnelle, inversion, δ — fonctions pures
   simulate.py    # Monte-Carlo gaussien à graine fixée
@@ -230,8 +232,8 @@ Rédigée en clair dans la page, comme le contrat de vérité de la page éclips
   les corrélations des déciles extrêmes plus bruitées que le bootstrap i.i.d. ne le dit.
 - Le conditionnement de place se fait sur volatilité glissante, pas sur `|x|` du jour ; la
   version retenue isole le mécanisme, la figure 4 couvre l'autre.
-- Stooq est déclaratif ; cours de clôture, dividendes non réinvestis, corrélations de
-  Pearson sur rendements logarithmiques.
+- Yahoo Finance est déclaratif ; cours de clôture, dividendes non réinvestis,
+  corrélations de Pearson sur rendements logarithmiques.
 
 ## 10. Validation
 
@@ -277,7 +279,7 @@ Fichiers modifiés :
 
 | Risque | Portée | Traitement |
 |---|---|---|
-| Historique CAC 40 chez Stooq court ou symbole absent | Moyenne — c'est la seule dépendance externe | Traité en tout premier : `data.py` et le manifeste avant toute autre tâche ; replis du §4.1 |
+| Disponibilité et profondeur des séries chez le fournisseur | Moyenne — c'est la seule dépendance externe | Traité en tout premier : `data.py` et le manifeste avant toute autre tâche. Risque déjà matérialisé une fois (Stooq), d'où la bascule yfinance du §4.1 |
 | La courbe corrigée n'est pas plate sur les données réelles | Nulle — ce n'est pas un échec | C'est le contenu du §5 « ce qui reste » ; la page rapporte le chiffre qui sort |
 | Corrélations des déciles extrêmes bruitées, figure 1 peu lisible | Faible | Intervalles bootstrap dès la conception ; au pire, quintiles au lieu de déciles, dit dans la légende |
 | Taille du JSON au-dessus de l'attendu | Faible | Arrondi à 6 décimales, dates compactées ; budget annoncé ~150 Ko avant compression, mesuré au build |
