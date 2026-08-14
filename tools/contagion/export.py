@@ -17,7 +17,7 @@ from tools.contagion.simulate import correlation
 RACINE = pathlib.Path(__file__).resolve().parents[2]
 SORTIE_JSON = RACINE / "assets" / "data" / "contagion.json"
 SORTIE_FIXTURE = RACINE / "tools" / "js-tests" / "fixture-contagion.json"
-QUANTILES_FIXTURE = [0.0, 0.5, 0.9]
+QUANTILES_FIXTURE = [0.0, 0.5, 0.9, 0.95]
 
 
 def sous_echantillon(rx, ry, q):

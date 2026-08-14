@@ -43,7 +43,7 @@ def test_budget_de_taille(artefacts):
 
 def test_fixtures_de_parite(artefacts):
     donnees, fixture = artefacts
-    assert [c["q"] for c in fixture["cas"]] == [0.0, 0.5, 0.9]
+    assert [c["q"] for c in fixture["cas"]] == [0.0, 0.5, 0.9, 0.95]
     for cas in fixture["cas"]:
         for cle in ("n", "delta", "rho", "rho_corrigee"):
             assert cle in cas
