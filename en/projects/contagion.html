@@ -322,7 +322,18 @@
 </details>
 </figure>
 <!-- /fig:correction -->
-  <!-- explorateur: pose a la tache 13 -->
+  <div class="explorateur" id="explorateur" hidden>
+    <p class="explo-titre">Move the threshold: the raw climbs, the corrected stays put.</p>
+    <p class="explo-label"><label for="explo-seuil">Keep the days where |S&amp;P return| exceeds quantile <output id="explo-q">0.50</output></label></p>
+    <input type="range" id="explo-seuil" min="0" max="95" step="5" value="50">
+    <div class="explo-barres" aria-hidden="true">
+      <div class="explo-ligne"><span>raw</span><div class="explo-piste"><div class="explo-barre explo-a"></div></div></div>
+      <div class="explo-ligne"><span>corrected</span><div class="explo-piste"><div class="explo-barre explo-b"></div></div></div>
+    </div>
+    <p><output id="explo-valeurs" aria-live="polite"></output></p>
+  </div>
+  <noscript><p class="explo-sans-js">Without JavaScript, this box has nothing to show that the figure above does not already show: at quantile 0.90, 903 days remain, the raw correlation is 0.816 and the corrected one 0.493, against a full sample at 0.641.</p></noscript>
+  <script type="module" src="/assets/js/contagion/ui.js"></script>
 
   <h2>What is left</h2>
 

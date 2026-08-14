@@ -863,6 +863,96 @@ body.vue-disque .sim-canvas {
 .fig-table th:first-child,
 .fig-table td:first-child { text-align: left; }
 
+/* ---- explorateur contagion ----
+
+   L'encart interactif de la page contagion. Cache par defaut : c'est ui.js qui
+   le revele apres avoir charge le JSON, et sans JavaScript le <noscript> porte
+   les memes chiffres. Les deux barres reprennent exactement les couleurs de
+   serie des figures, deja validees sur les deux fonds. */
+
+.explorateur {
+  margin: 1.4rem 0;
+  max-width: 40rem;
+  border: 1px solid var(--rule);
+  padding: 1.1rem 1.25rem;
+  background: var(--paper);
+  --serie-a: #0f8f63;
+  --serie-b: #2a78d6;
+}
+@media (prefers-color-scheme: dark) {
+  .explorateur { --serie-a: #199e70; --serie-b: #5b8fe0; }
+}
+.explo-titre {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  color: var(--ink-soft);
+  margin-bottom: 0.75rem;
+}
+.explo-label label {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+}
+.explorateur input[type="range"] {
+  display: block;
+  width: 100%;
+  margin: 0.5rem 0 1rem;
+  accent-color: var(--accent);
+}
+.explorateur :focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.explo-ligne {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  gap: 0.6rem;
+  align-items: center;
+}
+.explo-ligne + .explo-ligne { margin-top: 0.45rem; }
+.explo-ligne span {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  color: var(--ink-soft);
+}
+.explo-piste {
+  position: relative;
+  height: 0.75rem;
+  background: color-mix(in srgb, var(--rule) 55%, var(--paper));
+}
+.explo-barre {
+  height: 100%;
+  width: 0;
+  transition: width 0.15s ease;
+}
+.explo-a { background: var(--serie-a); }
+.explo-b { background: var(--serie-b); }
+/* La ligne pleine periode, posee par ui.js a rho*100 % sur les deux pistes :
+   la reference que la brute quitte et que la corrigee garde. */
+.explo-repere {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--ink);
+  opacity: 0.5;
+}
+#explo-valeurs {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  color: var(--ink-soft);
+}
+.explo-sans-js {
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+@media (prefers-reduced-motion: reduce) {
+  .explo-barre { transition: none; }
+}
+@media (max-width: 26rem) {
+  .explo-ligne { grid-template-columns: 4.5rem 1fr; }
+}
+
 /* ---- pages légales ---- */
 
 .legal main {

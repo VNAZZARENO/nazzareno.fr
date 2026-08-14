@@ -322,7 +322,18 @@
 </details>
 </figure>
 <!-- /fig:correction -->
-  <!-- explorateur: pose a la tache 13 -->
+  <div class="explorateur" id="explorateur" hidden>
+    <p class="explo-titre">Déplacez le seuil : la brute grimpe, la corrigée reste posée.</p>
+    <p class="explo-label"><label for="explo-seuil">Garder les jours où |rendement S&amp;P| dépasse le quantile <output id="explo-q">0,50</output></label></p>
+    <input type="range" id="explo-seuil" min="0" max="95" step="5" value="50">
+    <div class="explo-barres" aria-hidden="true">
+      <div class="explo-ligne"><span>brute</span><div class="explo-piste"><div class="explo-barre explo-a"></div></div></div>
+      <div class="explo-ligne"><span>corrigée</span><div class="explo-piste"><div class="explo-barre explo-b"></div></div></div>
+    </div>
+    <p><output id="explo-valeurs" aria-live="polite"></output></p>
+  </div>
+  <noscript><p class="explo-sans-js">Sans JavaScript, cet encart n'a rien à montrer que la figure ci-dessus ne montre déjà : au quantile 0,90, il reste 903 jours, la corrélation brute vaut 0,816 et la corrigée 0,493, pour une pleine période à 0,641.</p></noscript>
+  <script type="module" src="/assets/js/contagion/ui.js"></script>
 
   <h2>Ce qui reste</h2>
 
