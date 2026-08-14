@@ -1,4 +1,4 @@
 numpy==2.5.2
-matplotlib
+matplotlib==3.11.1
 yfinance==1.6.0
 pytest>=8.0

@@ -14,6 +14,7 @@ import pathlib
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
 
 from tools.contagion.figures import calculer
 
@@ -43,6 +44,10 @@ def main():
         ax.plot(x[2:], corr[2:], "o-", color=SERIE_B, lw=2, ms=8, label=lb)
         ax.set_ylim(0, 1)
         ax.set_xticks(x)
+        # la vignette FR parle la meme langue que la page: virgule decimale
+        ax.yaxis.set_major_formatter(FuncFormatter(
+            lambda v, _, fr=(lang == "fr"):
+            f"{v:.1f}".replace(".", ",") if fr else f"{v:.1f}"))
         ax.set_title(titre, color=ENCRE, fontsize=22, pad=18)
         ax.legend(facecolor=PAPIER, labelcolor=ENCRE, edgecolor="none",
                   fontsize=14, loc="upper left")
