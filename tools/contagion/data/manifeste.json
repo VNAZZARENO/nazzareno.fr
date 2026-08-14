@@ -1,0 +1,17 @@
+{
+  "telecharge_utc": "2026-08-14T09:02:05+00:00",
+  "fichiers": {
+    "spx.csv": {
+      "symbole": "^GSPC",
+      "source": "Yahoo Finance via yfinance 1.6.0",
+      "sha256": "2fcc5b03d6f25ead0dc30b5eb0e6a6299ce97e47bb4c5e8d13669d9d9e4b91a9",
+      "octets": 1534161
+    },
+    "cac.csv": {
+      "symbole": "^FCHI",
+      "source": "Yahoo Finance via yfinance 1.6.0",
+      "sha256": "4b33b5bfc754caa8760be1b6037faafc752876e8adab9d0f993a18e56b7818c2",
+      "octets": 606044
+    }
+  }
+}
