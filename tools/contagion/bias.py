@@ -15,7 +15,7 @@ def delta_relatif(var_sous_echantillon, var_pleine):
 
 
 def rho_conditionnelle(rho, delta):
-    """Correlation d'echantillon attendue sous conditionnement, a rho vrai constant."""
+    """Correlation conditionnelle de population (limite en probabilite), a rho vrai constant. Domaine: delta > -1."""
     return rho * math.sqrt(1.0 + delta) / math.sqrt(1.0 + delta * rho * rho)
 
 
