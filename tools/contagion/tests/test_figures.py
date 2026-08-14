@@ -1,7 +1,5 @@
 # tools/contagion/tests/test_figures.py
 """Ce que les legendes affirment, un test par affirmation."""
-import re
-
 import pytest
 
 from tools.contagion import figures
@@ -36,3 +34,72 @@ def test_nombres_francais(contexte):
 def test_pas_de_tiret_cadratin(contexte):
     for lang in ("fr", "en"):
         assert "—" not in figures.fig_constat(contexte, lang)
+
+
+def test_moins_typographique(contexte):
+    # MEME convention que points_pct de l'eclipse: U+2212 pour le signe moins,
+    # jamais le trait d'union ASCII.
+    assert figures.nombre(-1.0, "fr", 2) == "−1,00"
+    assert figures.nombre(-0.5, "en", 2) == "−0.50"
+    svg = figures.fig_constat(contexte, "fr")
+    assert ">-" not in svg.replace("><", ">\n<")
+
+
+def test_fig1_serie_et_repere_etiquetes(contexte):
+    # l'identite d'un trace ne repose jamais sur la seule couleur: chaque
+    # serie ET la droite de reference portent un mot pose au contact.
+    svg_fr = figures.fig_constat(contexte, "fr")
+    assert "pleine période" in svg_fr and "brute" in svg_fr
+    svg_en = figures.fig_constat(contexte, "en")
+    assert "full sample" in svg_en and "raw" in svg_en
+
+
+def test_fig2_le_monde_constant_monte_aussi(contexte):
+    simulees = [t["rho"] for t in contexte["tranches_simulees"]]
+    assert simulees[-1] - simulees[0] > 0.25
+
+
+def test_fig2_analytique_colle_au_monte_carlo(contexte):
+    from tools.contagion.bias import rho_conditionnelle
+    for t in contexte["tranches_simulees"]:
+        attendu = rho_conditionnelle(contexte["rho_pleine"], t["delta"])
+        assert t["ic_bas"] < attendu < t["ic_haut"], "la formule sort de l'IC bootstrap"
+
+
+def test_fig2_un_monde_sans_unite(contexte):
+    # le monde simule est un couple gaussien SANS unite: son axe ne pretend
+    # pas etre le rendement S&P, et ses amplitudes ne sont pas des pourcents.
+    for lang, interdit in (("fr", "rendement S&P"), ("en", "S&P return")):
+        html = figures.fig_retournement(contexte, lang)
+        assert interdit not in html
+        assert "%" not in html
+
+
+def test_fig2_formule_dans_le_tableau(contexte):
+    # toute figure existe aussi sous forme de nombres: la prediction tracee
+    # doit avoir sa colonne dans la vue tabulaire.
+    assert "Formule" in figures.fig_retournement(contexte, "fr")
+    assert "Formula" in figures.fig_retournement(contexte, "en")
+
+
+def test_fig3_la_corrigee_tient_ou_l_estimateur_tient(contexte):
+    # meme lecon que test_deciles: l'inversion F-R amplifie le bruit ~1/sqrt(1+delta)
+    # dans les deciles bas; la platitude ne s'affirme que sur les deciles 3 a 10.
+    bruts = [t["rho"] for t in contexte["tranches_reelles"]]
+    corriges_serres = [t["rho_corrigee"] for t in contexte["tranches_reelles"][2:]]
+    ecart = max(abs(c - contexte["rho_pleine"]) for c in corriges_serres)
+    assert ecart < (bruts[-1] - bruts[0]) / 3
+
+
+def test_fig2_fig3_svg_bien_formes_et_etiquetes(contexte):
+    for fabrique in (figures.fig_retournement, figures.fig_correction):
+        for lang in ("fr", "en"):
+            svg = fabrique(contexte, lang)
+            assert svg.count("<svg") == 1 and "aria-labelledby" in svg
+            assert "—" not in svg
+    # les identites de serie ne reposent jamais sur la seule couleur:
+    # chaque serie porte une etiquette posee au contact (doctrine eclipse)
+    svg_fr = figures.fig_correction(contexte, "fr")
+    assert "brute" in svg_fr and "corrigée" in svg_fr
+    svg2_fr = figures.fig_retournement(contexte, "fr")
+    assert "Monte-Carlo" in svg2_fr and "formule" in svg2_fr
