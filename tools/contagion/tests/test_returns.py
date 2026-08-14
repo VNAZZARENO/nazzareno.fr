@@ -35,9 +35,20 @@ def test_appariement_sur_intersection():
 
 def test_chaine_complete_sur_donnees_reelles():
     dates, rx, ry = charger_cloture()
-    assert len(dates) > 6000                      # ~35 ans de jours communs
+    assert len(dates) > 8500                      # ~35 ans de jours communs
     assert not np.isnan(rx).any() and not np.isnan(ry).any()
+    # rx est bien le S&P et ry bien le CAC: la vol du CAC est plus haute
+    assert rx.std() < ry.std()
     # la moyenne mobile 2 jours induit une autocorrelation MA(1) positive: declaree
     for r in (rx, ry):
         ac1 = np.corrcoef(r[:-1], r[1:])[0, 1]
-        assert ac1 > 0.2, "l'autocorrelation MA(1) attendue n'est pas la"
+        assert 0.3 < ac1 < 0.6, "l'autocorrelation MA(1) attendue n'est pas la"
+
+
+def test_chaine_sans_moyenne_mobile():
+    dates2, rx2, ry2 = charger_cloture(ma2=True)
+    dates1, rx1, ry1 = charger_cloture(ma2=False)
+    assert len(dates1) == len(dates2) + 1
+    for r in (rx1, ry1):
+        ac1 = np.corrcoef(r[:-1], r[1:])[0, 1]
+        assert abs(ac1) < 0.2, "sans moyenne mobile, pas d'autocorrelation MA(1)"
