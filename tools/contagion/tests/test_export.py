@@ -4,7 +4,9 @@ import pathlib
 
 import pytest
 
-from tools.contagion.export import construire, ecrire
+from tools.contagion.bias import correction, delta_relatif
+from tools.contagion.export import (
+    QUANTILES_FIXTURE, _variance, construire, ecrire, sous_echantillon)
 from tools.contagion.returns import charger_cloture
 from tools.contagion.simulate import correlation
 
@@ -13,10 +15,14 @@ RACINE = pathlib.Path(__file__).resolve().parents[3]
 
 @pytest.fixture(scope="module")
 def artefacts():
+    chemin_json = RACINE / "assets" / "data" / "contagion.json"
+    chemin_fix = RACINE / "tools" / "js-tests" / "fixture-contagion.json"
+    avant = (chemin_json.read_bytes(), chemin_fix.read_bytes())
     ecrire()
-    donnees = json.loads((RACINE / "assets" / "data" / "contagion.json").read_text())
-    fixture = json.loads((RACINE / "tools" / "js-tests" / "fixture-contagion.json").read_text())
-    return donnees, fixture
+    apres = (chemin_json.read_bytes(), chemin_fix.read_bytes())
+    assert avant == apres, \
+        "artefacts commites perimes: relancer python3 -m tools.contagion.export et commiter"
+    return json.loads(apres[0]), json.loads(apres[1])
 
 
 def test_contenu_et_coherence(artefacts):
@@ -32,7 +38,7 @@ def test_contenu_et_coherence(artefacts):
 
 def test_budget_de_taille(artefacts):
     octets = (RACINE / "assets" / "data" / "contagion.json").stat().st_size
-    assert octets < 200_000, f"{octets} octets: budget ~150 Ko creve, spec section 12"
+    assert octets < 200_000, f"{octets} octets: budget 200 Ko depasse, spec section 12"
 
 
 def test_fixtures_de_parite(artefacts):
@@ -44,3 +50,13 @@ def test_fixtures_de_parite(artefacts):
     # les fixtures sont calculees sur les MEMES tableaux arrondis que le JSON servi
     assert fixture["rho_pleine"] == pytest.approx(
         correlation(donnees["rx"], donnees["ry"]), abs=1e-12)
+    # epingler les cas individuels contre les valeurs calculees de la page
+    var_pleine = _variance(donnees["rx"])
+    for cas in fixture["cas"]:
+        sx, sy = sous_echantillon(donnees["rx"], donnees["ry"], cas["q"])
+        delta = delta_relatif(_variance(sx), var_pleine)
+        rho = correlation(sx, sy)
+        assert cas["n"] == len(sx)
+        assert cas["delta"] == pytest.approx(delta, abs=1e-12)
+        assert cas["rho"] == pytest.approx(rho, abs=1e-12)
+        assert cas["rho_corrigee"] == pytest.approx(correction(rho, delta), abs=1e-12)

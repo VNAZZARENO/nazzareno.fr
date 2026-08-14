@@ -21,7 +21,11 @@ QUANTILES_FIXTURE = [0.0, 0.5, 0.9]
 
 
 def sous_echantillon(rx, ry, q):
-    """Convention unique du seuil, dupliquee a l'identique dans explorer.js."""
+    """Convention unique du seuil, dupliquee a l'identique dans explorer.js.
+
+    Domaine: 0 <= q < 1. La valeur q=1 leverait IndexError; le curseur de
+    la page est borne en dessous.
+    """
     ampl = sorted(abs(v) for v in rx)
     seuil = ampl[int(q * len(ampl))] if q > 0.0 else 0.0
     couples = [(a, b) for a, b in zip(rx, ry) if abs(a) >= seuil]
@@ -57,8 +61,8 @@ def _variance(valeurs):
 
 def ecrire():
     donnees, fixture = construire()
-    SORTIE_JSON.write_text(json.dumps(donnees, separators=(",", ":")) + "\n")
-    SORTIE_FIXTURE.write_text(json.dumps(fixture, indent=1) + "\n")
+    SORTIE_JSON.write_text(json.dumps(donnees, separators=(",", ":"), allow_nan=False) + "\n")
+    SORTIE_FIXTURE.write_text(json.dumps(fixture, indent=1, allow_nan=False) + "\n")
     print(SORTIE_JSON, SORTIE_JSON.stat().st_size, "octets")
 
 
