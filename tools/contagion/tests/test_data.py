@@ -25,6 +25,14 @@ def test_manifeste_et_sommes():
     assert "telecharge_utc" in manifeste
 
 
+def test_pas_de_seance_en_cours():
+    manifeste = json.loads((DOSSIER / "manifeste.json").read_text())
+    jour_gel = datetime.datetime.fromisoformat(manifeste["telecharge_utc"]).date()
+    for nom in ("spx.csv", "cac.csv"):
+        derniere = datetime.date.fromisoformat(lire(nom)[-1]["Date"])
+        assert derniere < jour_gel, f"{nom}: derniere ligne {derniere} pas reglee"
+
+
 def test_profondeur_et_ordre():
     for nom in ("spx.csv", "cac.csv"):
         lignes = lire(nom)

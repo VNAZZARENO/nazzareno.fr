@@ -7,6 +7,7 @@ Le manifeste enregistre symbole, source, horodatage et sommes SHA-256, pour
 que le calcul soit rejouable sur exactement les memes octets. Le CSV est
 reecrit par nos soins (Date,Open,High,Low,Close,Volume): le gel porte sur des
 octets que NOUS avons produits, pas sur un format tiers susceptible de bouger.
+La seance du jour du gel est ecartee: on ne gele que des clotures reglees.
 """
 import datetime
 import hashlib
@@ -35,12 +36,14 @@ def _volume(valeur):
 
 def main():
     DOSSIER.mkdir(exist_ok=True)
-    manifeste = {"telecharge_utc":
-                 datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
+    maintenant = datetime.datetime.now(datetime.timezone.utc)
+    jour_gel = maintenant.date()
+    manifeste = {"telecharge_utc": maintenant.isoformat(timespec="seconds"),
                  "fichiers": {}}
     for nom, symbole in SYMBOLES.items():
         histo = yfinance.Ticker(symbole).history(period="max", auto_adjust=False)
         histo = histo.dropna(subset=["Close"])
+        histo = histo[[ts.date() < jour_gel for ts in histo.index]]
         if len(histo) < 5000:
             raise SystemExit(f"{symbole}: {len(histo)} lignes seulement")
         lignes = ["Date,Open,High,Low,Close,Volume"]

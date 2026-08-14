@@ -1,5 +1,5 @@
 {
-  "telecharge_utc": "2026-08-14T09:02:05+00:00",
+  "telecharge_utc": "2026-08-14T09:03:36+00:00",
   "fichiers": {
     "spx.csv": {
       "symbole": "^GSPC",
@@ -10,8 +10,8 @@
     "cac.csv": {
       "symbole": "^FCHI",
       "source": "Yahoo Finance via yfinance 1.6.0",
-      "sha256": "4b33b5bfc754caa8760be1b6037faafc752876e8adab9d0f993a18e56b7818c2",
-      "octets": 606044
+      "sha256": "ea021b4fa798d9737b11b64a0142a926beba688d9fa7d24e53fd07f2eca965fe",
+      "octets": 605983
     }
   }
 }
