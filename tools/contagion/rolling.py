@@ -12,7 +12,18 @@ from tools.contagion.simulate import correlation
 
 
 def glissantes(x, y, fenetre=60):
+    """Correlation par fenetre, brute et corrigee. x est le marche SOURCE.
+
+    Le delta vient de la variance de x seul: glissantes(x, y) et
+    glissantes(y, x) ne disent pas la meme chose. La reference est la
+    variance pleine periode, crises comprises: la correction SOUS-corrige
+    donc, et c'est assume. Dans les fenetres calmes delta < 0 et la
+    corrigee passe AU-DESSUS de la brute: l'inversion est symetrique,
+    une variance sous la moyenne attenue la correlation d'echantillon.
+    """
     x, y = np.asarray(x, float), np.asarray(y, float)
+    assert len(x) == len(y), "series de longueurs differentes"
+    assert len(x) >= fenetre, "serie plus courte que la fenetre"
     var_pleine = x.var()
     n = len(x) - fenetre + 1
     brute = np.empty(n)

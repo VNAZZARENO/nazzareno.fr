@@ -1,6 +1,7 @@
 import numpy as np
 import pytest
 
+from tools.contagion.bias import correction
 from tools.contagion.simulate import correlation, tirages
 from tools.contagion.rolling import glissantes
 
@@ -28,4 +29,10 @@ def test_sur_monde_constant_la_corrigee_reste_au_niveau():
     brute, corrigee, _ = glissantes(x2, y2, fenetre=FENETRE)
     segment = slice(8000 + FENETRE, 9000 - FENETRE)
     assert np.mean(brute[segment]) > 0.75
-    assert abs(np.mean(corrigee[segment]) - rho) < 0.1
+    # la reference de variance est la PLEINE periode, crise comprise: c'est le
+    # choix assume du module (il sous-corrige, donc il joue contre la these de
+    # la page). La valeur attendue s'en deduit, on ne compare pas a rho nu.
+    rho_seg = 3 * rho / np.sqrt(9 * rho**2 + 1 - rho**2)
+    var_pleine_pop = (19_000 * 1.0 + 1_000 * 9.0) / 20_000
+    attendu = correction(rho_seg, 9.0 / var_pleine_pop - 1.0)
+    assert abs(np.mean(corrigee[segment]) - attendu) < 0.05
