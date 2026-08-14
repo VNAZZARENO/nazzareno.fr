@@ -88,16 +88,16 @@ def _etiquette(x, y, texte):
 
 
 def _tranches_svg(tranches, rho_reference, lang, id_fig, titre, description,
-                  etiquettes, serie_b=None, courbe_analytique=None,
+                  etiquettes, avec_corrigee=False, courbe_analytique=None,
                   simule=False):
     """Le rendu commun aux figures 1 a 3: deciles en x, correlation en y.
 
     etiquettes: dict cle -> (texte, decalage_dy) pour "a", "reference" et,
     selon la figure, "b" ou "analytique"; chaque texte est pose dans la marge
     droite a la hauteur du dernier point du trace qu'il nomme.
-    serie_b: si vrai, trace aussi rho_corrigee et son IC par decile
+    avec_corrigee: si vrai, trace aussi rho_corrigee et son IC par decile
     (figure 3, la serie corrigee).
-    courbe_analytique: liste de valeurs par decile a tracer en trait fin
+    courbe_analytique: liste de valeurs par decile a tracer en trait continu
     (figure 2, la prediction de la formule).
     simule: le monde temoin est un couple gaussien SANS unite; son axe ne
     pretend pas etre le rendement S&P et ses amplitudes ne sont pas des
@@ -107,8 +107,10 @@ def _tranches_svg(tranches, rho_reference, lang, id_fig, titre, description,
     v0, v1 = 0.0, 1.0
     xs_dec = [sx(i + 0.5, 0, 10) for i in range(10)]
     # Deux series de points: ecart symetrique de 3 px de part et d'autre du
-    # centre du decile, pour que les disques de 4 px ne se recouvrent jamais.
-    dx_a = -3.0 if serie_b else 0.0
+    # centre du decile; c'est l'anneau couleur papier des disques qui garde
+    # les deux series separables meme quand les valeurs se confondent
+    # presque (decile 8).
+    dx_a = -3.0 if avec_corrigee else 0.0
     parts = [f'<figure class="fig" id="{id_fig}">']
     parts.append(f'<svg class="fig-svg" viewBox="0 0 640 388" role="img" '
                  f'aria-labelledby="{id_fig}-t {id_fig}-d">')
@@ -131,7 +133,7 @@ def _tranches_svg(tranches, rho_reference, lang, id_fig, titre, description,
                      f'x2="{x + dx_a}" y2="{yhaut}"/>')
         parts.append(f'<circle class="fig-point fig-serie-a" cx="{x + dx_a}" '
                      f'cy="{sy(t["rho"], v0, v1, y0, y1)}" r="4"/>')
-    if serie_b is not None:
+    if avec_corrigee:
         for x, t in zip(xs_dec, tranches):
             ybas = sy(t["ic_corr_bas"], v0, v1, y0, y1)
             yhaut = sy(t["ic_corr_haut"], v0, v1, y0, y1)
@@ -145,7 +147,7 @@ def _tranches_svg(tranches, rho_reference, lang, id_fig, titre, description,
     x_et = xs_dec[-1] + 13.0
     texte, dy = etiquettes["a"]
     parts.append(_etiquette(x_et, sy(tranches[-1]["rho"], v0, v1, y0, y1) + dy, texte))
-    if serie_b is not None and "b" in etiquettes:
+    if avec_corrigee and "b" in etiquettes:
         texte, dy = etiquettes["b"]
         parts.append(_etiquette(
             x_et, sy(tranches[-1]["rho_corrigee"], v0, v1, y0, y1) + dy, texte))
@@ -171,7 +173,7 @@ def _tranches_svg(tranches, rho_reference, lang, id_fig, titre, description,
     parts.append(f'<text class="fig-tick" x="{(X0 + X1) / 2}" y="{y1 + 52}" '
                  f'text-anchor="middle">{echapper(axe)}</text>')
     parts.append("</svg>")
-    parts.append(_tableau(tranches, lang, avec_corrigee=serie_b is not None,
+    parts.append(_tableau(tranches, lang, avec_corrigee=avec_corrigee,
                           analytique=courbe_analytique, simule=simule))
     parts.append("</figure>")
     return "\n".join(parts)
@@ -241,12 +243,12 @@ def fig_retournement(ctx, lang):
     desc = ("Paire gaussienne simulée dont la corrélation vraie est constante, "
             "égale à la valeur pleine période de la paire réelle, soumise à la "
             "même procédure par décile : la courbe monte de la même façon, et "
-            "elle suit la prédiction analytique tracée en trait fin." if lang == "fr"
+            "elle suit la prédiction analytique tracée en trait continu." if lang == "fr"
             else
             "Simulated Gaussian pair whose true correlation is constant, equal "
             "to the real pair's full-sample value, put through the same decile "
             "procedure: the curve rises the same way, and it follows the "
-            "analytic prediction drawn as a thin line.")
+            "analytic prediction drawn as a solid line.")
     analytique = [rho_conditionnelle(ctx["rho_pleine"], t["delta"])
                   for t in ctx["tranches_simulees"]]
     # Les points Monte-Carlo et le trait de la formule finissent presque
@@ -283,7 +285,7 @@ def fig_correction(ctx, lang):
     }
     return _tranches_svg(ctx["tranches_reelles"], ctx["rho_pleine"], lang,
                          "fig-correction", titre, desc, etiquettes,
-                         serie_b=True)
+                         avec_corrigee=True)
 
 
 def injecter(chemin, bloc, contenu):
