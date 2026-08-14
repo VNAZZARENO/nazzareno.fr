@@ -241,8 +241,8 @@ def fig_constat(ctx, lang):
 def fig_retournement(ctx, lang):
     titre = ("La même procédure sur un monde à corrélation constante" if lang == "fr"
              else "The same procedure on a constant-correlation world")
-    desc = ("Paire gaussienne simulée dont la corrélation vraie est constante, "
-            "égale à la valeur pleine période de la paire réelle, soumise à la "
+    desc = ("Couple gaussien simulé dont la corrélation vraie est constante, "
+            "égale à la valeur pleine période du couple réel, soumis à la "
             "même procédure par décile : la courbe monte de la même façon, et "
             "elle suit la prédiction analytique tracée en trait continu." if lang == "fr"
             else

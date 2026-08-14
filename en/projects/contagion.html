@@ -208,7 +208,7 @@
 
   <h2>The mechanism</h2>
 
-  <p>The mechanism fits in one line of model: <code>y = βx + ε</code>, with ε independent of x. Conditioning on the days when x is large changes neither β nor the noise; it only changes the signal-to-noise ratio. In a wild decile, the part of y explained by x weighs more against the same noise, and the sample correlation rises, mechanically, with no structural parameter having moved.</p>
+  <p>The mechanism fits in a single line: <code>y = βx + ε</code>, with ε independent of x. Conditioning on the days when x is large changes neither β nor the noise; it only changes the signal-to-noise ratio. In a wild decile, the part of y explained by x weighs more against the same noise, and the sample correlation rises, mechanically, with no structural parameter having moved.</p>
 
   <p class="aside">Writing δ for the relative excess variance of x in the subsample, the conditional correlation is <code>ρ<sub>A</sub> = ρ·√(1 + δ) / √(1 + δ·ρ²)</code>: it rises with δ, and with δ alone.</p>
 
@@ -224,13 +224,13 @@
     </ol>
   </details>
 
-  <p>A trap met along the way shows where the effect really lives. One of the first tests multiplied both series by three, stormy days included, and expected the correlation to rise: it did not move by a single digit, Pearson correlation being invariant under changes of scale. What the conditioning amplifies is not the size of the returns, then, but the share of the common shock against a noise that does not grow with it: inflate x alone, leaving ε untouched, and the raw correlation soars while the corrected one returns ρ. The whole question of contagion sits in that ratio, not in the turbulence itself.</p>
+  <p>A trap met along the way shows where the effect really lives. One of the first tests multiplied both series by three, stormy days included, and expected the correlation to rise: it did not move by a single decimal place, Pearson correlation being invariant under changes of scale. What the conditioning amplifies is not the size of the returns, then, but the share of the common shock against a noise that does not grow with it: inflate x alone, leaving ε untouched, and the raw correlation soars while the corrected one returns ρ. The whole question of contagion sits in that ratio, not in the turbulence itself.</p>
 
   <h2>The correction</h2>
 
-  <p>The formula inverts: if the rising curve is only the image of a constant correlation seen through δ, then it can be straightened. That is the Forbes-Rigobon correction, applied here decile by decile to the real data. From the third to the tenth decile, where the estimator is tight, the rise of the first chart vanishes: the corrected curve has no overall slope left and holds within a band of about 0.15 around the full-sample value. In the two lowest deciles, by contrast, the inversion divides by a number close to zero and amplifies noise instead of removing it: the first corrected decile comes out at 0.88, with an interval running from 0.46 to 0.96, which is to say a point that says nothing. The intervals in the figure say so on their own; the flattening, for its part, is only claimed from the third decile onwards.</p>
+  <p>The formula inverts: if the rising curve is only the image of a constant correlation seen through δ, then it can be straightened. That is the Forbes-Rigobon correction, applied here decile by decile to the real data. From the third to the tenth decile, where the estimator is tight, the rise of the first chart vanishes: the corrected curve has no overall slope left and stays within 0.15 of the full-sample value. In the two lowest deciles, by contrast, the inversion divides by a number close to zero and amplifies noise instead of removing the bias: the first corrected decile comes out at 0.88, with an interval running from 0.46 to 0.96, which is to say a point that says nothing. The intervals in the figure say so on their own; the flattening, for its part, is only claimed from the third decile onwards.</p>
 
-  <p>The last decile deserves its own sentence. There the correction does more than flatten: the corrected value drops to 0.49, below the 0.64 reference, and its interval, from 0.46 to 0.53, excludes it. Two readings are compatible with that point. Either the inversion, driven by this decile's δ of 5.2, corrects beyond what was needed; or the raw excess of the wildest days really was volatility bias through and through, down to the last point. The page reports what comes out of the computation and does not decide between the two.</p>
+  <p>The last decile is worth pausing on. There the correction does more than flatten: the corrected value drops to 0.49, below the 0.64 reference, and its interval, from 0.46 to 0.53, excludes it. Two readings are compatible with that point. Either the inversion, driven by this decile's δ of 5.2, corrects beyond what was needed; or the raw excess of the wildest days really was volatility bias through and through, down to the last point. The page reports what comes out of the computation and does not decide between the two.</p>
 
   <!-- fig:correction -->
 <figure class="fig" id="fig-correction">
@@ -336,7 +336,7 @@
     </div>
     <p><output id="explo-valeurs" aria-live="polite"></output></p>
   </div>
-  <noscript><p class="explo-sans-js">Without JavaScript, this box has nothing to show that the figure above does not already show: at quantile 0.90, 903 days remain, the raw correlation is 0.816 and the corrected one 0.493, against a full sample at 0.641.</p></noscript>
+  <noscript><p class="explo-sans-js">Without JavaScript, this box has nothing to show that the figure above does not already show: at quantile 0.90, 903 days remain (a quantile cut is not a decile cut, hence one day more than the last decile), the raw correlation is 0.816 and the corrected one 0.493, against a full sample at 0.641.</p></noscript>
   <script type="module" src="/assets/js/contagion/ui.js"></script>
 
   <h2>What is left</h2>
@@ -345,7 +345,7 @@
 
   <p>These means are descriptive, and it matters to say why. Two successive windows share 59 of their 60 days: the 84 windows of autumn 2008 amount to one or two independent observations, not 84. The two-day smoothing also autocorrelates the returns, 0.45 at the first lag, so that a 60-day window carries about 23 effective observations. And it is precisely in a crisis that δ becomes huge, a median of 8.3 in autumn 2008, which is exactly where the inversion amplifies noise the most. February-April 2020 makes the point: the standard deviation of the corrected windows there reaches 0.21, and 18 of the 51 windows go above the reference. "Below the reference" is a statement about a noisy average, not about every window.</p>
 
-  <p>The solid argument lies elsewhere, and it is a fortiori. The correction's variance reference is the full sample, crises included, not a calm period: the correction therefore under-corrects by construction. If extra propagation were added to the mechanism, above the reference is where it had every room to survive; yet, averaged over each episode, nothing survives. That an under-correcting adjustment lands below is, moreover, no paradox: at huge δ, averaging a noisy and roughly concave transform pulls downward, and the windows mix regimes, those ending in early September 2008 still looking back at a calm summer. The careful reading fits in one sentence: most of the crisis-time surge in correlations is the mechanical effect of volatility, not proof of extra propagation.</p>
+  <p>The solid argument lies elsewhere, and it is an a fortiori one. The correction's variance reference is the full sample, crises included, not a calm period: the correction therefore under-corrects by construction. If extra propagation were added to the mechanism, above the reference is where it would have ample room to survive; yet, averaged over each episode, nothing survives. That an under-correcting adjustment lands below is, moreover, no paradox: at huge δ, averaging a noisy and roughly concave transform pulls downward, and the windows mix regimes, those ending in early September 2008 still looking back at a calm summer. The careful reading fits in one sentence: most of the crisis-time surge in correlations is the mechanical effect of volatility, not proof of extra propagation.</p>
 
   <!-- fig:reste -->
 <figure class="fig" id="fig-reste">
@@ -403,10 +403,10 @@
     <li><strong>The two-day moving average creates artificial autocorrelation.</strong> It is there to absorb the time-zone gap, and it raises the level: on single days, without smoothing, the full-sample correlation is 0.52 instead of 0.64. The Forbes-Rigobon correction says nothing about that level shift; the decile mechanics, though, are the same with or without smoothing.</li>
     <li><strong>The Monte-Carlo is Gaussian.</strong> That is a tamer world than markets, with no fat tails; and the interval bootstrap is i.i.d., which likely understates their width.</li>
     <li><strong>Trading desks usually condition on a market's rolling volatility,</strong> not on the day's magnitude. The day-magnitude version isolates the mechanism; the last figure covers the other reading.</li>
-    <li><strong>The data is as declared.</strong> Yahoo Finance closes, dividends not reinvested, Pearson correlation on log returns: nothing here is total return, and another vendor would give neighbouring but not identical numbers.</li>
+    <li><strong>The data is taken as is.</strong> Yahoo Finance closes, dividends not reinvested, Pearson correlation on log returns: nothing here is total return, and another vendor would give neighbouring but not identical numbers.</li>
   </ul>
 
-  <p>Out of scope, finally: dynamic conditional correlations of the DCC-GARCH kind, copulas, correlations implied by option prices. So many open doors for a follow-up post. The starting point remains the Forbes and Rigobon paper, <a href="https://onlinelibrary.wiley.com/doi/10.1111/0022-1082.00494">"No Contagion, Only Interdependence" (Journal of Finance, 2002)</a>, and the whole computation behind this page can be replayed from <a href="https://github.com/VNAZZARENO/nazzareno.fr/tree/main/tools/contagion">tools/contagion, on GitHub</a>.</p>
+  <p>Out of scope, finally: dynamic conditional correlations of the DCC-GARCH kind, copulas, correlations implied by option prices. So many doors left open for a follow-up post. The starting point remains the Forbes and Rigobon article, <a href="https://onlinelibrary.wiley.com/doi/10.1111/0022-1082.00494">"No Contagion, Only Interdependence" (Journal of Finance, 2002)</a>, and the whole computation behind this page can be re-run from <a href="https://github.com/VNAZZARENO/nazzareno.fr/tree/main/tools/contagion">tools/contagion, on GitHub</a>.</p>
 
   <p class="aside">Every number on this page comes out of the same computation pipeline; the paired returns themselves are in <a href="/assets/data/contagion.json">contagion.json</a>.</p>
 
