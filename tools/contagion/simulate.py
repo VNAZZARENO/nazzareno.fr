@@ -16,7 +16,9 @@ def tirages(rho, n, graine):
 
 
 def correlation(x, y):
-    """Pearson, diviseur n. Meme convention que l'explorateur JS: la parite en depend."""
+    """Pearson, diviseur n. Meme convention que l'explorateur JS: la parite en depend.
+
+    Entree constante -> nan: aucun sous-echantillon degenere ne doit arriver ici."""
     x, y = np.asarray(x, float), np.asarray(y, float)
     cx, cy = x - x.mean(), y - y.mean()
     return float((cx * cy).mean() / np.sqrt(cx.var() * cy.var()))
