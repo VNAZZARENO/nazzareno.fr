@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contagion, or less than advertised, Vincent Nazzareno</title>
+  <meta name="description" content="The classic contagion proof recomputed on S&P 500 × CAC 40 daily closes, reproduced in a constant-correlation simulated world, then corrected (Forbes-Rigobon).">
+  <link rel="canonical" href="https://nazzareno.fr/en/projects/contagion.html">
+  <link rel="alternate" hreflang="fr" href="https://nazzareno.fr/projets/contagion.html">
+  <link rel="alternate" hreflang="en" href="https://nazzareno.fr/en/projects/contagion.html">
+  <link rel="alternate" hreflang="x-default" href="https://nazzareno.fr/projets/contagion.html">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+  <meta property="og:title" content="Contagion, or less than advertised, Vincent Nazzareno">
+  <meta property="og:description" content="The classic contagion proof recomputed on S&P 500 × CAC 40 daily closes, reproduced in a constant-correlation simulated world, then corrected (Forbes-Rigobon).">
+  <meta property="og:url" content="https://nazzareno.fr/en/projects/contagion.html">
+  <meta property="og:image" content="https://nazzareno.fr/assets/og/contagion-en.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Vincent Nazzareno, nazzareno.fr">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:type" content="article">
+</head>
+<body class="article post">
+
+<header>
+  <div class="wrap">
+    <span class="nav nav-start">
+      <a class="brand" href="/en/">vincent<span class="brand-rest"> nazzareno</span></a>
+      <a class="section" href="/en/#projects">projects</a>
+    </span>
+    <span class="nav nav-end">
+      <a class="contact" href="mailto:contact@nazzareno.fr">contact</a>
+      <span class="lang"><a href="/projets/contagion.html">fr</a> · en</span>
+    </span>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="post-date"><time datetime="2026-08-14">Thursday 14 August 2026</time></p>
+  <h1>Contagion, or less than advertised</h1>
+  <p class="standfirst">When markets fall, correlations rise, and we call that contagion. I recomputed the classic proof on the S&amp;P 500 and the CAC 40, then obtained the exact same picture in a simulated world where, by construction, nothing propagates.</p>
+  <p class="facts"><b>Labels</b> <span>S&amp;P 500 × CAC 40</span>
+    <span>Forbes-Rigobon 2002</span>
+    <span>⟨n⟩ trading days</span>
+    <span>conditional correlations</span>
+    <span>no dependencies</span></p>
+
+  <h2>The finding</h2>
+
+  <p>The phrase comes back with every crisis: "in times of stress, everything becomes correlated". It has a standard proof, and the proof fits in one chart. Take the daily closes of the S&amp;P 500 and the CAC 40, ⟨n⟩ common trading days from ⟨…⟩ to ⟨…⟩; turn them into log returns smoothed with a two-day moving average, to absorb the time-zone gap between New York and Paris. Then sort the days into ten deciles of US return magnitude, from calmest to wildest, and measure the correlation inside each one.</p>
+
+  <p>The curve rises, without hesitation: from ⟨…⟩ in the calmest decile to ⟨…⟩ in the wildest, against a full-sample correlation of ⟨…⟩. On stormy days, Paris follows New York almost step for step. There, we are told, is contagion, measured.</p>
+
+  <!-- fig:constat -->
+<figure class="fig" id="fig-constat">
+<svg class="fig-svg" viewBox="0 0 640 388" role="img" aria-labelledby="fig-constat-t fig-constat-d">
+<title id="fig-constat-t">S&amp;P 500 × CAC 40 correlation by magnitude decile</title>
+<desc id="fig-constat-d">Sample correlation rises from the first to the last decile of S&amp;P return magnitude; the horizontal line is the full-sample correlation.</desc>
+<line class="fig-grille" x1="54.0" y1="320.0" x2="528.0" y2="320.0"/>
+<text class="fig-tick fig-tick-y" x="46.0" y="324.0">0.00</text>
+<line class="fig-grille" x1="54.0" y1="248.0" x2="528.0" y2="248.0"/>
+<text class="fig-tick fig-tick-y" x="46.0" y="252.0">0.25</text>
+<line class="fig-grille" x1="54.0" y1="176.0" x2="528.0" y2="176.0"/>
+<text class="fig-tick fig-tick-y" x="46.0" y="180.0">0.50</text>
+<line class="fig-grille" x1="54.0" y1="104.0" x2="528.0" y2="104.0"/>
+<text class="fig-tick fig-tick-y" x="46.0" y="108.0">0.75</text>
+<line class="fig-grille" x1="54.0" y1="32.0" x2="528.0" y2="32.0"/>
+<text class="fig-tick fig-tick-y" x="46.0" y="36.0">1.00</text>
+<polyline class="fig-repere" points="54.0,135.44 528.0,135.44"/>
+<line class="fig-ic fig-serie-a" x1="77.7" y1="312.63" x2="77.7" y2="274.97"/>
+<circle class="fig-point fig-serie-a" cx="77.7" cy="293.85" r="4"/>
+<line class="fig-ic fig-serie-a" x1="125.1" y1="307.43" x2="125.1" y2="269.44"/>
+<circle class="fig-point fig-serie-a" cx="125.1" cy="287.82" r="4"/>
+<line class="fig-ic fig-serie-a" x1="172.5" y1="264.87" x2="172.5" y2="229.29"/>
+<circle class="fig-point fig-serie-a" cx="172.5" cy="246.94" r="4"/>
+<line class="fig-ic fig-serie-a" x1="219.9" y1="267.55" x2="219.9" y2="232.81"/>
+<circle class="fig-point fig-serie-a" cx="219.9" cy="249.54" r="4"/>
+<line class="fig-ic fig-serie-a" x1="267.3" y1="232.71" x2="267.3" y2="198.32"/>
+<circle class="fig-point fig-serie-a" cx="267.3" cy="215.46" r="4"/>
+<line class="fig-ic fig-serie-a" x1="314.7" y1="194.91" x2="314.7" y2="167.77"/>
+<circle class="fig-point fig-serie-a" cx="314.7" cy="180.83" r="4"/>
+<line class="fig-ic fig-serie-a" x1="362.1" y1="178.58" x2="362.1" y2="152.94"/>
+<circle class="fig-point fig-serie-a" cx="362.1" cy="165.9" r="4"/>
+<line class="fig-ic fig-serie-a" x1="409.5" y1="159.5" x2="409.5" y2="134.24"/>
+<circle class="fig-point fig-serie-a" cx="409.5" cy="146.45" r="4"/>
+<line class="fig-ic fig-serie-a" x1="456.9" y1="130.25" x2="456.9" y2="111.21"/>
+<circle class="fig-point fig-serie-a" cx="456.9" cy="120.52" r="4"/>
+<line class="fig-ic fig-serie-a" x1="504.3" y1="92.32" x2="504.3" y2="78.08"/>
+<circle class="fig-point fig-serie-a" cx="504.3" cy="85.0" r="4"/>
+<text class="fig-serie" x="517.3" y="89.0">raw</text>
+<text class="fig-serie" x="534.0" y="139.44">full sample</text>
+<text class="fig-tick" x="77.7" y="338.0" text-anchor="middle">1</text>
+<text class="fig-tick" x="125.1" y="338.0" text-anchor="middle">2</text>
+<text class="fig-tick" x="172.5" y="338.0" text-anchor="middle">3</text>
+<text class="fig-tick" x="219.9" y="338.0" text-anchor="middle">4</text>
+<text class="fig-tick" x="267.3" y="338.0" text-anchor="middle">5</text>
+<text class="fig-tick" x="314.7" y="338.0" text-anchor="middle">6</text>
+<text class="fig-tick" x="362.1" y="338.0" text-anchor="middle">7</text>
+<text class="fig-tick" x="409.5" y="338.0" text-anchor="middle">8</text>
+<text class="fig-tick" x="456.9" y="338.0" text-anchor="middle">9</text>
+<text class="fig-tick" x="504.3" y="338.0" text-anchor="middle">10</text>
+<text class="fig-tick" x="77.7" y="354.0" text-anchor="middle">0.03%</text>
+<text class="fig-tick" x="267.3" y="354.0" text-anchor="middle">0.34%</text>
+<text class="fig-tick" x="504.3" y="354.0" text-anchor="middle">1.53%</text>
+<text class="fig-tick" x="291.0" y="372.0" text-anchor="middle">decile of |S&amp;P return|, median magnitude below</text>
+</svg>
+<details class="fig-data">
+<summary>the plotted values</summary>
+<table class="fig-table">
+<thead><tr><th scope="col">Decile</th><th scope="col">n</th><th scope="col">Median magnitude</th><th scope="col">δ</th><th scope="col">Correlation</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>902</td><td>0.03%</td><td>−1.00</td><td>0.091</td></tr>
+<tr><td>2</td><td>903</td><td>0.10%</td><td>−0.98</td><td>0.112</td></tr>
+<tr><td>3</td><td>902</td><td>0.18%</td><td>−0.95</td><td>0.254</td></tr>
+<tr><td>4</td><td>902</td><td>0.25%</td><td>−0.90</td><td>0.245</td></tr>
+<tr><td>5</td><td>903</td><td>0.34%</td><td>−0.81</td><td>0.363</td></tr>
+<tr><td>6</td><td>902</td><td>0.44%</td><td>−0.68</td><td>0.483</td></tr>
+<tr><td>7</td><td>902</td><td>0.56%</td><td>−0.49</td><td>0.535</td></tr>
+<tr><td>8</td><td>902</td><td>0.73%</td><td>−0.10</td><td>0.603</td></tr>
+<tr><td>9</td><td>903</td><td>0.98%</td><td>0.63</td><td>0.693</td></tr>
+<tr><td>10</td><td>902</td><td>1.53%</td><td>5.22</td><td>0.816</td></tr>
+</tbody>
+</table>
+</details>
+</figure>
+<!-- /fig:constat -->
+
+  <h2>The reversal</h2>
+
+  <p>Before concluding, a counter-test. I build a simulated Gaussian pair of the same size, whose true correlation is constant by construction, equal to ⟨…⟩, the real pair's full-sample value. No regimes, no crises, no propagation: the tamest world one can draw at random. The same decile procedure produces the same rising curve, and the analytic prediction, drawn as a solid line, threads through the Monte-Carlo points. The chart that "proved" contagion therefore proves nothing on its own: it rediscovers a property of the estimator, not a property of markets.</p>
+
+  <!-- fig:retournement -->
+<figure class="fig" id="fig-retournement">
+<svg class="fig-svg" viewBox="0 0 640 388" role="img" aria-labelledby="fig-retournement-t fig-retournement-d">
+<title id="fig-retournement-t">The same procedure on a constant-correlation world</title>
+<desc id="fig-retournement-d">Simulated Gaussian pair whose true correlation is constant, equal to the real pair's full-sample value, put through the same decile procedure: the curve rises the same way, and it follows the analytic prediction drawn as a solid line.</desc>
+<line class="fig-grille" x1="54.0" y1="320.0" x2="528.0" y2="320.0"/>
+<text class="fig-tick fig-tick-y" x="46.0" y="324.0">0.00</text>
+<line class="fig-grille" x1="54.0" y1="248.0" x2="528.0" y2="248.0"/>
+<text class="fig-tick fig-tick-y" x="46.0" y="252.0">0.25</text>
+<line class="fig-grille" x1="54.0" y1="176.0" x2="528.0" y2="176.0"/>
+<text class="fig-tick fig-tick-y" x="46.0" y="180.0">0.50</text>
+<line class="fig-grille" x1="54.0" y1="104.0" x2="528.0" y2="104.0"/>
+<text class="fig-tick fig-tick-y" x="46.0" y="108.0">0.75</text>
+<line class="fig-grille" x1="54.0" y1="32.0" x2="528.0" y2="32.0"/>
+<text class="fig-tick fig-tick-y" x="46.0" y="36.0">1.00</text>
+<polyline class="fig-repere" points="54.0,135.44 528.0,135.44"/>
+<polyline class="fig-trait fig-serie-b" points="77.7,302.41 125.1,273.28 172.5,244.62 219.9,216.31 267.3,189.7 314.7,165.01 362.1,142.27 409.5,120.14 456.9,97.99 504.3,70.22"/>
+<line class="fig-ic fig-serie-a" x1="77.7" y1="325.68" x2="77.7" y2="287.4"/>
+<circle class="fig-point fig-serie-a" cx="77.7" cy="307.81" r="4"/>
+<line class="fig-ic fig-serie-a" x1="125.1" y1="283.27" x2="125.1" y2="247.81"/>
+<circle class="fig-point fig-serie-a" cx="125.1" cy="265.4" r="4"/>
+<line class="fig-ic fig-serie-a" x1="172.5" y1="261.2" x2="172.5" y2="228.37"/>
+<circle class="fig-point fig-serie-a" cx="172.5" cy="244.7" r="4"/>
+<line class="fig-ic fig-serie-a" x1="219.9" y1="229.8" x2="219.9" y2="198.03"/>
+<circle class="fig-point fig-serie-a" cx="219.9" cy="213.72" r="4"/>
+<line class="fig-ic fig-serie-a" x1="267.3" y1="204.82" x2="267.3" y2="175.79"/>
+<circle class="fig-point fig-serie-a" cx="267.3" cy="189.96" r="4"/>
+<line class="fig-ic fig-serie-a" x1="314.7" y1="174.74" x2="314.7" y2="150.15"/>
+<circle class="fig-point fig-serie-a" cx="314.7" cy="162.27" r="4"/>
+<line class="fig-ic fig-serie-a" x1="362.1" y1="158.04" x2="362.1" y2="135.92"/>
+<circle class="fig-point fig-serie-a" cx="362.1" cy="146.45" r="4"/>
+<line class="fig-ic fig-serie-a" x1="409.5" y1="123.88" x2="409.5" y2="108.06"/>
+<circle class="fig-point fig-serie-a" cx="409.5" cy="115.66" r="4"/>
+<line class="fig-ic fig-serie-a" x1="456.9" y1="104.17" x2="456.9" y2="92.0"/>
+<circle class="fig-point fig-serie-a" cx="456.9" cy="98.02" r="4"/>
+<line class="fig-ic fig-serie-a" x1="504.3" y1="75.85" x2="504.3" y2="67.73"/>
+<circle class="fig-point fig-serie-a" cx="504.3" cy="71.72" r="4"/>
+<text class="fig-serie" x="517.3" y="63.72">Monte-Carlo</text>
+<text class="fig-serie" x="517.3" y="88.22">formula</text>
+<text class="fig-serie" x="534.0" y="139.44">full sample</text>
+<text class="fig-tick" x="77.7" y="338.0" text-anchor="middle">1</text>
+<text class="fig-tick" x="125.1" y="338.0" text-anchor="middle">2</text>
+<text class="fig-tick" x="172.5" y="338.0" text-anchor="middle">3</text>
+<text class="fig-tick" x="219.9" y="338.0" text-anchor="middle">4</text>
+<text class="fig-tick" x="267.3" y="338.0" text-anchor="middle">5</text>
+<text class="fig-tick" x="314.7" y="338.0" text-anchor="middle">6</text>
+<text class="fig-tick" x="362.1" y="338.0" text-anchor="middle">7</text>
+<text class="fig-tick" x="409.5" y="338.0" text-anchor="middle">8</text>
+<text class="fig-tick" x="456.9" y="338.0" text-anchor="middle">9</text>
+<text class="fig-tick" x="504.3" y="338.0" text-anchor="middle">10</text>
+<text class="fig-tick" x="77.7" y="354.0" text-anchor="middle">0.06</text>
+<text class="fig-tick" x="267.3" y="354.0" text-anchor="middle">0.61</text>
+<text class="fig-tick" x="504.3" y="354.0" text-anchor="middle">1.96</text>
+<text class="fig-tick" x="291.0" y="372.0" text-anchor="middle">decile of simulated |x|, median magnitude below</text>
+</svg>
+<details class="fig-data">
+<summary>the plotted values</summary>
+<table class="fig-table">
+<thead><tr><th scope="col">Decile</th><th scope="col">n</th><th scope="col">Median magnitude</th><th scope="col">δ</th><th scope="col">Correlation</th><th scope="col">Formula</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>902</td><td>0.06</td><td>−0.99</td><td>0.042</td><td>0.061</td></tr>
+<tr><td>2</td><td>903</td><td>0.19</td><td>−0.96</td><td>0.190</td><td>0.162</td></tr>
+<tr><td>3</td><td>902</td><td>0.32</td><td>−0.89</td><td>0.261</td><td>0.262</td></tr>
+<tr><td>4</td><td>902</td><td>0.46</td><td>−0.79</td><td>0.369</td><td>0.360</td></tr>
+<tr><td>5</td><td>903</td><td>0.61</td><td>−0.63</td><td>0.452</td><td>0.452</td></tr>
+<tr><td>6</td><td>902</td><td>0.77</td><td>−0.41</td><td>0.548</td><td>0.538</td></tr>
+<tr><td>7</td><td>902</td><td>0.94</td><td>−0.12</td><td>0.603</td><td>0.617</td></tr>
+<tr><td>8</td><td>902</td><td>1.15</td><td>0.33</td><td>0.710</td><td>0.694</td></tr>
+<tr><td>9</td><td>903</td><td>1.44</td><td>1.10</td><td>0.771</td><td>0.771</td></tr>
+<tr><td>10</td><td>902</td><td>1.96</td><td>3.36</td><td>0.862</td><td>0.867</td></tr>
+</tbody>
+</table>
+</details>
+</figure>
+<!-- /fig:retournement -->
+
+  <h2>The mechanism</h2>
+
+  <p>The mechanism fits in one line of model: <code>y = βx + ε</code>, with ε independent of x. Conditioning on the days when x is large changes neither β nor the noise; it only changes the signal-to-noise ratio. In a wild decile, the part of y explained by x weighs more against the same noise, and the sample correlation rises, mechanically, with no structural parameter having moved.</p>
+
+  <p class="aside">Writing δ for the relative excess variance of x in the subsample, the conditional correlation is <code>ρ<sub>A</sub> = ρ·√(1 + δ) / √(1 + δ·ρ²)</code>: it rises with δ, and with δ alone.</p>
+
+  <details class="fig-data">
+    <summary>the full derivation</summary>
+    <ol>
+      <li>Model: <code>y = βx + ε</code>, ε independent of x with variance σ²; A is the conditioning event, defined on x alone.</li>
+      <li><code>Cov(x, y | A) = β·Var(x | A)</code>, because ε does not depend on x.</li>
+      <li><code>Var(y | A) = β²·Var(x | A) + σ²</code>, for the same reason.</li>
+      <li>Hence <code>ρ<sub>A</sub> = β·√Var(x | A) / √(β²·Var(x | A) + σ²)</code>.</li>
+      <li>Set <code>δ = Var(x | A) / Var(x) − 1</code> and divide top and bottom by the unconditional standard deviation of y, which brings out ρ.</li>
+      <li>What remains is <code>ρ<sub>A</sub> = ρ·√(1 + δ) / √(1 + δ·ρ²)</code>: the whole effect goes through δ.</li>
+    </ol>
+  </details>
+
+  <h2>The correction</h2>
+
+  <p>The formula inverts: if the rising curve is only the image of a constant correlation seen through δ, then it can be straightened. That is the Forbes-Rigobon correction, applied here decile by decile to the real data. From the third to the tenth decile, where the estimator is tight, the corrected correlation stays near the full-sample value: the rise of the first chart all but vanishes. In the lowest deciles, the inversion divides by a number close to zero and amplifies noise; the wide intervals in the figure say so on their own.</p>
+
+  <!-- fig:correction -->
+<figure class="fig" id="fig-correction">
+<svg class="fig-svg" viewBox="0 0 640 388" role="img" aria-labelledby="fig-correction-t fig-correction-d">
+<title id="fig-correction-t">The real deciles, raw and corrected</title>
+<desc id="fig-correction-d">The same real deciles, raw correlation and Forbes-Rigobon corrected correlation side by side. The corrected curve stays near the full-sample correlation where the estimator is tight, from the third to the tenth decile; in the lowest deciles the inversion amplifies noise, and the wide intervals say so.</desc>
+<line class="fig-grille" x1="54.0" y1="320.0" x2="528.0" y2="320.0"/>
+<text class="fig-tick fig-tick-y" x="46.0" y="324.0">0.00</text>
+<line class="fig-grille" x1="54.0" y1="248.0" x2="528.0" y2="248.0"/>
+<text class="fig-tick fig-tick-y" x="46.0" y="252.0">0.25</text>
+<line class="fig-grille" x1="54.0" y1="176.0" x2="528.0" y2="176.0"/>
+<text class="fig-tick fig-tick-y" x="46.0" y="180.0">0.50</text>
+<line class="fig-grille" x1="54.0" y1="104.0" x2="528.0" y2="104.0"/>
+<text class="fig-tick fig-tick-y" x="46.0" y="108.0">0.75</text>
+<line class="fig-grille" x1="54.0" y1="32.0" x2="528.0" y2="32.0"/>
+<text class="fig-tick fig-tick-y" x="46.0" y="36.0">1.00</text>
+<polyline class="fig-repere" points="54.0,135.44 528.0,135.44"/>
+<line class="fig-ic fig-serie-a" x1="74.7" y1="312.63" x2="74.7" y2="274.97"/>
+<circle class="fig-point fig-serie-a" cx="74.7" cy="293.85" r="4"/>
+<line class="fig-ic fig-serie-a" x1="122.1" y1="307.43" x2="122.1" y2="269.44"/>
+<circle class="fig-point fig-serie-a" cx="122.1" cy="287.82" r="4"/>
+<line class="fig-ic fig-serie-a" x1="169.5" y1="264.87" x2="169.5" y2="229.29"/>
+<circle class="fig-point fig-serie-a" cx="169.5" cy="246.94" r="4"/>
+<line class="fig-ic fig-serie-a" x1="216.9" y1="267.55" x2="216.9" y2="232.81"/>
+<circle class="fig-point fig-serie-a" cx="216.9" cy="249.54" r="4"/>
+<line class="fig-ic fig-serie-a" x1="264.3" y1="232.71" x2="264.3" y2="198.32"/>
+<circle class="fig-point fig-serie-a" cx="264.3" cy="215.46" r="4"/>
+<line class="fig-ic fig-serie-a" x1="311.7" y1="194.91" x2="311.7" y2="167.77"/>
+<circle class="fig-point fig-serie-a" cx="311.7" cy="180.83" r="4"/>
+<line class="fig-ic fig-serie-a" x1="359.1" y1="178.58" x2="359.1" y2="152.94"/>
+<circle class="fig-point fig-serie-a" cx="359.1" cy="165.9" r="4"/>
+<line class="fig-ic fig-serie-a" x1="406.5" y1="159.5" x2="406.5" y2="134.24"/>
+<circle class="fig-point fig-serie-a" cx="406.5" cy="146.45" r="4"/>
+<line class="fig-ic fig-serie-a" x1="453.9" y1="130.25" x2="453.9" y2="111.21"/>
+<circle class="fig-point fig-serie-a" cx="453.9" cy="120.52" r="4"/>
+<line class="fig-ic fig-serie-a" x1="501.3" y1="92.32" x2="501.3" y2="78.08"/>
+<circle class="fig-point fig-serie-a" cx="501.3" cy="85.0" r="4"/>
+<line class="fig-ic fig-serie-b" x1="80.7" y1="187.15" x2="80.7" y2="44.92"/>
+<circle class="fig-point fig-serie-b" cx="80.7" cy="66.18" r="4"/>
+<line class="fig-ic fig-serie-b" x1="128.1" y1="229.23" x2="128.1" y2="88.43"/>
+<circle class="fig-point fig-serie-b" cx="128.1" cy="133.43" r="4"/>
+<line class="fig-ic fig-serie-b" x1="175.5" y1="130.89" x2="175.5" y2="81.53"/>
+<circle class="fig-point fig-serie-b" cx="175.5" cy="101.19" r="4"/>
+<line class="fig-ic fig-serie-b" x1="222.9" y1="176.78" x2="222.9" y2="117.91"/>
+<circle class="fig-point fig-serie-b" cx="222.9" cy="142.84" r="4"/>
+<line class="fig-ic fig-serie-b" x1="270.3" y1="149.55" x2="270.3" y2="109.46"/>
+<circle class="fig-point fig-serie-b" cx="270.3" cy="127.73" r="4"/>
+<line class="fig-ic fig-serie-b" x1="317.7" y1="132.21" x2="317.7" y2="106.09"/>
+<circle class="fig-point fig-serie-b" cx="317.7" cy="118.1" r="4"/>
+<line class="fig-ic fig-serie-b" x1="365.1" y1="141.07" x2="365.1" y2="116.15"/>
+<circle class="fig-point fig-serie-b" cx="365.1" cy="128.52" r="4"/>
+<line class="fig-ic fig-serie-b" x1="412.5" y1="153.84" x2="412.5" y2="128.79"/>
+<circle class="fig-point fig-serie-b" cx="412.5" cy="140.85" r="4"/>
+<line class="fig-ic fig-serie-b" x1="459.9" y1="156.94" x2="459.9" y2="136.87"/>
+<circle class="fig-point fig-serie-b" cx="459.9" cy="147.0" r="4"/>
+<line class="fig-ic fig-serie-b" x1="507.3" y1="187.52" x2="507.3" y2="167.86"/>
+<circle class="fig-point fig-serie-b" cx="507.3" cy="178.11" r="4"/>
+<text class="fig-serie" x="517.3" y="89.0">raw</text>
+<text class="fig-serie" x="517.3" y="182.11">corrected</text>
+<text class="fig-serie" x="534.0" y="139.44">full sample</text>
+<text class="fig-tick" x="77.7" y="338.0" text-anchor="middle">1</text>
+<text class="fig-tick" x="125.1" y="338.0" text-anchor="middle">2</text>
+<text class="fig-tick" x="172.5" y="338.0" text-anchor="middle">3</text>
+<text class="fig-tick" x="219.9" y="338.0" text-anchor="middle">4</text>
+<text class="fig-tick" x="267.3" y="338.0" text-anchor="middle">5</text>
+<text class="fig-tick" x="314.7" y="338.0" text-anchor="middle">6</text>
+<text class="fig-tick" x="362.1" y="338.0" text-anchor="middle">7</text>
+<text class="fig-tick" x="409.5" y="338.0" text-anchor="middle">8</text>
+<text class="fig-tick" x="456.9" y="338.0" text-anchor="middle">9</text>
+<text class="fig-tick" x="504.3" y="338.0" text-anchor="middle">10</text>
+<text class="fig-tick" x="77.7" y="354.0" text-anchor="middle">0.03%</text>
+<text class="fig-tick" x="267.3" y="354.0" text-anchor="middle">0.34%</text>
+<text class="fig-tick" x="504.3" y="354.0" text-anchor="middle">1.53%</text>
+<text class="fig-tick" x="291.0" y="372.0" text-anchor="middle">decile of |S&amp;P return|, median magnitude below</text>
+</svg>
+<details class="fig-data">
+<summary>the plotted values</summary>
+<table class="fig-table">
+<thead><tr><th scope="col">Decile</th><th scope="col">n</th><th scope="col">Median magnitude</th><th scope="col">δ</th><th scope="col">Correlation</th><th scope="col">Corrected</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>902</td><td>0.03%</td><td>−1.00</td><td>0.091</td><td>0.881</td></tr>
+<tr><td>2</td><td>903</td><td>0.10%</td><td>−0.98</td><td>0.112</td><td>0.648</td></tr>
+<tr><td>3</td><td>902</td><td>0.18%</td><td>−0.95</td><td>0.254</td><td>0.760</td></tr>
+<tr><td>4</td><td>902</td><td>0.25%</td><td>−0.90</td><td>0.245</td><td>0.615</td></tr>
+<tr><td>5</td><td>903</td><td>0.34%</td><td>−0.81</td><td>0.363</td><td>0.668</td></tr>
+<tr><td>6</td><td>902</td><td>0.44%</td><td>−0.68</td><td>0.483</td><td>0.701</td></tr>
+<tr><td>7</td><td>902</td><td>0.56%</td><td>−0.49</td><td>0.535</td><td>0.665</td></tr>
+<tr><td>8</td><td>902</td><td>0.73%</td><td>−0.10</td><td>0.603</td><td>0.622</td></tr>
+<tr><td>9</td><td>903</td><td>0.98%</td><td>0.63</td><td>0.693</td><td>0.601</td></tr>
+<tr><td>10</td><td>902</td><td>1.53%</td><td>5.22</td><td>0.816</td><td>0.493</td></tr>
+</tbody>
+</table>
+</details>
+</figure>
+<!-- /fig:correction -->
+  <!-- explorateur: pose a la tache 13 -->
+
+  <h2>What is left</h2>
+
+  <p>Deciles mix every era together; to look at the crises themselves, I switch to a rolling correlation over 60 trading days. The raw curve climbs to ⟨…⟩ at the height of the crises. The corrected curve tells another story: averaged over each episode, it sits at ⟨…⟩ in autumn 2008 and ⟨…⟩ in February-April 2020, both below the full-sample line. These means are descriptive, and successive windows overlap: they carry fewer independent observations than they seem to. The correction is, moreover, conservative, its variance reference being the full sample, crises included, and yet here it dips below the reference; part of that gap comes from the difference between conditioning on a calendar window and conditioning on the day's magnitude, for which the formula is exact. The careful reading: most of the crisis-time surge in correlations is the mechanical effect of volatility, not proof of extra propagation.</p>
+
+  <!-- fig:reste -->
+<figure class="fig" id="fig-reste">
+<svg class="fig-svg" viewBox="0 0 640 388" role="img" aria-labelledby="fig-reste-t fig-reste-d">
+<title id="fig-reste-t">60-day rolling correlation, raw and corrected</title>
+<desc id="fig-reste-d">60-day rolling correlation between S&amp;P 500 and CAC 40 returns, raw and Forbes-Rigobon corrected, 1990 to 2026, with autumn 2008 and February-April 2020 as shaded bands. The correction reduces the excess of both crises. The variance reference is the full sample, crises included: the correction under-corrects, and whatever would stay above the reference in a crisis is not by itself evidence of contagion. Each window carries less information than its 60 points, hence per-episode means in the table; in calm windows the corrected curve runs above the raw one, a mechanical and symmetric effect of the inversion.</desc>
+<rect class="fig-episode" x="291.66" y="32.0" width="4.39" height="288.0"/>
+<text class="fig-tick" x="293.86" y="24.0" text-anchor="middle">2008</text>
+<rect class="fig-episode" x="442.59" y="32.0" width="3.0" height="288.0"/>
+<text class="fig-tick" x="444.09" y="24.0" text-anchor="middle">2020</text>
+<line class="fig-grille" x1="54.0" y1="320.0" x2="528.0" y2="320.0"/>
+<text class="fig-tick fig-tick-y" x="46.0" y="324.0">0.00</text>
+<line class="fig-grille" x1="54.0" y1="248.0" x2="528.0" y2="248.0"/>
+<text class="fig-tick fig-tick-y" x="46.0" y="252.0">0.25</text>
+<line class="fig-grille" x1="54.0" y1="176.0" x2="528.0" y2="176.0"/>
+<text class="fig-tick fig-tick-y" x="46.0" y="180.0">0.50</text>
+<line class="fig-grille" x1="54.0" y1="104.0" x2="528.0" y2="104.0"/>
+<text class="fig-tick fig-tick-y" x="46.0" y="108.0">0.75</text>
+<line class="fig-grille" x1="54.0" y1="32.0" x2="528.0" y2="32.0"/>
+<text class="fig-tick fig-tick-y" x="46.0" y="36.0">1.00</text>
+<polyline class="fig-repere" points="54.0,135.44 528.0,135.44"/>
+<polyline class="fig-trait fig-trait-fin fig-serie-a" points="54.0,302.57 54.26,289.96 54.53,277.39 54.79,291.75 55.06,293.18 55.32,275.66 55.59,266.35 55.85,250.93 56.12,248.02 56.38,165.97 56.64,184.4 56.91,200.99 57.17,166.41 57.44,174.1 57.7,176.09 57.97,167.77 58.23,176.43 58.5,169.51 58.76,174.77 59.02,167.02 59.29,169.23 59.55,192.7 59.82,177.1 60.08,171.8 60.35,198.2 60.61,179.67 60.87,178.44 61.14,185.63 61.4,182.48 61.67,206.65 61.93,225.0 62.2,180.26 62.46,173.89 62.73,165.34 62.99,164.66 63.25,167.32 63.52,165.39 63.78,165.15 64.05,158.38 64.31,152.35 64.58,152.67 64.84,133.99 65.11,113.35 65.37,172.84 65.63,157.59 65.9,169.7 66.16,174.3 66.43,163.85 66.69,167.07 66.96,173.92 67.22,178.29 67.49,176.01 67.75,167.07 68.01,174.31 68.28,180.22 68.54,165.08 68.81,192.07 69.07,193.98 69.34,192.21 69.6,155.23 69.87,117.76 70.13,121.94 70.39,121.45 70.66,130.48 70.92,132.1 71.19,130.41 71.45,115.05 71.72,121.97 71.98,110.68 72.25,102.16 72.51,99.29 72.77,143.56 73.04,186.72 73.3,194.58 73.57,207.73 73.83,188.08 74.1,244.34 74.36,198.35 74.62,206.37 74.89,216.72 75.15,226.21 75.42,236.68 75.68,237.14 75.95,223.16 76.21,276.75 76.48,274.45 76.74,268.71 77.0,270.35 77.27,212.04 77.53,297.79 77.8,299.53 78.06,277.41 78.33,235.76 78.59,224.07 78.86,213.13 79.12,208.66 79.38,186.0 79.65,187.38 79.91,183.45 80.18,187.84 80.44,176.14 80.71,168.37 80.97,178.74 81.24,185.75 81.5,213.21 81.76,173.82 82.03,204.87 82.29,204.94 82.56,198.97 82.82,195.16 83.09,198.84 83.35,204.39 83.62,195.5 83.88,190.4 84.14,188.98 84.41,175.38 84.67,181.33 84.94,184.01 85.2,179.78 85.47,198.95 85.73,196.2 85.99,219.7 86.26,216.77 86.52,223.91 86.79,233.71 87.05,233.32 87.32,237.98 87.58,277.74 87.85,287.4 88.11,294.81 88.37,307.18 88.64,252.58 88.9,276.03 89.17,241.92 89.43,258.52 89.7,248.74 89.96,248.62 90.23,242.44 90.49,244.25 90.75,227.73 91.02,213.3 91.28,205.76 91.55,179.37 91.81,195.48 92.08,195.03 92.34,197.55 92.61,183.79 92.87,198.03 93.13,218.98 93.4,225.86 93.66,212.21 93.93,228.14 94.19,219.14 94.46,237.94 94.72,251.25 94.99,247.34 95.25,245.1 95.51,240.99 95.78,245.69 96.04,230.46 96.31,209.5 96.57,215.33 96.84,242.4 97.1,246.68 97.36,263.61 97.63,269.98 97.89,297.58 98.16,310.17 98.42,280.91 98.69,277.43 98.95,278.25 99.22,283.13 99.48,280.24 99.74,275.13 100.01,246.76 100.27,251.73 100.54,255.23 100.8,226.5 101.07,204.34 101.33,208.95 101.6,205.16 101.86,194.74 102.12,206.96 102.39,192.74 102.65,187.64 102.92,180.16 103.18,191.48 103.45,178.2 103.71,152.99 103.98,158.21 104.24,163.51 104.5,167.58 104.77,172.81 105.03,176.49 105.3,188.98 105.56,212.37 105.83,222.96 106.09,237.73 106.36,224.16 106.62,244.71 106.88,286.31 107.15,279.43 107.41,282.6 107.68,272.97 107.94,272.19 108.21,282.4 108.47,266.78 108.74,222.09 109.0,212.72 109.26,198.0 109.53,218.97 109.79,212.22 110.06,217.43 110.32,188.39 110.59,169.77 110.85,165.4 111.11,155.13 111.38,161.99 111.64,157.98 111.91,172.46 112.17,181.3 112.44,186.65 112.7,184.86 112.97,180.18 113.23,182.25 113.49,215.11 113.76,210.59 114.02,214.75 114.29,233.6 114.55,187.64 114.82,193.71 115.08,184.34 115.35,164.46 115.61,142.81 115.87,152.08 116.14,158.59 116.4,175.76 116.67,176.2 116.93,178.52 117.2,185.54 117.46,192.76 117.73,206.46 117.99,210.91 118.25,223.05 118.52,211.3 118.78,203.2 119.05,199.05 119.31,193.02 119.58,181.85 119.84,181.37 120.11,183.03 120.37,180.88 120.63,183.19 120.9,182.0 121.16,182.15 121.43,180.58 121.69,204.39 121.96,225.26 122.22,219.46 122.48,209.85 122.75,232.38 123.01,254.59 123.28,236.7 123.54,259.02 123.81,277.04 124.07,264.51 124.34,257.58 124.6,238.89 124.86,247.17 125.13,253.65 125.39,268.85 125.66,271.65 125.92,253.34 126.19,243.06 126.45,254.84 126.72,245.34 126.98,241.59 127.24,225.16 127.51,255.44 127.77,258.0 128.04,235.04 128.3,227.1 128.57,204.68 128.83,217.45 129.1,218.38 129.36,225.46 129.62,240.6 129.89,240.22 130.15,231.19 130.42,252.15 130.68,193.82 130.95,206.37 131.21,231.73 131.48,223.9 131.74,265.1 132.0,248.02 132.27,250.96 132.53,250.27 132.8,196.23 133.06,169.55 133.33,167.77 133.59,158.03 133.85,149.71 134.12,154.49 134.38,151.68 134.65,141.19 134.91,135.28 135.18,122.85 135.44,117.86 135.71,122.39 135.97,128.09 136.23,146.47 136.5,159.8 136.76,158.66 137.03,164.63 137.29,150.59 137.56,145.68 137.82,157.62 138.09,165.88 138.35,163.61 138.61,160.22 138.88,146.31 139.14,149.72 139.41,157.12 139.67,153.8 139.94,161.25 140.2,165.34 140.47,185.89 140.73,184.24 140.99,182.81 141.26,190.24 141.52,206.01 141.79,198.96 142.05,202.96 142.32,203.58 142.58,201.02 142.85,187.98 143.11,201.49 143.37,179.2 143.64,169.35 143.9,178.46 144.17,197.51 144.43,189.26 144.7,193.41 144.96,185.05 145.23,192.42 145.49,215.55 145.75,215.69 146.02,218.19 146.28,195.22 146.55,210.6 146.81,207.23 147.08,184.78 147.34,158.0 147.6,137.88 147.87,122.64 148.13,123.01 148.4,113.13 148.66,102.05 148.93,100.14 149.19,105.81 149.46,119.95 149.72,123.59 149.98,130.9 150.25,130.28 150.51,132.32 150.78,135.73 151.04,136.13 151.31,140.38 151.57,139.68 151.84,138.01 152.1,130.51 152.36,126.54 152.63,125.19 152.89,126.05 153.16,106.67 153.42,110.43 153.69,117.44 153.95,121.6 154.22,128.33 154.48,135.13 154.74,142.1 155.01,144.56 155.27,149.01 155.54,161.03 155.8,153.63 156.07,143.62 156.33,144.44 156.6,142.12 156.86,123.33 157.12,143.19 157.39,153.39 157.65,144.17 157.92,144.87 158.18,138.73 158.45,141.18 158.71,148.8 158.97,135.68 159.24,150.04 159.5,137.94 159.77,136.21 160.03,137.34 160.3,111.54 160.56,147.7 160.83,142.0 161.09,135.88 161.35,145.55 161.62,134.76 161.88,149.98 162.15,143.81 162.41,142.42 162.68,150.15 162.94,153.46 163.21,152.85 163.47,158.38 163.73,135.62 164.0,149.96 164.26,161.63 164.53,158.52 164.79,214.87 165.06,204.63 165.32,182.79 165.59,171.98 165.85,150.04 166.11,136.61 166.38,138.15 166.64,142.97 166.91,141.06 167.17,118.46 167.44,122.66 167.7,118.25 167.97,106.81 168.23,106.61 168.49,116.1 168.76,153.94 169.02,168.32 169.29,175.67 169.55,179.79 169.82,184.24 170.08,191.82 170.34,217.43 170.61,214.99 170.87,217.16 171.14,198.57 171.4,188.83 171.67,195.17 171.93,132.56 172.2,113.04 172.46,114.51 172.72,124.77 172.99,110.96 173.25,106.84 173.52,115.47 173.78,120.03 174.05,127.01 174.31,134.51 174.58,142.69 174.84,131.19 175.1,130.4 175.37,125.64 175.63,118.26 175.9,120.08 176.16,124.8 176.43,129.24 176.69,124.13 176.96,125.27 177.22,132.53 177.48,144.32 177.75,142.34 178.01,128.96 178.28,134.36 178.54,139.36 178.81,153.28 179.07,155.11 179.34,158.38 179.6,176.75 179.86,185.2 180.13,177.53 180.39,174.58 180.66,198.47 180.92,213.09 181.19,249.33 181.45,253.43 181.72,232.72 181.98,222.12 182.24,226.45 182.51,216.93 182.77,198.71 183.04,183.38 183.3,174.8 183.57,178.92 183.83,160.54 184.09,151.1 184.36,138.38 184.62,138.34 184.89,136.7 185.15,133.44 185.42,114.14 185.68,134.09 185.95,141.52 186.21,169.8 186.47,223.42 186.74,208.89 187.0,208.46 187.27,201.43 187.53,218.62 187.8,245.64 188.06,216.38 188.33,203.97 188.59,191.35 188.85,170.63 189.12,166.22 189.38,136.49 189.65,135.33 189.91,132.93 190.18,138.15 190.44,125.16 190.71,121.33 190.97,128.55 191.23,153.0 191.5,154.54 191.76,157.86 192.03,168.49 192.29,166.35 192.56,187.34 192.82,185.18 193.09,191.8 193.35,180.83 193.61,174.21 193.88,189.38 194.14,149.85 194.41,114.55 194.67,107.21 194.94,102.86 195.2,99.1 195.46,102.31 195.73,106.92 195.99,107.8 196.26,104.58 196.52,106.72 196.79,112.72 197.05,104.05 197.32,118.48 197.58,129.17 197.84,137.33 198.11,156.99 198.37,182.17 198.64,182.13 198.9,177.51 199.17,185.17 199.43,183.64 199.7,176.63 199.96,157.78 200.22,146.81 200.49,126.99 200.75,134.58 201.02,129.12 201.28,140.41 201.55,141.35 201.81,132.14 202.08,134.42 202.34,130.56 202.6,134.08 202.87,136.16 203.13,136.35 203.4,140.12 203.66,150.84 203.93,141.08 204.19,143.35 204.46,115.12 204.72,98.39 204.98,111.56 205.25,100.58 205.51,103.82 205.78,103.58 206.04,106.39 206.31,125.33 206.57,130.09 206.83,129.08 207.1,133.64 207.36,138.74 207.63,132.54 207.89,126.39 208.16,130.3 208.42,127.05 208.69,125.71 208.95,130.55 209.21,137.21 209.48,165.28 209.74,160.64 210.01,146.21 210.27,159.93 210.54,135.89 210.8,152.69 211.07,150.55 211.33,126.22 211.59,119.6 211.86,121.43 212.12,121.42 212.39,121.22 212.65,113.75 212.92,115.22 213.18,116.6 213.45,106.09 213.71,122.25 213.97,114.93 214.24,99.46 214.5,108.86 214.77,116.3 215.03,112.62 215.3,104.73 215.56,105.31 215.83,110.36 216.09,105.43 216.35,107.12 216.62,113.27 216.88,83.84 217.15,86.97 217.41,101.3 217.68,91.18 217.94,95.12 218.21,100.97 218.47,107.42 218.73,102.85 219.0,109.35 219.26,117.1 219.53,116.66 219.79,114.92 220.06,113.75 220.32,114.56 220.58,118.42 220.85,117.64 221.11,106.54 221.38,102.89 221.64,102.97 221.91,100.46 222.17,104.85 222.44,106.61 222.7,110.19 222.96,109.69 223.23,113.87 223.49,133.0 223.76,114.21 224.02,111.85 224.29,126.0 224.55,132.75 224.82,137.0 225.08,161.91 225.34,156.65 225.61,159.43 225.87,156.22 226.14,159.39 226.4,158.76 226.67,139.08 226.93,150.89 227.2,169.19 227.46,161.39 227.72,143.49 227.99,124.13 228.25,128.5 228.52,129.01 228.78,118.3 229.05,119.49 229.31,125.55 229.58,136.18 229.84,140.91 230.1,153.14 230.37,146.09 230.63,145.33 230.9,168.68 231.16,205.54 231.43,189.2 231.69,189.17 231.95,229.81 232.22,245.86 232.48,244.82 232.75,199.99 233.01,172.35 233.28,156.24 233.54,140.94 233.81,150.41 234.07,151.05 234.33,122.24 234.6,120.85 234.86,111.35 235.13,107.31 235.39,112.38 235.66,116.63 235.92,112.11 236.19,121.75 236.45,137.81 236.71,148.83 236.98,143.52 237.24,129.81 237.51,149.81 237.77,154.46 238.04,159.92 238.3,150.29 238.57,149.9 238.83,141.8 239.09,148.03 239.36,146.66 239.62,132.52 239.89,124.43 240.15,115.25 240.42,117.61 240.68,120.58 240.95,131.27 241.21,141.79 241.47,166.15 241.74,157.29 242.0,151.95 242.27,146.62 242.53,158.86 242.8,157.25 243.06,159.45 243.33,168.01 243.59,198.21 243.85,197.2 244.12,189.83 244.38,196.26 244.65,167.02 244.91,167.02 245.18,167.09 245.44,178.15 245.7,152.81 245.97,146.87 246.23,152.67 246.5,170.91 246.76,144.86 247.03,152.85 247.29,163.07 247.56,163.48 247.82,166.45 248.08,175.83 248.35,179.99 248.61,179.24 248.88,178.58 249.14,185.68 249.41,191.55 249.67,180.61 249.94,185.77 250.2,166.45 250.46,178.65 250.73,184.88 250.99,189.19 251.26,164.59 251.52,151.29 251.79,149.15 252.05,153.08 252.32,142.19 252.58,130.37 252.84,130.56 253.11,132.14 253.37,148.59 253.64,147.28 253.9,154.92 254.17,176.0 254.43,180.85 254.7,177.07 254.96,180.1 255.22,183.58 255.49,189.73 255.75,191.01 256.02,188.28 256.28,191.28 256.55,181.9 256.81,177.91 257.07,179.89 257.34,148.66 257.6,146.8 257.87,142.63 258.13,136.96 258.4,142.6 258.66,139.55 258.93,148.71 259.19,145.25 259.45,144.09 259.72,140.37 259.98,159.99 260.25,160.84 260.51,172.33 260.78,192.48 261.04,196.93 261.31,165.3 261.57,132.62 261.83,134.59 262.1,129.13 262.36,133.23 262.63,119.6 262.89,127.49 263.16,114.1 263.42,116.43 263.69,113.09 263.95,103.48 264.21,105.44 264.48,107.01 264.74,116.61 265.01,113.38 265.27,112.03 265.54,109.12 265.8,114.13 266.07,100.96 266.33,115.49 266.59,110.63 266.86,122.32 267.12,136.87 267.39,129.48 267.65,132.37 267.92,103.41 268.18,109.89 268.44,119.91 268.71,104.48 268.97,126.6 269.24,130.22 269.5,125.36 269.77,129.16 270.03,127.63 270.3,125.23 270.56,130.01 270.82,137.7 271.09,147.87 271.35,143.55 271.62,140.34 271.88,129.39 272.15,117.49 272.41,122.49 272.68,119.88 272.94,120.11 273.2,116.03 273.47,112.41 273.73,110.69 274.0,107.55 274.26,108.57 274.53,111.31 274.79,111.6 275.06,131.64 275.32,116.07 275.58,111.4 275.85,106.86 276.11,104.62 276.38,120.33 276.64,113.91 276.91,117.0 277.17,98.43 277.44,114.07 277.7,112.06 277.96,133.38 278.23,124.03 278.49,127.28 278.76,129.03 279.02,125.02 279.29,120.29 279.55,116.39 279.82,120.16 280.08,119.35 280.34,128.86 280.61,123.25 280.87,121.49 281.14,99.15 281.4,109.98 281.67,117.64 281.93,108.97 282.19,107.27 282.46,116.97 282.72,115.18 282.99,113.34 283.25,130.08 283.52,121.55 283.78,151.61 284.05,152.53 284.31,143.83 284.57,138.65 284.84,133.29 285.1,134.2 285.37,136.26 285.63,125.21 285.9,132.9 286.16,123.95 286.43,115.18 286.69,117.01 286.95,94.8 287.22,89.84 287.48,98.93 287.75,101.89 288.01,99.97 288.28,104.75 288.54,113.99 288.81,116.78 289.07,100.21 289.33,107.1 289.6,114.02 289.86,144.59 290.13,140.97 290.39,152.04 290.66,134.99 290.92,130.47 291.19,132.78 291.45,139.75 291.71,139.09 291.98,136.43 292.24,133.06 292.51,120.49 292.77,106.49 293.04,92.28 293.3,80.28 293.56,88.11 293.83,90.11 294.09,93.47 294.36,87.98 294.62,89.11 294.89,89.1 295.15,86.46 295.42,92.89 295.68,94.15 295.94,96.49 296.21,96.64 296.47,105.76 296.74,102.03 297.0,104.03 297.27,99.46 297.53,107.75 297.8,106.02 298.06,119.14 298.32,122.45 298.59,90.22 298.85,96.6 299.12,99.34 299.38,98.24 299.65,97.06 299.91,100.54 300.18,97.23 300.44,94.03 300.7,96.13 300.97,96.08 301.23,91.87 301.5,99.26 301.76,112.62 302.03,87.14 302.29,75.29 302.56,91.82 302.82,92.12 303.08,74.93 303.35,74.03 303.61,79.63 303.88,81.28 304.14,85.78 304.41,79.25 304.67,78.47 304.93,73.97 305.2,80.18 305.46,84.29 305.73,68.69 305.99,62.77 306.26,68.76 306.52,68.38 306.79,67.49 307.05,65.14 307.31,67.77 307.58,70.11 307.84,64.98 308.11,66.47 308.37,73.11 308.64,73.84 308.9,80.23 309.17,91.83 309.43,91.96 309.69,93.83 309.96,85.13 310.22,89.55 310.49,87.8 310.75,89.28 311.02,88.37 311.28,92.92 311.55,89.82 311.81,90.21 312.07,86.08 312.34,90.86 312.6,91.74 312.87,93.33 313.13,94.78 313.4,100.78 313.66,97.8 313.93,74.15 314.19,78.3 314.45,74.03 314.72,77.22 314.98,82.14 315.25,80.1 315.51,81.5 315.78,80.64 316.04,78.27 316.31,77.3 316.57,76.44 316.83,72.45 317.1,80.38 317.36,73.65 317.63,76.44 317.89,73.65 318.16,68.44 318.42,68.47 318.68,65.0 318.95,65.28 319.21,66.02 319.48,67.45 319.74,62.97 320.01,60.35 320.27,63.35 320.54,70.64 320.8,80.39 321.06,82.33 321.33,95.01 321.59,86.78 321.86,93.54 322.12,102.1 322.39,103.84 322.65,106.62 322.92,105.63 323.18,108.72 323.44,109.41 323.71,105.48 323.97,98.67 324.24,103.74 324.5,99.73 324.77,117.82 325.03,105.36 325.3,90.11 325.56,83.14 325.82,82.39 326.09,78.92 326.35,77.48 326.62,73.25 326.88,73.16 327.15,75.52 327.41,77.85 327.68,78.87 327.94,76.62 328.2,77.6 328.47,80.3 328.73,85.88 329.0,80.31 329.26,82.55 329.53,75.95 329.79,85.77 330.05,84.8 330.32,72.51 330.58,74.23 330.85,66.18 331.11,62.86 331.38,71.5 331.64,70.0 331.91,75.82 332.17,78.14 332.43,84.34 332.7,87.31 332.96,86.02 333.23,88.23 333.49,86.97 333.76,83.69 334.02,89.65 334.29,94.68 334.55,89.62 334.81,89.84 335.08,86.23 335.34,86.73 335.61,78.29 335.87,73.93 336.14,75.87 336.4,74.48 336.67,83.04 336.93,99.48 337.19,96.21 337.46,94.47 337.72,92.9 337.99,113.31 338.25,102.13 338.52,117.03 338.78,111.12 339.05,106.55 339.31,89.78 339.57,81.53 339.84,75.96 340.1,69.66 340.37,81.35 340.63,80.29 340.9,86.18 341.16,86.2 341.42,84.74 341.69,90.02 341.95,92.15 342.22,89.3 342.48,84.72 342.75,87.2 343.01,84.23 343.28,76.82 343.54,72.66 343.8,73.32 344.07,71.16 344.33,69.95 344.6,69.91 344.86,66.47 345.13,69.13 345.39,69.29 345.66,84.28 345.92,86.66 346.18,91.22 346.45,115.26 346.71,116.19 346.98,130.09 347.24,136.21 347.51,127.47 347.77,123.84 348.04,136.71 348.3,122.64 348.56,129.54 348.83,114.88 349.09,110.54 349.36,112.93 349.62,123.79 349.89,130.81 350.15,145.71 350.42,154.39 350.68,187.89 350.94,196.17 351.21,182.8 351.47,180.07 351.74,167.55 352.0,193.02 352.27,179.9 352.53,167.91 352.8,150.62 353.06,151.08 353.32,144.39 353.59,144.48 353.85,132.02 354.12,124.51 354.38,129.26 354.65,126.17 354.91,106.9 355.17,93.47 355.44,92.75 355.7,91.27 355.97,85.68 356.23,89.31 356.5,90.74 356.76,93.39 357.03,107.11 357.29,106.95 357.55,97.6 357.82,105.28 358.08,133.13 358.35,155.42 358.61,147.6 358.88,143.73 359.14,132.22 359.41,139.43 359.67,147.03 359.93,150.62 360.2,141.84 360.46,142.83 360.73,165.25 360.99,166.0 361.26,164.77 361.52,163.28 361.79,157.87 362.05,157.95 362.31,191.78 362.58,180.1 362.84,129.7 363.11,122.35 363.37,103.47 363.64,98.82 363.9,96.96 364.17,90.53 364.43,90.69 364.69,79.84 364.96,89.0 365.22,96.25 365.49,107.71 365.75,114.7 366.02,136.07 366.28,144.45 366.54,165.14 366.81,161.12 367.07,158.95 367.34,163.03 367.6,156.95 367.87,179.46 368.13,165.17 368.4,168.34 368.66,138.14 368.92,123.45 369.19,136.89 369.45,145.13 369.72,118.87 369.98,124.72 370.25,119.25 370.51,127.76 370.78,150.4 371.04,149.34 371.3,153.89 371.57,143.31 371.83,149.13 372.1,167.95 372.36,168.5 372.63,151.14 372.89,166.57 373.16,157.15 373.42,162.17 373.68,160.25 373.95,151.67 374.21,154.85 374.48,146.19 374.74,123.63 375.01,120.95 375.27,105.59 375.54,104.19 375.8,109.93 376.06,106.5 376.33,109.31 376.59,108.18 376.86,109.41 377.12,111.35 377.39,116.22 377.65,120.82 377.91,148.37 378.18,141.67 378.44,164.47 378.71,173.59 378.97,170.93 379.24,185.07 379.5,184.78 379.77,172.34 380.03,179.02 380.29,172.46 380.56,154.29 380.82,128.65 381.09,131.67 381.35,143.46 381.62,125.19 381.88,151.11 382.15,135.97 382.41,135.36 382.67,134.23 382.94,144.49 383.2,145.07 383.47,131.53 383.73,123.55 384.0,122.18 384.26,123.33 384.53,113.73 384.79,119.22 385.05,95.77 385.32,99.22 385.58,97.05 385.85,93.96 386.11,90.31 386.38,83.74 386.64,90.45 386.91,96.11 387.17,104.16 387.43,102.13 387.7,101.09 387.96,108.23 388.23,118.21 388.49,102.85 388.76,120.06 389.02,133.47 389.29,133.29 389.55,127.79 389.81,125.53 390.08,120.83 390.34,124.71 390.61,118.16 390.87,121.51 391.14,116.15 391.4,120.79 391.66,138.47 391.93,130.24 392.19,126.09 392.46,123.6 392.72,131.56 392.99,142.45 393.25,157.69 393.52,135.04 393.78,137.35 394.04,138.16 394.31,114.92 394.57,103.99 394.84,73.23 395.1,73.14 395.37,71.55 395.63,70.0 395.9,71.29 396.16,69.3 396.42,67.69 396.69,69.29 396.95,70.71 397.22,72.57 397.48,80.67 397.75,81.53 398.01,136.42 398.28,158.67 398.54,176.83 398.8,175.58 399.07,168.72 399.33,178.98 399.6,151.4 399.86,140.57 400.13,138.8 400.39,137.91 400.66,130.21 400.92,116.65 401.18,123.4 401.45,107.33 401.71,105.28 401.98,101.35 402.24,102.17 402.51,100.01 402.77,120.64 403.03,123.73 403.3,121.33 403.56,118.85 403.83,129.81 404.09,144.38 404.36,148.74 404.62,147.88 404.89,138.58 405.15,139.75 405.41,155.37 405.68,141.41 405.94,144.9 406.21,149.99 406.47,133.15 406.74,136.06 407.0,143.87 407.27,143.61 407.53,136.63 407.79,132.09 408.06,134.49 408.32,134.54 408.59,119.75 408.85,136.52 409.12,126.84 409.38,137.75 409.65,134.45 409.91,151.08 410.17,159.3 410.44,154.84 410.7,144.64 410.97,145.63 411.23,148.32 411.5,143.61 411.76,147.67 412.03,138.81 412.29,137.56 412.55,129.41 412.82,164.49 413.08,144.27 413.35,136.93 413.61,158.58 413.88,225.47 414.14,214.26 414.4,191.78 414.67,201.15 414.93,172.09 415.2,182.8 415.46,179.34 415.73,163.63 415.99,123.43 416.26,139.15 416.52,141.11 416.78,139.53 417.05,146.67 417.31,144.16 417.58,140.94 417.84,143.27 418.11,160.12 418.37,156.18 418.64,159.01 418.9,163.78 419.16,193.78 419.43,196.46 419.69,205.89 419.96,216.29 420.22,202.77 420.49,214.91 420.75,233.51 421.02,249.46 421.28,222.85 421.54,215.39 421.81,195.93 422.07,168.37 422.34,189.89 422.6,185.66 422.87,166.99 423.13,169.26 423.4,161.44 423.66,155.71 423.92,152.11 424.19,151.71 424.45,162.16 424.72,152.65 424.98,124.88 425.25,122.18 425.51,115.75 425.78,107.38 426.04,107.68 426.3,119.96 426.57,120.04 426.83,112.84 427.1,110.26 427.36,114.48 427.63,146.44 427.89,142.58 428.15,143.41 428.42,144.25 428.68,142.21 428.95,145.9 429.21,146.64 429.48,139.43 429.74,145.59 430.01,142.06 430.27,156.08 430.53,168.19 430.8,106.29 431.06,105.35 431.33,107.34 431.59,107.69 431.86,116.45 432.12,119.97 432.39,118.37 432.65,122.4 432.91,113.67 433.18,112.78 433.44,108.49 433.71,108.52 433.97,110.52 434.24,115.78 434.5,114.18 434.77,119.51 435.03,116.05 435.29,114.14 435.56,101.92 435.82,93.64 436.09,88.7 436.35,86.07 436.62,82.0 436.88,78.23 437.15,76.39 437.41,79.29 437.67,78.69 437.94,78.72 438.2,74.49 438.47,74.39 438.73,74.59 439.0,78.83 439.26,86.89 439.52,88.99 439.79,90.13 440.05,87.05 440.32,86.8 440.58,81.25 440.85,84.56 441.11,72.02 441.38,85.59 441.64,88.33 441.9,93.53 442.17,75.5 442.43,75.75 442.7,76.64 442.96,58.82 443.23,86.46 443.49,64.3 443.76,87.4 444.02,103.63 444.28,106.83 444.55,101.97 444.81,103.05 445.08,102.23 445.34,104.59 445.61,104.42 445.87,104.26 446.14,105.79 446.4,104.61 446.66,135.77 446.93,124.78 447.19,99.87 447.46,102.01 447.72,107.38 447.99,107.32 448.25,108.87 448.52,106.96 448.78,112.73 449.04,127.07 449.31,131.48 449.57,131.64 449.84,152.81 450.1,241.13 450.37,237.94 450.63,228.69 450.9,223.96 451.16,220.22 451.42,213.58 451.69,227.83 451.95,183.98 452.22,144.59 452.48,161.93 452.75,161.76 453.01,152.72 453.27,143.74 453.54,144.34 453.8,138.09 454.07,136.88 454.33,135.6 454.6,134.29 454.86,127.16 455.13,165.58 455.39,188.03 455.65,144.96 455.92,140.84 456.18,147.31 456.45,170.39 456.71,161.24 456.98,156.83 457.24,157.65 457.51,157.98 457.77,167.84 458.03,158.74 458.3,159.54 458.56,182.68 458.83,177.8 459.09,156.58 459.36,161.3 459.62,140.27 459.89,151.79 460.15,157.12 460.41,146.9 460.68,147.48 460.94,151.16 461.21,151.62 461.47,115.4 461.74,113.69 462.0,120.65 462.27,121.92 462.53,122.71 462.79,134.53 463.06,136.97 463.32,136.86 463.59,140.53 463.85,127.85 464.12,120.22 464.38,127.34 464.64,136.38 464.91,148.27 465.17,142.58 465.44,141.05 465.7,146.18 465.97,130.82 466.23,127.54 466.5,161.86 466.76,136.53 467.02,141.51 467.29,139.91 467.55,137.74 467.82,165.02 468.08,159.72 468.35,175.11 468.61,194.55 468.88,184.7 469.14,176.84 469.4,184.09 469.67,178.0 469.93,172.05 470.2,164.72 470.46,173.05 470.73,169.79 470.99,159.56 471.26,163.39 471.52,163.07 471.78,156.61 472.05,159.67 472.31,166.1 472.58,157.97 472.84,147.13 473.11,151.06 473.37,126.57 473.64,122.33 473.9,121.03 474.16,128.03 474.43,124.65 474.69,111.8 474.96,108.41 475.22,103.73 475.49,93.47 475.75,94.68 476.01,92.45 476.28,89.11 476.54,117.31 476.81,122.35 477.07,123.22 477.34,115.96 477.6,96.26 477.87,96.55 478.13,100.77 478.39,106.7 478.66,112.57 478.92,107.41 479.19,110.86 479.45,113.51 479.72,110.73 479.98,111.1 480.25,101.3 480.51,96.93 480.77,126.4 481.04,134.19 481.3,127.54 481.57,130.48 481.83,127.34 482.1,151.05 482.36,161.87 482.63,163.81 482.89,166.58 483.15,157.73 483.42,218.07 483.68,224.99 483.95,201.5 484.21,199.67 484.48,206.7 484.74,203.12 485.01,197.92 485.27,181.98 485.53,173.82 485.8,157.72 486.06,173.53 486.33,165.86 486.59,152.22 486.86,134.11 487.12,138.67 487.39,136.26 487.65,128.9 487.91,136.64 488.18,141.14 488.44,133.15 488.71,148.44 488.97,153.94 489.24,137.65 489.5,142.77 489.76,139.63 490.03,150.42 490.29,158.0 490.56,154.75 490.82,165.31 491.09,150.98 491.35,129.49 491.62,145.03 491.88,114.19 492.14,126.88 492.41,125.18 492.67,127.02 492.94,135.31 493.2,130.29 493.47,137.52 493.73,147.23 494.0,144.19 494.26,148.16 494.52,174.1 494.79,185.23 495.05,237.22 495.32,222.99 495.58,236.81 495.85,214.74 496.11,208.31 496.38,198.4 496.64,200.49 496.9,201.77 497.17,212.07 497.43,203.43 497.7,215.78 497.96,207.77 498.23,192.42 498.49,194.59 498.76,198.53 499.02,222.99 499.28,209.54 499.55,231.66 499.81,247.44 500.08,254.78 500.34,250.22 500.61,256.24 500.87,253.15 501.13,237.48 501.4,239.16 501.66,186.44 501.93,178.09 502.19,172.99 502.46,179.0 502.72,161.56 502.99,135.07 503.25,125.4 503.51,134.72 503.78,129.96 504.04,116.58 504.31,125.68 504.57,124.39 504.84,157.23 505.1,182.95 505.37,206.1 505.63,203.22 505.89,235.45 506.16,250.05 506.42,260.78 506.69,272.49 506.95,297.93 507.22,304.77 507.48,282.23 507.75,274.34 508.01,287.52 508.27,274.95 508.54,260.32 508.8,253.29 509.07,241.91 509.33,214.77 509.6,202.2 509.86,200.34 510.13,174.92 510.39,85.73 510.65,133.26 510.92,130.67 511.18,128.4 511.45,128.01 511.71,125.41 511.98,124.09 512.24,121.19 512.5,121.75 512.77,121.1 513.03,117.95 513.3,119.45 513.56,237.43 513.83,141.18 514.09,150.25 514.36,162.61 514.62,144.52 514.88,154.24 515.15,170.89 515.41,186.24 515.68,180.27 515.94,184.05 516.21,180.5 516.47,184.33 516.74,177.09 517.0,191.54 517.26,196.87 517.53,196.91 517.79,238.79 518.06,232.76 518.32,208.8 518.59,169.84 518.85,182.72 519.12,182.33 519.38,188.52 519.64,192.52 519.91,206.51 520.17,202.31 520.44,197.74 520.7,178.07 520.97,176.37 521.23,205.13 521.5,210.73 521.76,237.27 522.02,235.82 522.29,226.4 522.55,210.3 522.82,190.76 523.08,174.39 523.35,162.22 523.61,142.89 523.88,148.61 524.14,154.31 524.4,134.4 524.67,139.16 524.93,136.19 525.2,129.09 525.46,128.76 525.73,144.56 525.99,150.7 526.25,155.92 526.52,169.97 526.78,203.32 527.05,212.83 527.31,197.88 527.58,204.26 527.84,166.5 528.0,179.97"/>
+<polyline class="fig-trait fig-trait-fin fig-serie-b" points="54.0,294.32 54.26,278.5 54.53,262.84 54.79,282.08 55.06,283.99 55.32,260.94 55.59,252.78 55.85,232.3 56.12,228.24 56.38,158.97 56.64,172.96 56.91,204.67 57.17,180.57 57.44,186.89 57.7,188.5 57.97,180.39 58.23,188.23 58.5,190.76 58.76,197.08 59.02,197.91 59.29,202.45 59.55,220.32 59.82,210.69 60.08,196.7 60.35,213.66 60.61,198.08 60.87,196.81 61.14,202.17 61.4,196.05 61.67,215.5 61.93,225.85 62.2,185.22 62.46,175.69 62.73,162.41 62.99,157.68 63.25,160.35 63.52,159.65 63.78,157.67 64.05,152.37 64.31,147.18 64.58,149.48 64.84,122.97 65.11,101.93 65.37,143.83 65.63,132.37 65.9,145.54 66.16,140.09 66.43,131.65 66.69,136.39 66.96,144.13 67.22,148.33 67.49,146.8 67.75,137.03 68.01,142.83 68.28,148.65 68.54,125.89 68.81,150.71 69.07,151.2 69.34,147.23 69.6,116.75 69.87,94.03 70.13,97.2 70.39,95.5 70.66,100.27 70.92,97.74 71.19,93.13 71.45,83.92 71.72,94.0 71.98,83.97 72.25,78.79 72.51,75.97 72.77,113.87 73.04,148.38 73.3,156.73 73.57,172.24 73.83,153.37 74.1,226.17 74.36,187.12 74.62,191.07 74.89,200.2 75.15,211.32 75.42,221.49 75.68,222.49 75.95,198.09 76.21,260.99 76.48,256.73 76.74,249.87 77.0,251.97 77.27,169.12 77.53,274.92 77.8,279.35 78.06,241.91 78.33,195.26 78.59,180.88 78.86,167.77 79.12,161.8 79.38,135.17 79.65,136.61 79.91,129.71 80.18,135.08 80.44,128.83 80.71,122.34 80.97,132.49 81.24,131.89 81.5,143.26 81.76,112.25 82.03,141.51 82.29,141.84 82.56,130.25 82.82,130.52 83.09,135.27 83.35,140.8 83.62,124.69 83.88,122.97 84.14,122.23 84.41,111.24 84.67,119.13 84.94,111.25 85.2,108.75 85.47,129.27 85.73,126.51 85.99,148.74 86.26,145.68 86.52,154.19 86.79,163.6 87.05,165.74 87.32,166.81 87.58,229.73 87.85,248.34 88.11,263.38 88.37,290.89 88.64,183.42 88.9,225.98 89.17,191.47 89.43,218.94 89.7,207.86 89.96,211.59 90.23,198.57 90.49,200.84 90.75,184.86 91.02,167.39 91.28,158.99 91.55,134.78 91.81,148.67 92.08,147.72 92.34,138.37 92.61,122.43 92.87,131.82 93.13,150.74 93.4,159.51 93.66,146.64 93.93,159.89 94.19,150.8 94.46,176.31 94.72,188.71 94.99,180.22 95.25,176.25 95.51,162.59 95.78,166.72 96.04,139.57 96.31,116.12 96.57,122.8 96.84,161.54 97.1,160.89 97.36,181.56 97.63,199.62 97.89,262.56 98.16,294.74 98.42,237.53 98.69,229.73 98.95,231.37 99.22,241.05 99.48,232.92 99.74,222.62 100.01,166.66 100.27,173.58 100.54,181.8 100.8,137.48 101.07,109.13 101.33,117.57 101.6,98.23 101.86,109.7 102.12,120.52 102.39,113.52 102.65,109.12 102.92,101.42 103.18,111.62 103.45,104.08 103.71,101.79 103.98,102.62 104.24,107.58 104.5,115.3 104.77,118.47 105.03,117.42 105.3,138.23 105.56,160.53 105.83,172.66 106.09,192.23 106.36,177.59 106.62,206.19 106.88,255.28 107.15,242.52 107.41,247.64 107.68,225.67 107.94,227.14 108.21,239.84 108.47,198.56 108.74,137.57 109.0,128.58 109.26,115.65 109.53,141.89 109.79,130.55 110.06,143.06 110.32,124.7 110.59,108.59 110.85,107.17 111.11,102.61 111.38,110.75 111.64,107.15 111.91,125.06 112.17,135.6 112.44,142.99 112.7,139.95 112.97,132.02 113.23,130.77 113.49,155.21 113.76,151.59 114.02,154.18 114.29,168.72 114.55,118.62 114.82,123.09 115.08,96.38 115.35,78.55 115.61,60.55 115.87,65.41 116.14,68.55 116.4,81.25 116.67,83.53 116.93,81.17 117.2,86.52 117.46,92.36 117.73,98.68 117.99,103.13 118.25,135.57 118.52,133.25 118.78,126.74 119.05,124.0 119.31,123.08 119.58,112.5 119.84,114.47 120.11,123.39 120.37,121.13 120.63,125.6 120.9,122.64 121.16,124.2 121.43,112.35 121.69,124.84 121.96,148.76 122.22,137.66 122.48,121.27 122.75,147.09 123.01,175.68 123.28,136.09 123.54,168.47 123.81,213.88 124.07,195.45 124.34,183.34 124.6,155.92 124.86,171.46 125.13,186.65 125.39,211.47 125.66,222.53 125.92,190.25 126.19,176.29 126.45,211.09 126.72,198.1 126.98,188.53 127.24,169.48 127.51,214.74 127.77,222.87 128.04,201.77 128.3,194.9 128.57,179.54 128.83,192.78 129.1,194.75 129.36,202.36 129.62,217.41 129.89,219.63 130.15,208.78 130.42,232.31 130.68,164.01 130.95,181.76 131.21,202.74 131.48,189.86 131.74,234.6 132.0,208.93 132.27,212.12 132.53,211.85 132.8,150.48 133.06,131.62 133.33,137.36 133.59,129.33 133.85,128.91 134.12,126.87 134.38,123.98 134.65,116.04 134.91,112.15 135.18,105.47 135.44,100.65 135.71,103.61 135.97,101.75 136.23,105.52 136.5,104.91 136.76,105.9 137.03,95.91 137.29,92.1 137.56,88.81 137.82,90.1 138.09,98.68 138.35,102.32 138.61,111.09 138.88,102.97 139.14,114.08 139.41,119.55 139.67,117.97 139.94,129.53 140.2,137.91 140.47,157.27 140.73,161.11 140.99,162.01 141.26,172.5 141.52,185.1 141.79,178.23 142.05,181.66 142.32,181.03 142.58,179.82 142.85,177.1 143.11,188.74 143.37,173.84 143.64,171.5 143.9,178.05 144.17,195.72 144.43,183.98 144.7,190.0 144.96,178.85 145.23,187.48 145.49,207.05 145.75,208.49 146.02,204.23 146.28,184.13 146.55,191.78 146.81,183.16 147.08,163.78 147.34,144.02 147.6,129.42 147.87,114.58 148.13,115.94 148.4,105.75 148.66,95.35 148.93,92.51 149.19,95.06 149.46,109.23 149.72,140.1 149.98,158.14 150.25,157.23 150.51,159.73 150.78,161.96 151.04,162.07 151.31,166.14 151.57,165.88 151.84,165.22 152.1,159.79 152.36,161.11 152.63,159.06 152.89,140.62 153.16,109.68 153.42,110.72 153.69,111.88 153.95,114.01 154.22,119.27 154.48,121.22 154.74,123.4 155.01,119.48 155.27,118.33 155.54,110.42 155.8,98.49 156.07,96.23 156.33,99.19 156.6,103.16 156.86,89.43 157.12,109.01 157.39,123.41 157.65,117.32 157.92,123.08 158.18,121.67 158.45,122.68 158.71,127.15 158.97,119.67 159.24,131.63 159.5,131.52 159.77,128.17 160.03,136.31 160.3,116.84 160.56,180.78 160.83,183.73 161.09,183.26 161.35,194.06 161.62,188.89 161.88,203.56 162.15,206.64 162.41,205.22 162.68,209.44 162.94,213.12 163.21,211.16 163.47,213.94 163.73,174.56 164.0,181.8 164.26,187.61 164.53,182.08 164.79,220.36 165.06,205.95 165.32,180.36 165.59,175.0 165.85,152.87 166.11,141.94 166.38,146.25 166.64,152.51 166.91,150.65 167.17,129.85 167.44,131.14 167.7,129.19 167.97,119.13 168.23,116.75 168.49,120.87 168.76,166.12 169.02,178.59 169.29,181.71 169.55,183.84 169.82,184.99 170.08,194.19 170.34,216.41 170.61,215.11 170.87,217.13 171.14,199.2 171.4,191.34 171.67,193.91 171.93,123.8 172.2,106.51 172.46,112.1 172.72,120.91 172.99,110.4 173.25,105.78 173.52,116.59 173.78,122.02 174.05,126.05 174.31,135.42 174.58,137.13 174.84,129.54 175.1,134.18 175.37,133.71 175.63,137.13 175.9,138.59 176.16,141.22 176.43,143.44 176.69,134.21 176.96,136.18 177.22,141.85 177.48,145.54 177.75,143.84 178.01,142.76 178.28,143.22 178.54,145.56 178.81,153.41 179.07,159.19 179.34,163.88 179.6,184.95 179.86,194.85 180.13,189.19 180.39,194.64 180.66,230.42 180.92,243.66 181.19,267.7 181.45,269.09 181.72,261.5 181.98,256.33 182.24,259.96 182.51,253.77 182.77,242.06 183.04,231.63 183.3,227.16 183.57,227.16 183.83,201.9 184.09,191.31 184.36,179.02 184.62,179.4 184.89,158.91 185.15,142.57 185.42,119.57 185.68,137.73 185.95,137.15 186.21,155.09 186.47,193.32 186.74,177.42 187.0,175.27 187.27,166.32 187.53,188.66 187.8,218.78 188.06,196.87 188.33,195.87 188.59,189.64 188.85,174.14 189.12,169.31 189.38,148.88 189.65,149.37 189.91,148.09 190.18,163.37 190.44,154.34 190.71,156.11 190.97,167.99 191.23,193.12 191.5,190.93 191.76,189.98 192.03,195.4 192.29,192.96 192.56,206.44 192.82,208.52 193.09,214.15 193.35,198.68 193.61,199.12 193.88,210.24 194.14,175.62 194.41,143.59 194.67,138.9 194.94,144.87 195.2,142.56 195.46,146.28 195.73,152.53 195.99,151.41 196.26,148.37 196.52,149.77 196.79,147.99 197.05,133.62 197.32,144.0 197.58,145.32 197.84,152.46 198.11,151.74 198.37,179.57 198.64,179.95 198.9,173.58 199.17,172.74 199.43,170.51 199.7,167.93 199.96,158.41 200.22,166.81 200.49,158.22 200.75,167.03 201.02,162.52 201.28,175.61 201.55,174.86 201.81,171.61 202.08,175.19 202.34,172.33 202.6,175.79 202.87,175.81 203.13,172.05 203.4,153.59 203.66,155.59 203.93,143.04 204.19,140.97 204.46,109.95 204.72,93.9 204.98,104.76 205.25,95.3 205.51,99.48 205.78,101.24 206.04,109.06 206.31,119.6 206.57,122.67 206.83,123.62 207.1,127.68 207.36,132.86 207.63,128.1 207.89,122.52 208.16,120.96 208.42,125.06 208.69,127.36 208.95,132.8 209.21,133.11 209.48,161.71 209.74,163.08 210.01,152.32 210.27,173.67 210.54,167.12 210.8,182.37 211.07,199.94 211.33,193.04 211.59,191.39 211.86,196.11 212.12,198.94 212.39,199.51 212.65,193.48 212.92,194.86 213.18,196.47 213.45,186.21 213.71,200.11 213.97,194.14 214.24,174.65 214.5,176.28 214.77,174.05 215.03,165.25 215.3,155.23 215.56,157.53 215.83,160.62 216.09,154.1 216.35,152.95 216.62,155.57 216.88,113.1 217.15,115.24 217.41,111.24 217.68,103.13 217.94,114.09 218.21,118.82 218.47,121.07 218.73,114.48 219.0,118.19 219.26,125.81 219.53,135.84 219.79,140.95 220.06,139.92 220.32,138.6 220.58,142.08 220.85,139.52 221.11,123.45 221.38,116.7 221.64,115.69 221.91,112.39 222.17,117.73 222.44,118.56 222.7,111.85 222.96,105.89 223.23,108.8 223.49,119.5 223.76,103.74 224.02,101.0 224.29,107.84 224.55,115.54 224.82,118.4 225.08,133.7 225.34,124.09 225.61,120.77 225.87,116.53 226.14,115.71 226.4,114.86 226.67,102.03 226.93,111.98 227.2,123.98 227.46,116.09 227.72,100.13 227.99,82.86 228.25,86.68 228.52,89.33 228.78,83.56 229.05,83.21 229.31,84.53 229.58,90.83 229.84,86.18 230.1,90.57 230.37,86.84 230.63,85.38 230.9,98.61 231.16,139.71 231.43,123.71 231.69,120.23 231.95,163.1 232.22,182.02 232.48,185.04 232.75,143.44 233.01,124.84 233.28,113.82 233.54,101.49 233.81,111.66 234.07,115.88 234.33,92.14 234.6,90.51 234.86,85.86 235.13,82.6 235.39,89.9 235.66,92.4 235.92,86.01 236.19,86.32 236.45,95.61 236.71,103.57 236.98,97.08 237.24,82.34 237.51,93.67 237.77,96.26 238.04,106.9 238.3,104.97 238.57,101.14 238.83,95.54 239.09,95.7 239.36,95.18 239.62,83.26 239.89,78.26 240.15,75.06 240.42,78.16 240.68,80.84 240.95,94.87 241.21,91.42 241.47,112.85 241.74,106.96 242.0,103.06 242.27,100.13 242.53,112.5 242.8,111.04 243.06,111.24 243.33,116.03 243.59,149.71 243.85,143.38 244.12,134.56 244.38,139.48 244.65,103.91 244.91,101.47 245.18,103.09 245.44,114.82 245.7,92.58 245.97,89.18 246.23,94.54 246.5,112.51 246.76,86.79 247.03,98.13 247.29,108.99 247.56,110.13 247.82,112.9 248.08,120.02 248.35,131.55 248.61,125.87 248.88,124.57 249.14,129.05 249.41,130.11 249.67,121.43 249.94,127.33 250.2,108.48 250.46,106.58 250.73,110.32 250.99,111.96 251.26,95.28 251.52,75.58 251.79,76.69 252.05,78.46 252.32,73.65 252.58,68.86 252.84,67.96 253.11,69.41 253.37,75.86 253.64,84.33 253.9,91.65 254.17,115.82 254.43,124.78 254.7,123.1 254.96,126.61 255.22,132.84 255.49,139.88 255.75,139.78 256.02,134.34 256.28,135.38 256.55,124.99 256.81,113.18 257.07,112.66 257.34,87.31 257.6,79.98 257.87,79.37 258.13,74.62 258.4,77.2 258.66,73.67 258.93,79.85 259.19,78.2 259.45,78.74 259.72,74.84 259.98,81.98 260.25,85.12 260.51,93.83 260.78,108.79 261.04,109.67 261.31,94.41 261.57,77.41 261.83,82.24 262.1,84.55 262.36,90.35 262.63,88.25 262.89,95.8 263.16,90.44 263.42,90.88 263.69,88.96 263.95,87.18 264.21,89.05 264.48,87.29 264.74,92.05 265.01,89.5 265.27,83.65 265.54,77.87 265.8,74.69 266.07,65.02 266.33,70.02 266.59,67.6 266.86,66.78 267.12,65.69 267.39,60.26 267.65,63.03 267.92,50.88 268.18,51.3 268.44,54.46 268.71,52.69 268.97,59.5 269.24,61.77 269.5,57.69 269.77,60.47 270.03,58.81 270.3,58.01 270.56,60.97 270.82,66.77 271.09,69.22 271.35,70.45 271.62,68.93 271.88,78.8 272.15,74.25 272.41,80.79 272.68,85.33 272.94,85.24 273.2,83.3 273.47,81.73 273.73,80.16 274.0,77.04 274.26,78.24 274.53,79.17 274.79,79.73 275.06,77.05 275.32,70.81 275.58,67.14 275.85,61.73 276.11,61.63 276.38,70.84 276.64,72.69 276.91,74.87 277.17,73.67 277.44,87.79 277.7,96.36 277.96,124.76 278.23,118.87 278.49,124.04 278.76,126.66 279.02,123.59 279.29,123.72 279.55,119.54 279.82,119.89 280.08,119.24 280.34,124.76 280.61,118.35 280.87,111.04 281.14,89.87 281.4,101.73 281.67,104.68 281.93,104.15 282.19,106.02 282.46,114.14 282.72,116.29 282.99,116.73 283.25,136.89 283.52,133.91 283.78,165.97 284.05,170.87 284.31,165.92 284.57,159.22 284.84,155.98 285.1,153.38 285.37,155.49 285.63,149.53 285.9,156.23 286.16,152.98 286.43,141.36 286.69,140.08 286.95,114.02 287.22,106.35 287.48,108.49 287.75,110.79 288.01,108.91 288.28,108.47 288.54,116.22 288.81,112.43 289.07,95.89 289.33,95.8 289.6,103.83 289.86,125.86 290.13,128.95 290.39,140.66 290.66,134.63 290.92,136.33 291.19,139.12 291.45,146.63 291.71,144.46 291.98,147.78 292.24,154.87 292.51,160.73 292.77,163.65 293.04,166.97 293.3,179.36 293.56,196.07 293.83,205.63 294.09,210.18 294.36,208.54 294.62,211.51 294.89,221.93 295.15,222.06 295.42,229.45 295.68,229.62 295.94,229.46 296.21,226.93 296.47,224.08 296.74,217.2 297.0,212.77 297.27,207.82 297.53,211.57 297.8,208.57 298.06,199.53 298.32,196.53 298.59,164.93 298.85,175.32 299.12,183.68 299.38,183.21 299.65,183.28 299.91,186.34 300.18,181.22 300.44,176.58 300.7,174.17 300.97,170.27 301.23,161.86 301.5,159.57 301.76,163.32 302.03,130.33 302.29,107.28 302.56,119.02 302.82,114.3 303.08,93.81 303.35,91.27 303.61,94.02 303.88,95.57 304.14,97.14 304.41,90.57 304.67,85.45 304.93,84.54 305.2,88.39 305.46,87.87 305.73,72.07 305.99,65.01 306.26,67.03 306.52,66.67 306.79,65.3 307.05,65.19 307.31,69.13 307.58,69.35 307.84,64.6 308.11,63.27 308.37,67.46 308.64,68.15 308.9,72.99 309.17,75.64 309.43,73.42 309.69,72.86 309.96,69.38 310.22,75.31 310.49,78.14 310.75,79.06 311.02,77.76 311.28,80.35 311.55,78.06 311.81,77.62 312.07,73.5 312.34,77.31 312.6,76.89 312.87,78.33 313.13,78.14 313.4,77.02 313.66,66.56 313.93,69.67 314.19,75.88 314.45,78.33 314.72,84.89 314.98,98.31 315.25,101.29 315.51,103.84 315.78,107.14 316.04,109.7 316.31,108.9 316.57,108.78 316.83,104.72 317.1,105.67 317.36,98.06 317.63,97.53 317.89,91.81 318.16,82.28 318.42,78.98 318.68,73.98 318.95,68.61 319.21,64.23 319.48,65.35 319.74,57.75 320.01,53.56 320.27,54.67 320.54,55.47 320.8,61.71 321.06,62.77 321.33,64.75 321.59,62.9 321.86,66.83 322.12,69.56 322.39,69.92 322.65,70.01 322.92,69.83 323.18,72.19 323.44,72.63 323.71,70.95 323.97,64.49 324.24,60.15 324.5,63.38 324.77,71.6 325.03,69.38 325.3,66.72 325.56,63.91 325.82,63.38 326.09,60.62 326.35,59.38 326.62,58.42 326.88,56.21 327.15,59.09 327.41,61.1 327.68,60.38 327.94,57.3 328.2,59.22 328.47,57.18 328.73,60.27 329.0,60.2 329.26,65.66 329.53,63.55 329.79,70.01 330.05,72.47 330.32,68.35 330.58,84.77 330.85,83.94 331.11,88.65 331.38,105.35 331.64,108.41 331.91,120.16 332.17,128.05 332.43,138.13 332.7,148.75 332.96,149.29 333.23,151.81 333.49,151.05 333.76,142.83 334.02,147.94 334.29,147.64 334.55,141.22 334.81,141.22 335.08,133.87 335.34,127.39 335.61,114.09 335.87,99.42 336.14,99.32 336.4,97.08 336.67,100.34 336.93,106.84 337.19,96.57 337.46,88.81 337.72,75.46 337.99,72.46 338.25,67.57 338.52,69.11 338.78,60.35 339.05,57.96 339.31,56.89 339.57,54.56 339.84,52.7 340.1,50.43 340.37,59.96 340.63,60.87 340.9,68.27 341.16,69.29 341.42,73.94 341.69,76.08 341.95,82.45 342.22,80.16 342.48,77.32 342.75,77.88 343.01,76.12 343.28,73.35 343.54,68.5 343.8,68.45 344.07,63.59 344.33,61.96 344.6,55.62 344.86,54.92 345.13,55.21 345.39,53.55 345.66,60.87 345.92,60.73 346.18,64.53 346.45,74.76 346.71,75.06 346.98,84.97 347.24,100.17 347.51,100.29 347.77,99.67 348.04,105.93 348.3,90.38 348.56,100.35 348.83,97.7 349.09,93.69 349.36,93.58 349.62,97.72 349.89,100.64 350.15,110.83 350.42,101.34 350.68,128.85 350.94,139.51 351.21,126.07 351.47,123.66 351.74,107.02 352.0,98.95 352.27,90.99 352.53,96.25 352.8,91.22 353.06,91.34 353.32,89.66 353.59,91.47 353.85,79.41 354.12,72.38 354.38,81.02 354.65,83.25 354.91,81.99 355.17,73.99 355.44,73.31 355.7,69.89 355.97,62.95 356.23,65.49 356.5,65.54 356.76,67.03 357.03,79.19 357.29,79.03 357.55,70.79 357.82,75.54 358.08,80.57 358.35,97.58 358.61,90.39 358.88,87.17 359.14,89.54 359.41,99.35 359.67,104.22 359.93,106.6 360.2,93.84 360.46,95.3 360.73,108.77 360.99,107.11 361.26,109.02 361.52,105.78 361.79,101.79 362.05,96.64 362.31,112.27 362.58,97.81 362.84,78.36 363.11,80.54 363.37,72.36 363.64,69.23 363.9,67.21 364.17,64.07 364.43,62.58 364.69,56.81 364.96,61.15 365.22,67.29 365.49,79.55 365.75,91.36 366.02,100.69 366.28,99.24 366.54,110.77 366.81,108.61 367.07,108.32 367.34,109.46 367.6,105.02 367.87,120.91 368.13,108.55 368.4,106.78 368.66,75.34 368.92,53.45 369.19,58.27 369.45,62.13 369.72,59.54 369.98,60.97 370.25,59.57 370.51,63.48 370.78,74.37 371.04,73.2 371.3,76.09 371.57,73.48 371.83,80.72 372.1,99.85 372.36,118.12 372.63,116.12 372.89,127.21 373.16,119.85 373.42,122.18 373.68,120.24 373.95,112.82 374.21,116.05 374.48,111.74 374.74,108.4 375.01,103.09 375.27,94.24 375.54,88.58 375.8,91.38 376.06,90.59 376.33,94.46 376.59,94.66 376.86,96.51 377.12,98.13 377.39,102.99 377.65,107.79 377.91,115.61 378.18,113.85 378.44,128.16 378.71,126.97 378.97,119.2 379.24,122.84 379.5,122.08 379.77,111.32 380.03,117.71 380.29,113.24 380.56,96.09 380.82,75.35 381.09,77.95 381.35,80.17 381.62,73.19 381.88,94.7 382.15,88.52 382.41,90.32 382.67,89.64 382.94,95.76 383.2,95.48 383.47,107.32 383.73,146.97 384.0,149.05 384.26,150.51 384.53,142.25 384.79,147.99 385.05,126.84 385.32,130.24 385.58,128.45 385.85,125.27 386.11,121.04 386.38,112.98 386.64,115.68 386.91,88.14 387.17,85.95 387.43,87.71 387.7,87.02 387.96,96.96 388.23,97.09 388.49,95.72 388.76,111.17 389.02,124.3 389.29,129.83 389.55,129.01 389.81,130.43 390.08,128.42 390.34,134.85 390.61,128.44 390.87,130.8 391.14,119.41 391.4,123.17 391.66,126.33 391.93,117.16 392.19,107.29 392.46,99.74 392.72,96.48 392.99,95.61 393.25,100.39 393.52,81.34 393.78,75.51 394.04,73.14 394.31,62.13 394.57,59.21 394.84,60.46 395.1,60.31 395.37,59.19 395.63,57.73 395.9,57.23 396.16,55.68 396.42,53.99 396.69,54.05 396.95,55.2 397.22,56.16 397.48,63.03 397.75,62.44 398.01,69.26 398.28,79.14 398.54,90.57 398.8,91.54 399.07,87.59 399.33,93.84 399.6,89.66 399.86,85.71 400.13,85.12 400.39,84.07 400.66,74.81 400.92,65.75 401.18,65.28 401.45,57.11 401.71,56.75 401.98,53.83 402.24,54.06 402.51,53.09 402.77,52.26 403.03,51.65 403.3,51.33 403.56,50.15 403.83,52.81 404.09,56.27 404.36,61.83 404.62,61.3 404.89,55.75 405.15,56.15 405.41,66.16 405.68,59.86 405.94,60.15 406.21,60.85 406.47,59.6 406.74,63.19 407.0,66.09 407.27,65.53 407.53,59.72 407.79,56.69 408.06,58.34 408.32,59.67 408.59,52.59 408.85,56.25 409.12,52.71 409.38,56.55 409.65,54.15 409.91,66.7 410.17,69.7 410.44,70.17 410.7,66.91 410.97,66.73 411.23,66.9 411.5,63.92 411.76,65.22 412.03,60.55 412.29,60.19 412.55,57.63 412.82,65.14 413.08,48.78 413.35,46.75 413.61,51.79 413.88,86.89 414.14,82.19 414.4,70.0 414.67,75.27 414.93,64.98 415.2,73.63 415.46,73.08 415.73,74.1 415.99,94.57 416.26,127.45 416.52,133.19 416.78,139.97 417.05,148.54 417.31,148.93 417.58,148.78 417.84,159.69 418.11,178.97 418.37,176.08 418.64,179.73 418.9,184.45 419.16,200.72 419.43,192.56 419.69,198.74 419.96,201.09 420.22,185.69 420.49,194.34 420.75,209.73 421.02,213.71 421.28,161.68 421.54,154.53 421.81,123.29 422.07,91.8 422.34,108.92 422.6,99.29 422.87,87.39 423.13,87.08 423.4,80.74 423.66,78.57 423.92,75.86 424.19,70.84 424.45,78.27 424.72,68.86 424.98,87.19 425.25,90.3 425.51,91.65 425.78,91.98 426.04,97.38 426.3,113.96 426.57,118.0 426.83,118.33 427.1,122.13 427.36,131.06 427.63,181.34 427.89,179.21 428.15,178.88 428.42,179.05 428.68,174.55 428.95,176.45 429.21,174.72 429.48,165.72 429.74,167.41 430.01,159.39 430.27,167.23 430.53,169.98 430.8,75.61 431.06,72.17 431.33,65.17 431.59,62.7 431.86,66.38 432.12,64.01 432.39,67.74 432.65,74.68 432.91,72.4 433.18,75.49 433.44,77.83 433.71,77.07 433.97,77.36 434.24,81.43 434.5,81.26 434.77,85.53 435.03,83.52 435.29,81.95 435.56,81.07 435.82,74.35 436.09,75.36 436.35,74.19 436.62,67.15 436.88,66.34 437.15,63.99 437.41,65.14 437.67,66.76 437.94,69.42 438.2,67.47 438.47,66.95 438.73,60.12 439.0,60.67 439.26,58.98 439.52,55.59 439.79,54.89 440.05,53.0 440.32,53.42 440.58,50.38 440.85,46.92 441.11,39.34 441.38,40.89 441.64,42.15 441.9,48.43 442.17,46.93 442.43,47.75 442.7,47.8 442.96,58.84 443.23,97.61 443.49,114.29 443.76,156.77 444.02,197.74 444.28,203.5 444.55,205.11 444.81,207.11 445.08,207.86 445.34,210.31 445.61,210.64 445.87,211.97 446.14,210.05 446.4,207.09 446.66,214.33 446.93,202.64 447.19,150.5 447.46,146.58 447.72,138.39 447.99,135.91 448.25,128.72 448.52,124.68 448.78,127.95 449.04,133.47 449.31,135.8 449.57,135.51 449.84,153.48 450.1,228.51 450.37,226.28 450.63,215.62 450.9,213.5 451.16,210.9 451.42,206.58 451.69,221.82 451.95,185.9 452.22,160.22 452.48,177.82 452.75,178.81 453.01,168.85 453.27,147.33 453.54,145.09 453.8,132.62 454.07,128.0 454.33,125.29 454.6,123.03 454.86,116.45 455.13,142.49 455.39,148.67 455.65,107.53 455.92,97.98 456.18,110.91 456.45,143.4 456.71,137.86 456.98,134.86 457.24,138.12 457.51,139.32 457.77,145.84 458.03,134.97 458.3,128.45 458.56,144.25 458.83,142.89 459.09,134.06 459.36,131.33 459.62,99.59 459.89,104.15 460.15,105.13 460.41,96.24 460.68,92.72 460.94,96.05 461.21,94.58 461.47,77.03 461.74,76.98 462.0,77.83 462.27,64.06 462.53,66.31 462.79,76.24 463.06,78.21 463.32,80.17 463.59,79.64 463.85,83.95 464.12,83.72 464.38,90.28 464.64,96.26 464.91,106.39 465.17,102.02 465.44,101.85 465.7,104.5 465.97,89.56 466.23,90.2 466.5,125.77 466.76,110.22 467.02,112.58 467.29,111.21 467.55,108.26 467.82,134.59 468.08,137.61 468.35,160.92 468.61,193.48 468.88,186.8 469.14,186.14 469.4,197.51 469.67,195.8 469.93,194.29 470.2,194.37 470.46,200.06 470.73,200.0 470.99,190.44 471.26,192.7 471.52,194.89 471.78,187.62 472.05,196.46 472.31,202.36 472.58,197.19 472.84,189.14 473.11,187.53 473.37,172.77 473.64,170.66 473.9,172.2 474.16,179.97 474.43,176.66 474.69,163.06 474.96,157.84 475.22,147.05 475.49,131.77 475.75,128.21 476.01,124.34 476.28,123.83 476.54,135.93 476.81,145.29 477.07,143.21 477.34,139.76 477.6,128.08 477.87,127.43 478.13,132.72 478.39,142.64 478.66,151.75 478.92,155.79 479.19,156.73 479.45,156.55 479.72,154.87 479.98,150.9 480.25,141.37 480.51,131.85 480.77,154.41 481.04,159.07 481.3,151.15 481.57,150.91 481.83,143.25 482.1,151.76 482.36,163.72 482.63,168.12 482.89,164.51 483.15,158.26 483.42,209.87 483.68,218.44 483.95,195.0 484.21,191.09 484.48,193.79 484.74,186.08 485.01,182.26 485.27,165.42 485.53,154.78 485.8,136.46 486.06,152.09 486.33,133.29 486.59,118.51 486.86,100.35 487.12,102.9 487.39,101.36 487.65,96.53 487.91,101.63 488.18,92.33 488.44,88.14 488.71,102.05 488.97,106.28 489.24,90.44 489.5,94.55 489.76,90.58 490.03,99.1 490.29,111.06 490.56,108.47 490.82,118.29 491.09,105.96 491.35,93.58 491.62,112.39 491.88,96.66 492.14,107.76 492.41,107.16 492.67,105.38 492.94,112.06 493.2,108.66 493.47,108.28 493.73,113.97 494.0,113.7 494.26,116.14 494.52,131.29 494.79,125.69 495.05,182.73 495.32,163.27 495.58,183.5 495.85,162.89 496.11,157.33 496.38,146.12 496.64,149.12 496.9,151.08 497.17,159.91 497.43,151.57 497.7,173.18 497.96,167.54 498.23,153.32 498.49,153.28 498.76,156.28 499.02,179.43 499.28,163.01 499.55,188.92 499.81,208.65 500.08,218.03 500.34,208.98 500.61,216.28 500.87,202.95 501.13,197.84 501.4,191.3 501.66,161.47 501.93,160.73 502.19,156.95 502.46,162.01 502.72,149.56 502.99,126.1 503.25,118.05 503.51,126.43 503.78,121.67 504.04,106.9 504.31,107.23 504.57,106.21 504.84,113.91 505.1,145.03 505.37,171.56 505.63,168.81 505.89,196.41 506.16,210.66 506.42,225.16 506.69,256.43 506.95,292.08 507.22,301.19 507.48,275.02 507.75,267.63 508.01,281.67 508.27,260.13 508.54,239.96 508.8,235.14 509.07,225.44 509.33,201.56 509.6,192.07 509.86,183.28 510.13,156.03 510.39,113.76 510.65,184.3 510.92,186.07 511.18,185.88 511.45,185.71 511.71,186.48 511.98,184.85 512.24,180.97 512.5,179.06 512.77,177.45 513.03,174.02 513.3,173.97 513.56,245.54 513.83,122.24 514.09,106.39 514.36,111.74 514.62,98.43 514.88,88.06 515.15,90.77 515.41,103.06 515.68,101.37 515.94,104.18 516.21,94.33 516.47,98.48 516.74,90.07 517.0,100.55 517.26,126.27 517.53,129.29 517.79,183.1 518.06,177.11 518.32,155.07 518.59,121.33 518.85,143.32 519.12,142.15 519.38,149.78 519.64,157.03 519.91,174.41 520.17,171.86 520.44,158.15 520.7,141.39 520.97,134.04 521.23,166.82 521.5,172.92 521.76,200.25 522.02,187.54 522.29,179.19 522.55,164.51 522.82,144.52 523.08,133.66 523.35,137.13 523.61,129.85 523.88,135.41 524.14,141.08 524.4,121.37 524.67,122.52 524.93,120.56 525.2,112.93 525.46,109.94 525.73,128.89 525.99,135.18 526.25,135.6 526.52,139.04 526.78,164.18 527.05,174.05 527.31,159.65 527.58,170.83 527.84,138.16 528.0,149.82"/>
+<text class="fig-serie" x="534.0" y="183.97">raw</text>
+<text class="fig-serie" x="534.0" y="153.82">corrected</text>
+<text class="fig-serie" x="534.0" y="129.44">full sample</text>
+<text class="fig-tick" x="54.0" y="338.0" text-anchor="middle">1990</text>
+<text class="fig-tick" x="113.18" y="338.0" text-anchor="middle">1995</text>
+<text class="fig-tick" x="177.85" y="338.0" text-anchor="middle">2000</text>
+<text class="fig-tick" x="243.38" y="338.0" text-anchor="middle">2005</text>
+<text class="fig-tick" x="309.32" y="338.0" text-anchor="middle">2010</text>
+<text class="fig-tick" x="375.11" y="338.0" text-anchor="middle">2015</text>
+<text class="fig-tick" x="440.95" y="338.0" text-anchor="middle">2020</text>
+<text class="fig-tick" x="506.95" y="338.0" text-anchor="middle">2025</text>
+</svg>
+<details class="fig-data">
+<summary>the plotted values</summary>
+<table class="fig-table">
+<thead><tr><th scope="col">Episode</th><th scope="col">Raw</th><th scope="col">Corrected</th></tr></thead>
+<tbody>
+<tr><td>autumn 2008</td><td>0.761</td><td>0.438</td></tr>
+<tr><td>February-April 2020</td><td>0.792</td><td>0.578</td></tr>
+<tr><td>full sample</td><td>0.641</td><td>0.641</td></tr>
+</tbody>
+</table>
+</details>
+</figure>
+<!-- /fig:reste -->
+
+  <h2>What the computation assumes</h2>
+
+  <ul>
+    <li><strong>The shock is assumed to come from the S&amp;P 500.</strong> Conditioning on the CAC 40's magnitude would give different numbers; the direction of conditioning is an economic choice, not a statistical truth.</li>
+    <li><strong>Homoscedastic ε, no omitted variable.</strong> Both assumptions are false in practice: an omitted common factor whose variance rises in a crisis biases the correction, in a direction that depends on its weight in each index. The follow-up will keep score.</li>
+    <li><strong>The two-day moving average creates MA(1) autocorrelation.</strong> It is there to absorb the time-zone gap; the tables give the single-day control, without smoothing, and the conclusion does not flip there.</li>
+    <li><strong>The Monte-Carlo is Gaussian.</strong> That is a tamer world than markets, with no fat tails; and the interval bootstrap is i.i.d., which likely understates their width.</li>
+    <li><strong>Trading desks usually condition on a market's rolling volatility,</strong> not on the day's magnitude. The day-magnitude version isolates the mechanism; figure 4 covers the other reading.</li>
+    <li><strong>The data is as declared.</strong> Yahoo Finance closes, dividends not reinvested, Pearson correlation on log returns: nothing here is total return, and another vendor would give neighbouring but not identical numbers.</li>
+  </ul>
+
+  <p>Out of scope, finally: dynamic conditional correlations of the DCC-GARCH kind, copulas, correlations implied by option prices. So many open doors for a follow-up post. The starting point remains the Forbes and Rigobon paper, <a href="https://onlinelibrary.wiley.com/doi/10.1111/0022-1082.00494">"No Contagion, Only Interdependence" (Journal of Finance, 2002)</a>, and the whole computation behind this page can be replayed from <a href="https://github.com/VNAZZARENO/nazzareno.fr/tree/main/tools/contagion">tools/contagion, on GitHub</a>.</p>
+
+  <p class="aside">Every number on this page comes out of the same computation pipeline; the paired returns themselves are in <a href="/assets/data/contagion.json">contagion.json</a>.</p>
+
+  <p class="byline">Posted by Vincent Nazzareno on <time datetime="2026-08-14">14 August 2026</time>.</p>
+  <p class="backlink"><a href="/en/#projects">← back to projects</a></p>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Vincent Nazzareno</span>
+    <nav>
+      <a href="/mentions-legales.html">legal notice (fr)</a>
+      <a href="/politique-confidentialite.html">privacy (fr)</a>
+      <a href="/projets/contagion.html">français</a>
+    </nav>
+  </div>
+</footer>
+
+<script data-goatcounter="https://nazzareno.goatcounter.com/count"
+        async src="https://gc.zgo.at/count.js"></script>
+
+</body>
+</html>
