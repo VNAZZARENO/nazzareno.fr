@@ -42,15 +42,15 @@
   <p class="standfirst">When markets fall, correlations rise, and we call that contagion. I recomputed the classic proof on the S&amp;P 500 and the CAC 40, then obtained the exact same picture in a simulated world where, by construction, nothing propagates.</p>
   <p class="facts"><b>Labels</b> <span>S&amp;P 500 × CAC 40</span>
     <span>Forbes-Rigobon 2002</span>
-    <span>⟨n⟩ trading days</span>
+    <span>9023 trading days</span>
     <span>conditional correlations</span>
     <span>no dependencies</span></p>
 
   <h2>The finding</h2>
 
-  <p>The phrase comes back with every crisis: "in times of stress, everything becomes correlated". It has a standard proof, and the proof fits in one chart. Take the daily closes of the S&amp;P 500 and the CAC 40, ⟨n⟩ common trading days from ⟨…⟩ to ⟨…⟩; turn them into log returns smoothed with a two-day moving average, to absorb the time-zone gap between New York and Paris. Then sort the days into ten deciles of US return magnitude, from calmest to wildest, and measure the correlation inside each one.</p>
+  <p>The phrase comes back with every crisis: "in times of stress, everything becomes correlated". It has a standard proof, and the proof fits in one chart. Take the daily closes of the S&amp;P 500 and the CAC 40, 9023 common trading days from 5 March 1990 to 13 August 2026; turn them into log returns smoothed with a two-day moving average, to absorb the time-zone gap between New York and Paris. Then sort the days into ten deciles of US return magnitude, from calmest to wildest, and measure the correlation inside each one.</p>
 
-  <p>The curve rises, without hesitation: from ⟨…⟩ in the calmest decile to ⟨…⟩ in the wildest, against a full-sample correlation of ⟨…⟩. On stormy days, Paris follows New York almost step for step. There, we are told, is contagion, measured.</p>
+  <p>The curve rises, without hesitation: from 0.09 in the calmest decile to 0.82 in the wildest, against a full-sample correlation of 0.64. On stormy days, Paris follows New York almost step for step. There, we are told, is contagion, measured.</p>
 
   <!-- fig:constat -->
 <figure class="fig" id="fig-constat">
@@ -128,7 +128,7 @@
 
   <h2>The reversal</h2>
 
-  <p>Before concluding, a counter-test. I build a simulated Gaussian pair of the same size, whose true correlation is constant by construction, equal to ⟨…⟩, the real pair's full-sample value. No regimes, no crises, no propagation: the tamest world one can draw at random. The same decile procedure produces the same rising curve, and the analytic prediction, drawn as a solid line, threads through the Monte-Carlo points. The chart that "proved" contagion therefore proves nothing on its own: it rediscovers a property of the estimator, not a property of markets.</p>
+  <p>Before concluding, a counter-test. I build a simulated Gaussian pair of the same size, whose true correlation is constant by construction, equal to 0.64, the real pair's full-sample value. No regimes, no crises, no propagation: the tamest world one can draw at random. The same decile procedure produces the same rising curve, from 0.04 in the first decile to 0.86 in the last, and the analytic prediction, drawn as a solid line, threads through the Monte-Carlo points. The chart that "proved" contagion therefore proves nothing on its own: it rediscovers a property of the estimator, not a property of markets.</p>
 
   <!-- fig:retournement -->
 <figure class="fig" id="fig-retournement">
@@ -224,9 +224,13 @@
     </ol>
   </details>
 
+  <p>A trap met along the way shows where the effect really lives. One of the first tests multiplied both series by three, stormy days included, and expected the correlation to rise: it did not move by a single digit, Pearson correlation being invariant under changes of scale. What the conditioning amplifies is not the size of the returns, then, but the share of the common shock against a noise that does not grow with it: inflate x alone, leaving ε untouched, and the raw correlation soars while the corrected one returns ρ. The whole question of contagion sits in that ratio, not in the turbulence itself.</p>
+
   <h2>The correction</h2>
 
-  <p>The formula inverts: if the rising curve is only the image of a constant correlation seen through δ, then it can be straightened. That is the Forbes-Rigobon correction, applied here decile by decile to the real data. From the third to the tenth decile, where the estimator is tight, the corrected correlation stays near the full-sample value: the rise of the first chart all but vanishes. In the lowest deciles, the inversion divides by a number close to zero and amplifies noise; the wide intervals in the figure say so on their own.</p>
+  <p>The formula inverts: if the rising curve is only the image of a constant correlation seen through δ, then it can be straightened. That is the Forbes-Rigobon correction, applied here decile by decile to the real data. From the third to the tenth decile, where the estimator is tight, the rise of the first chart vanishes: the corrected curve has no overall slope left and holds within a band of about 0.15 around the full-sample value. In the two lowest deciles, by contrast, the inversion divides by a number close to zero and amplifies noise instead of removing it: the first corrected decile comes out at 0.88, with an interval running from 0.46 to 0.96, which is to say a point that says nothing. The intervals in the figure say so on their own; the flattening, for its part, is only claimed from the third decile onwards.</p>
+
+  <p>The last decile deserves its own sentence. There the correction does more than flatten: the corrected value drops to 0.49, below the 0.64 reference, and its interval, from 0.46 to 0.53, excludes it. Two readings are compatible with that point. Either the inversion, driven by this decile's δ of 5.2, corrects beyond what was needed; or the raw excess of the wildest days really was volatility bias through and through, down to the last point. The page reports what comes out of the computation and does not decide between the two.</p>
 
   <!-- fig:correction -->
 <figure class="fig" id="fig-correction">
@@ -337,7 +341,11 @@
 
   <h2>What is left</h2>
 
-  <p>Deciles mix every era together; to look at the crises themselves, I switch to a rolling correlation over 60 trading days. The raw curve climbs to ⟨…⟩ at the height of the crises. The corrected curve tells another story: averaged over each episode, it sits at ⟨…⟩ in autumn 2008 and ⟨…⟩ in February-April 2020, both below the full-sample line. These means are descriptive, and successive windows overlap: they carry fewer independent observations than they seem to. The correction is, moreover, conservative, its variance reference being the full sample, crises included, and yet here it dips below the reference; part of that gap comes from the difference between conditioning on a calendar window and conditioning on the day's magnitude, for which the formula is exact. The careful reading: most of the crisis-time surge in correlations is the mechanical effect of volatility, not proof of extra propagation.</p>
+  <p>Deciles mix every era together; to look at the crises themselves, I switch to a rolling correlation over 60 trading days. The raw curve climbs to 0.92 at the height of the crises. The corrected curve tells another story: averaged over each episode, it sits at 0.44 in autumn 2008 and 0.58 in February-April 2020, both below the full-sample line.</p>
+
+  <p>These means are descriptive, and it matters to say why. Two successive windows share 59 of their 60 days: the 84 windows of autumn 2008 amount to one or two independent observations, not 84. The two-day smoothing also autocorrelates the returns, 0.45 at the first lag, so that a 60-day window carries about 23 effective observations. And it is precisely in a crisis that δ becomes huge, a median of 8.3 in autumn 2008, which is exactly where the inversion amplifies noise the most. February-April 2020 makes the point: the standard deviation of the corrected windows there reaches 0.21, and 18 of the 51 windows go above the reference. "Below the reference" is a statement about a noisy average, not about every window.</p>
+
+  <p>The solid argument lies elsewhere, and it is a fortiori. The correction's variance reference is the full sample, crises included, not a calm period: the correction therefore under-corrects by construction. If extra propagation were added to the mechanism, above the reference is where it had every room to survive; yet, averaged over each episode, nothing survives. That an under-correcting adjustment lands below is, moreover, no paradox: at huge δ, averaging a noisy and roughly concave transform pulls downward, and the windows mix regimes, those ending in early September 2008 still looking back at a calm summer. The careful reading fits in one sentence: most of the crisis-time surge in correlations is the mechanical effect of volatility, not proof of extra propagation.</p>
 
   <!-- fig:reste -->
 <figure class="fig" id="fig-reste">
@@ -391,10 +399,10 @@
 
   <ul>
     <li><strong>The shock is assumed to come from the S&amp;P 500.</strong> Conditioning on the CAC 40's magnitude would give different numbers; the direction of conditioning is an economic choice, not a statistical truth.</li>
-    <li><strong>Homoscedastic ε, no omitted variable.</strong> Both assumptions are false in practice: an omitted common factor whose variance rises in a crisis biases the correction, in a direction that depends on its weight in each index. The follow-up will keep score.</li>
-    <li><strong>The two-day moving average creates MA(1) autocorrelation.</strong> It is there to absorb the time-zone gap; the tables give the single-day control, without smoothing, and the conclusion does not flip there.</li>
+    <li><strong>Homoscedastic ε, no omitted variable.</strong> Both assumptions are false in practice: an omitted common factor whose variance rises in a crisis biases the correction, in a direction that depends on the factor's weight in each index.</li>
+    <li><strong>The two-day moving average creates artificial autocorrelation.</strong> It is there to absorb the time-zone gap, and it raises the level: on single days, without smoothing, the full-sample correlation is 0.52 instead of 0.64. The Forbes-Rigobon correction says nothing about that level shift; the decile mechanics, though, are the same with or without smoothing.</li>
     <li><strong>The Monte-Carlo is Gaussian.</strong> That is a tamer world than markets, with no fat tails; and the interval bootstrap is i.i.d., which likely understates their width.</li>
-    <li><strong>Trading desks usually condition on a market's rolling volatility,</strong> not on the day's magnitude. The day-magnitude version isolates the mechanism; figure 4 covers the other reading.</li>
+    <li><strong>Trading desks usually condition on a market's rolling volatility,</strong> not on the day's magnitude. The day-magnitude version isolates the mechanism; the last figure covers the other reading.</li>
     <li><strong>The data is as declared.</strong> Yahoo Finance closes, dividends not reinvested, Pearson correlation on log returns: nothing here is total return, and another vendor would give neighbouring but not identical numbers.</li>
   </ul>
 

@@ -42,15 +42,15 @@
   <p class="standfirst">Quand les marchés chutent, les corrélations montent, et on appelle cela contagion. J'ai recalculé la preuve classique sur le S&amp;P 500 et le CAC 40, puis je l'ai obtenue à l'identique dans un monde simulé où, par construction, rien ne se propage.</p>
   <p class="facts"><b>Mots-clés</b> <span>S&amp;P 500 × CAC 40</span>
     <span>Forbes-Rigobon 2002</span>
-    <span>⟨n⟩ jours de cotation</span>
+    <span>9023 jours de cotation</span>
     <span>corrélations conditionnelles</span>
     <span>sans dépendance</span></p>
 
   <h2>Le constat</h2>
 
-  <p>La phrase revient à chaque crise : « en période de tension, tout devient corrélé ». Elle a une preuve standard, et cette preuve tient en un graphique. On prend les clôtures quotidiennes du S&amp;P 500 et du CAC 40, soit ⟨n⟩ jours de cotation communs de ⟨…⟩ à ⟨…⟩ ; on en tire des rendements logarithmiques lissés en moyenne mobile sur deux jours, pour amortir le décalage horaire entre New York et Paris. Puis on classe les jours en dix déciles d'amplitude du rendement américain, du plus calme au plus agité, et on mesure la corrélation dans chacun.</p>
+  <p>La phrase revient à chaque crise : « en période de tension, tout devient corrélé ». Elle a une preuve standard, et cette preuve tient en un graphique. On prend les clôtures quotidiennes du S&amp;P 500 et du CAC 40, soit 9023 jours de cotation communs du 5 mars 1990 au 13 août 2026 ; on en tire des rendements logarithmiques lissés en moyenne mobile sur deux jours, pour amortir le décalage horaire entre New York et Paris. Puis on classe les jours en dix déciles d'amplitude du rendement américain, du plus calme au plus agité, et on mesure la corrélation dans chacun.</p>
 
-  <p>La courbe monte, sans hésiter : de ⟨…⟩ dans le décile le plus calme à ⟨…⟩ dans le plus agité, pour une corrélation pleine période de ⟨…⟩. Les jours de tempête, Paris suit New York presque pas à pas. Voilà, dit-on, la contagion, mesurée.</p>
+  <p>La courbe monte, sans hésiter : de 0,09 dans le décile le plus calme à 0,82 dans le plus agité, pour une corrélation pleine période de 0,64. Les jours de tempête, Paris suit New York presque pas à pas. Voilà, dit-on, la contagion, mesurée.</p>
 
   <!-- fig:constat -->
 <figure class="fig" id="fig-constat">
@@ -128,7 +128,7 @@
 
   <h2>Le retournement</h2>
 
-  <p>Avant de conclure, une contre-épreuve. Je fabrique un couple gaussien simulé de même taille, dont la corrélation vraie est constante par construction, égale à ⟨…⟩, la valeur pleine période du couple réel. Aucun régime, aucune crise, aucune propagation : le monde le plus sage qu'on puisse tirer au sort. La même procédure par décile y produit la même courbe montante, et la prédiction analytique, tracée en trait continu, passe au travers des points de Monte-Carlo. Le graphique qui « prouvait » la contagion ne prouve donc rien à lui seul : il redécouvre une propriété de l'estimateur, pas une propriété des marchés.</p>
+  <p>Avant de conclure, une contre-épreuve. Je fabrique un couple gaussien simulé de même taille, dont la corrélation vraie est constante par construction, égale à 0,64, la valeur pleine période du couple réel. Aucun régime, aucune crise, aucune propagation : le monde le plus sage qu'on puisse tirer au sort. La même procédure par décile y produit la même courbe montante, de 0,04 dans le premier décile à 0,86 dans le dernier, et la prédiction analytique, tracée en trait continu, passe au travers des points de Monte-Carlo. Le graphique qui « prouvait » la contagion ne prouve donc rien à lui seul : il redécouvre une propriété de l'estimateur, pas une propriété des marchés.</p>
 
   <!-- fig:retournement -->
 <figure class="fig" id="fig-retournement">
@@ -224,9 +224,13 @@
     </ol>
   </details>
 
+  <p>Un piège rencontré en chemin dit bien où loge l'effet. Un des premiers tests multipliait les deux séries par trois, jours de tempête compris, et attendait que la corrélation monte : elle n'a pas bougé d'une décimale, la corrélation de Pearson étant invariante par changement d'échelle. Ce que le conditionnement amplifie n'est donc pas la taille des rendements, c'est la part du choc commun face à un bruit qui, lui, ne grandit pas : gonflez x seul, en laissant ε tel quel, et la brute s'envole quand la corrigée rend ρ. Toute la question de la contagion se joue dans ce rapport, pas dans l'agitation elle-même.</p>
+
   <h2>La correction</h2>
 
-  <p>La formule s'inverse : si la courbe montante n'est que l'image d'une corrélation constante vue à travers δ, alors on peut la redresser. C'est la correction de Forbes et Rigobon, appliquée ici décile par décile aux données réelles. Du troisième au dixième décile, là où l'estimateur est serré, la corrélation corrigée reste au voisinage de la valeur pleine période : la montée du constat s'efface presque entièrement. Dans les déciles les plus bas, l'inversion divise par un nombre proche de zéro et amplifie le bruit ; les intervalles larges de la figure le disent d'eux-mêmes.</p>
+  <p>La formule s'inverse : si la courbe montante n'est que l'image d'une corrélation constante vue à travers δ, alors on peut la redresser. C'est la correction de Forbes et Rigobon, appliquée ici décile par décile aux données réelles. Du troisième au dixième décile, là où l'estimateur est serré, la montée du constat s'efface : la courbe corrigée n'a plus de pente d'ensemble et tient dans une bande d'environ 0,15 autour de la valeur pleine période. Dans les deux premiers déciles, en revanche, l'inversion divise par un nombre proche de zéro et amplifie le bruit au lieu de l'éteindre : le premier décile corrigé vaut 0,88, avec un intervalle qui court de 0,46 à 0,96, autant dire un point qui ne dit rien. Les intervalles de la figure le disent d'eux-mêmes ; l'aplatissement, lui, n'est constaté qu'à partir du troisième décile.</p>
+
+  <p>Le dernier décile mérite sa propre phrase. La correction y fait plus qu'aplatir : la corrigée tombe à 0,49, sous la référence de 0,64, et son intervalle, de 0,46 à 0,53, exclut celle-ci. Deux lectures sont compatibles avec ce point. Soit l'inversion, poussée par le δ de 5,2 de ce décile, corrige au-delà du nécessaire ; soit l'excès brut des jours les plus agités n'était réellement que du biais de volatilité, jusqu'au dernier point. La page rapporte ce qui sort du calcul et ne tranche pas entre les deux.</p>
 
   <!-- fig:correction -->
 <figure class="fig" id="fig-correction">
@@ -337,7 +341,11 @@
 
   <h2>Ce qui reste</h2>
 
-  <p>Les déciles mélangent toutes les époques ; pour regarder les crises elles-mêmes, je passe en corrélation glissante sur 60 jours de cotation. La courbe brute grimpe jusqu'à ⟨…⟩ au plus fort des crises. La courbe corrigée raconte autre chose : en moyenne d'épisode, elle vaut ⟨…⟩ à l'automne 2008 et ⟨…⟩ en février-avril 2020, toutes deux sous la ligne pleine période. Ces moyennes sont descriptives, et les fenêtres successives se recouvrent : elles comptent moins d'observations indépendantes qu'il n'y paraît. La correction est par ailleurs conservatrice, sa référence de variance étant la pleine période, crises comprises, et pourtant elle passe ici sous la référence ; l'écart entre le conditionnement par fenêtre de calendrier et le conditionnement sur l'amplitude du jour, pour lequel la formule est exacte, en explique une partie. La lecture prudente : l'essentiel de la flambée des corrélations en crise est l'effet mécanique de la volatilité, pas la preuve d'une propagation supplémentaire.</p>
+  <p>Les déciles mélangent toutes les époques ; pour regarder les crises elles-mêmes, je passe en corrélation glissante sur 60 jours de cotation. La courbe brute grimpe jusqu'à 0,92 au plus fort des crises. La courbe corrigée raconte autre chose : en moyenne d'épisode, elle vaut 0,44 à l'automne 2008 et 0,58 en février-avril 2020, toutes deux sous la ligne pleine période.</p>
+
+  <p>Ces moyennes sont descriptives, et il faut dire pourquoi. Deux fenêtres successives partagent 59 de leurs 60 jours : les 84 fenêtres de l'automne 2008 pèsent une à deux observations indépendantes, pas 84. Le lissage sur deux jours autocorrèle en outre les rendements, 0,45 au premier retard, si bien qu'une fenêtre de 60 jours porte environ 23 observations effectives. Et c'est précisément en crise que δ devient énorme, 8,3 en médiane à l'automne 2008, c'est-à-dire là où l'inversion amplifie le plus le bruit. Février-avril 2020 le montre : l'écart-type des fenêtres corrigées y atteint 0,21, et 18 des 51 fenêtres passent au-dessus de la référence. « Sous la référence » est un énoncé sur une moyenne bruitée, pas sur chaque fenêtre.</p>
+
+  <p>L'argument solide est ailleurs, et il est a fortiori. La référence de variance de la correction est la pleine période, crises comprises, et non une période calme : la correction sous-corrige donc par construction. Si une propagation supplémentaire s'ajoutait au mécanisme, c'est au-dessus de la référence qu'elle avait toute latitude de subsister ; or, en moyenne d'épisode, rien ne subsiste. Qu'une correction qui sous-corrige atterrisse en dessous n'a d'ailleurs rien de paradoxal : à δ énorme, la moyenne d'une transformation bruitée et à peu près concave tire vers le bas, et les fenêtres mélangent les régimes, celles qui s'achèvent début septembre 2008 regardant encore un été calme. La lecture prudente tient en une phrase : l'essentiel de la flambée des corrélations en crise est l'effet mécanique de la volatilité, pas la preuve d'une propagation supplémentaire.</p>
 
   <!-- fig:reste -->
 <figure class="fig" id="fig-reste">
@@ -391,10 +399,10 @@
 
   <ul>
     <li><strong>Le choc est supposé venir du S&amp;P 500.</strong> Conditionner sur l'amplitude du CAC 40 donnerait d'autres chiffres ; le sens du conditionnement est un choix économique, pas une vérité statistique.</li>
-    <li><strong>ε homoscédastique, aucune variable omise.</strong> Les deux hypothèses sont fausses en pratique : un facteur commun omis dont la variance monte en crise biaise la correction, et dans un sens qui dépend de sa part dans chaque indice. La suite du billet en tiendra le compte.</li>
-    <li><strong>La moyenne mobile sur deux jours crée une autocorrélation MA(1).</strong> Elle est là pour amortir le décalage horaire ; les tableaux donnent le contrôle en jour simple, sans lissage, et la conclusion ne s'y renverse pas.</li>
+    <li><strong>ε homoscédastique, aucune variable omise.</strong> Les deux hypothèses sont fausses en pratique : un facteur commun omis dont la variance monte en crise biaise la correction, dans un sens qui dépend de la part du facteur dans chaque indice.</li>
+    <li><strong>La moyenne mobile sur deux jours crée une autocorrélation artificielle.</strong> Elle est là pour amortir le décalage horaire, et elle relève le niveau : en jour simple, sans lissage, la corrélation pleine période vaut 0,52 au lieu de 0,64. La correction de Forbes et Rigobon ne dit rien de ce déplacement de niveau ; la mécanique des déciles, elle, est la même avec ou sans lissage.</li>
     <li><strong>Le Monte-Carlo est gaussien.</strong> C'est un monde plus sage que les marchés, sans queues épaisses ; et le bootstrap des intervalles est i.i.d., ce qui sous-estime vraisemblablement leur largeur.</li>
-    <li><strong>Le conditionnement des salles de marché est souvent une volatilité glissante de place,</strong> pas l'amplitude du jour. La version par amplitude du jour isole le mécanisme ; la figure 4 couvre l'autre lecture.</li>
+    <li><strong>Le conditionnement des salles de marché est souvent une volatilité glissante de place,</strong> pas l'amplitude du jour. La version par amplitude du jour isole le mécanisme ; la dernière figure couvre l'autre lecture.</li>
     <li><strong>Les données sont déclaratives.</strong> Clôtures Yahoo Finance, dividendes non réinvestis, corrélation de Pearson sur rendements logarithmiques : rien ici n'est du total return, et un autre fournisseur donnerait des chiffres voisins mais pas identiques.</li>
   </ul>
 
