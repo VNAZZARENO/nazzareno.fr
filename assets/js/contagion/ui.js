@@ -4,26 +4,33 @@
 import { analyse, correlation } from './explorer.js';
 
 const bloc = document.getElementById('explorateur');
-if (bloc) init().catch(() => { /* sans donnees, le noscript et la figure suffisent */ });
+// Sans donnees, le noscript et la figure suffisent: le bloc reste cache. La
+// trace en console, elle, distingue un reseau absent d'une erreur de code.
+if (bloc) init().catch((e) => console.error(e));
 
 async function init() {
   const reponse = await fetch('/assets/data/contagion.json');
   if (!reponse.ok) return;
   const { rx, ry } = await reponse.json();
   const pleine = correlation(rx, ry);
-  const fr = document.documentElement.lang === 'fr';
+  // francais par defaut, tolerant aux variantes fr-FR (convention de l'eclipse)
+  const fr = !document.documentElement.lang.startsWith('en');
   const nombre = (v, dec) => fr ? v.toFixed(dec).replace('.', ',') : v.toFixed(dec);
 
   // Si le balisage n'est pas complet on ne cable rien: mieux vaut aucun
-  // encart qu'une moitie d'encart (convention de l'eclipse).
+  // encart qu'une moitie d'encart (convention de l'eclipse). La chaine
+  // traduisible en fait partie: elle vient du HTML, jamais d'un dictionnaire
+  // cache dans le JS, chaque page porte la sienne en data-fmt-valeurs et
+  // ui.js ne fait que remplir les {jetons}.
   const curseur = document.getElementById('explo-seuil');
   const sortieQ = document.getElementById('explo-q');
   const valeurs = document.getElementById('explo-valeurs');
+  const gabarit = bloc.dataset.fmtValeurs;
   const barres = {
     brute: bloc.querySelector('.explo-barre.explo-a'),
     corrigee: bloc.querySelector('.explo-barre.explo-b'),
   };
-  if (!curseur || !sortieQ || !valeurs || !barres.brute || !barres.corrigee) return;
+  if (!curseur || !sortieQ || !valeurs || !gabarit || !barres.brute || !barres.corrigee) return;
 
   // le curseur est a pas fixes: tout precalculer une fois coute ~25 ms hors
   // interaction, et l'ecoute d'input ne fait plus qu'indexer.
@@ -44,12 +51,18 @@ async function init() {
   function rendre() {
     const r = resultats.get(Number(curseur.value));
     if (!r) return;
-    sortieQ.textContent = nombre(Number(curseur.value) / 100, 2);
+    const q = nombre(Number(curseur.value) / 100, 2);
+    sortieQ.textContent = q;
+    // le lecteur d'ecran entend le quantile, pas la position 0..95 du curseur
+    curseur.setAttribute('aria-valuetext', `quantile ${q}`);
     barres.brute.style.width = `${Math.max(0, r.rho) * 100}%`;
     barres.corrigee.style.width = `${Math.max(0, r.rho_corrigee) * 100}%`;
-    const texte = fr
-      ? `${r.n} jours gardés · δ = ${nombre(r.delta, 2)} · brute ${nombre(r.rho, 3)} · corrigée ${nombre(r.rho_corrigee, 3)} · pleine période ${nombre(pleine, 3)}`
-      : `${r.n} days kept · δ = ${nombre(r.delta, 2)} · raw ${nombre(r.rho, 3)} · corrected ${nombre(r.rho_corrigee, 3)} · full sample ${nombre(pleine, 3)}`;
+    const texte = gabarit
+      .replace('{n}', String(r.n))
+      .replace('{delta}', nombre(r.delta, 2))
+      .replace('{rho}', nombre(r.rho, 3))
+      .replace('{corr}', nombre(r.rho_corrigee, 3))
+      .replace('{pleine}', nombre(pleine, 3));
     // aria-live reannonce a chaque ecriture, meme identique: on ne touche au
     // noeud que si la valeur a change. Le curseur etant a pas de 5, les
     // annonces restent naturellement rares, pas besoin d'un minuteur.

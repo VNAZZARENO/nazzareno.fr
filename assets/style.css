@@ -917,6 +917,7 @@ body.vue-disque .sim-canvas {
 .explo-piste {
   position: relative;
   height: 0.75rem;
+  background: var(--rule);
   background: color-mix(in srgb, var(--rule) 55%, var(--paper));
 }
 .explo-barre {
