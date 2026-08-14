@@ -421,6 +421,11 @@ def fig_reste(ctx, lang):
     y_ref_et = yref + 14.0
     if min(abs(y_ref_et - y_b), abs(y_ref_et - y_c)) < 14:
         y_ref_et = yref - 6.0
+        # et on re-verifie au-dessus: un rafraichissement des donnees peut y
+        # amener une courbe, alors on s'ecarte du nom le plus haut (meme
+        # regle de 14 px qu'entre les deux noms de courbe).
+        if min(abs(y_ref_et - y_b), abs(y_ref_et - y_c)) < 14:
+            y_ref_et = min(y_b, y_c) - 14.0
     parts.append(_etiquette(x_et, y_ref_et, ETIQ_REF[lang]))
     # Reperes d'annees: les multiples de 5, a leur premiere date de bourse.
     annees_vues = set()

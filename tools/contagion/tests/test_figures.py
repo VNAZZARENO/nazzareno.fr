@@ -91,7 +91,9 @@ def test_fig3_la_corrigee_tient_ou_l_estimateur_tient(contexte):
     assert ecart < (bruts[-1] - bruts[0]) / 3
 
 
-EPISODES_TEST = [("2008-09-01", "2008-12-31"), ("2020-02-15", "2020-04-30")]
+# La MEME constante que la figure: une derive des bornes ferait passer les
+# tests sur d'autres episodes que ceux des bandes tracees.
+EPISODES_TEST = figures.EPISODES
 
 
 def _moyenne_episode(ctx, serie, debut, fin):
