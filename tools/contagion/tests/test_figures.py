@@ -91,6 +91,39 @@ def test_fig3_la_corrigee_tient_ou_l_estimateur_tient(contexte):
     assert ecart < (bruts[-1] - bruts[0]) / 3
 
 
+EPISODES_TEST = [("2008-09-01", "2008-12-31"), ("2020-02-15", "2020-04-30")]
+
+
+def _moyenne_episode(ctx, serie, debut, fin):
+    g = ctx["glissante"]
+    valeurs = [v for d, v in zip(g["dates"], g[serie]) if debut <= d <= fin]
+    assert len(valeurs) > 20, "episode absent des donnees"
+    return sum(valeurs) / len(valeurs)
+
+
+def test_fig4_la_brute_monte_dans_les_deux_crises(contexte):
+    for debut, fin in EPISODES_TEST:
+        assert _moyenne_episode(contexte, "brute", debut, fin) > \
+            contexte["rho_pleine"] + 0.1
+
+
+def test_fig4_la_correction_reduit_l_exces(contexte):
+    for debut, fin in EPISODES_TEST:
+        exces_brut = _moyenne_episode(contexte, "brute", debut, fin) - contexte["rho_pleine"]
+        exces_corrige = _moyenne_episode(contexte, "corrigee", debut, fin) - contexte["rho_pleine"]
+        assert exces_corrige < exces_brut, (debut, "la correction n'a rien reduit")
+        # PAS d'assertion exces_corrige ~ 0: ce qui reste est le contenu de la page,
+        # la legende citera la valeur qui sort, quelle qu'elle soit
+
+
+def test_fig4_svg_bien_forme(contexte):
+    for lang in ("fr", "en"):
+        svg = figures.fig_reste(contexte, lang)
+        assert svg.count("<svg") == 1 and "aria-labelledby" in svg
+        assert svg.count('class="fig-episode"') == 2
+        assert "—" not in svg
+
+
 def test_fig2_fig3_svg_bien_formes_et_etiquetes(contexte):
     for fabrique in (figures.fig_retournement, figures.fig_correction):
         for lang in ("fr", "en"):

@@ -9,6 +9,7 @@ site tombe sous le plancher de chroma des qu'il porte une courbe, donc la
 serie A reprend le vert de .fig-svg (--serie-a) et la serie B est un bleu
 passe au meme validateur de palette, cinq controles sur les DEUX fonds.
 """
+import bisect
 import pathlib
 import re
 
@@ -286,6 +287,154 @@ def fig_correction(ctx, lang):
     return _tranches_svg(ctx["tranches_reelles"], ctx["rho_pleine"], lang,
                          "fig-correction", titre, desc, etiquettes,
                          avec_corrigee=True)
+
+
+# Les deux crises de la figure 4, bornes en dates de bourse incluses.
+EPISODES = [("2008-09-01", "2008-12-31"), ("2020-02-15", "2020-04-30")]
+NOMS_EPISODES = {
+    "fr": ["automne 2008", "février-avril 2020"],
+    "en": ["autumn 2008", "February-April 2020"],
+}
+
+
+def _moyenne_fenetre(dates, valeurs, debut, fin):
+    """Moyenne d'une serie glissante sur les fenetres datees dans [debut, fin]."""
+    vals = [v for d, v in zip(dates, valeurs) if debut <= d <= fin]
+    return sum(vals) / len(vals)
+
+
+def _tableau_episodes(ctx, lang):
+    """La vue tabulaire de la figure 4: une ligne par crise, moyennes des deux
+    courbes, plus la reference pleine periode (ou brute et corrigee coincident
+    par construction, delta nul)."""
+    g = ctx["glissante"]
+    resume = "les valeurs des tracés" if lang == "fr" else "the plotted values"
+    entetes = (["Épisode", "Brute", "Corrigée"] if lang == "fr"
+               else ["Episode", "Raw", "Corrected"])
+    lignes = []
+    for nom, (debut, fin) in zip(NOMS_EPISODES[lang], EPISODES):
+        mb = _moyenne_fenetre(g["dates"], g["brute"], debut, fin)
+        mc = _moyenne_fenetre(g["dates"], g["corrigee"], debut, fin)
+        lignes.append([nom, nombre(mb, lang, 3), nombre(mc, lang, 3)])
+    ref = nombre(ctx["rho_pleine"], lang, 3)
+    lignes.append([ETIQ_REF[lang], ref, ref])
+    th = "".join(f'<th scope="col">{echapper(e)}</th>' for e in entetes)
+    tr = "\n".join("<tr>" + "".join(f"<td>{echapper(c)}</td>" for c in cases)
+                   + "</tr>" for cases in lignes)
+    return (f'<details class="fig-data">\n<summary>{echapper(resume)}</summary>\n'
+            f'<table class="fig-table">\n<thead><tr>{th}</tr></thead>\n'
+            f'<tbody>\n{tr}\n</tbody>\n</table>\n</details>')
+
+
+def fig_reste(ctx, lang):
+    """Figure 4: la correlation glissante 60 jours, brute et corrigee, avec les
+    deux crises en bandes. Rendu propre, pas le gabarit des deciles: l'axe des
+    x est le temps, pas des tranches."""
+    g = ctx["glissante"]
+    dates, brute, corrigee = g["dates"], g["brute"], g["corrigee"]
+    n = len(dates)
+    y0, y1 = 32.0, 320.0
+    # Les deux courbes restent dans [0, 1] sur toute la periode (minimum reel
+    # 0.02 brute, 0.04 corrigee): meme cadre 0..1 que les figures 1 a 3,
+    # l'oeil retrouve la grille.
+    v0, v1 = 0.0, 1.0
+
+    def x_de(i):
+        return round(X0 + i / (n - 1) * (X1 - X0), 2)
+
+    id_fig = "fig-reste"
+    titre = ("Corrélation glissante 60 jours, brute et corrigée" if lang == "fr"
+             else "60-day rolling correlation, raw and corrected")
+    desc = ("Corrélation glissante sur 60 jours entre rendements S&P 500 et "
+            "CAC 40, brute et corrigée de Forbes et Rigobon, de 1990 à 2026, "
+            "avec l'automne 2008 et février-avril 2020 en bandes. La "
+            "correction réduit l'excès des deux crises. La référence de "
+            "variance est la pleine période, crises comprises : la correction "
+            "sous-corrige, et ce qui resterait au-dessus de la référence en "
+            "crise n'est pas à lui seul une preuve de contagion. Chaque "
+            "fenêtre porte moins d'information que ses 60 points, d'où des "
+            "moyennes par épisode dans le tableau ; dans les fenêtres calmes "
+            "la corrigée passe au-dessus de la brute, effet mécanique et "
+            "symétrique de l'inversion." if lang == "fr" else
+            "60-day rolling correlation between S&P 500 and CAC 40 returns, "
+            "raw and Forbes-Rigobon corrected, 1990 to 2026, with autumn 2008 "
+            "and February-April 2020 as shaded bands. The correction reduces "
+            "the excess of both crises. The variance reference is the full "
+            "sample, crises included: the correction under-corrects, and "
+            "whatever would stay above the reference in a crisis is not by "
+            "itself evidence of contagion. Each window carries less "
+            "information than its 60 points, hence per-episode means in the "
+            "table; in calm windows the corrected curve runs above the raw "
+            "one, a mechanical and symmetric effect of the inversion.")
+    parts = [f'<figure class="fig" id="{id_fig}">']
+    parts.append(f'<svg class="fig-svg" viewBox="0 0 640 388" role="img" '
+                 f'aria-labelledby="{id_fig}-t {id_fig}-d">')
+    parts.append(f'<title id="{id_fig}-t">{echapper(titre)}</title>')
+    parts.append(f'<desc id="{id_fig}-d">{echapper(desc)}</desc>')
+    # Les bandes d'episode d'abord: sous la grille et sous les courbes.
+    # Quelques semaines sur 36 ans font une bande de 3 a 5 px: largeur
+    # minimale pour qu'elle existe a l'ecran, annee posee au-dessus.
+    for debut, fin in EPISODES:
+        i0 = bisect.bisect_left(dates, debut)
+        i1 = bisect.bisect_right(dates, fin) - 1
+        xg = x_de(i0)
+        largeur = max(round(x_de(i1) - xg, 2), 3.0)
+        parts.append(f'<rect class="fig-episode" x="{xg}" y="{y0}" '
+                     f'width="{largeur}" height="{y1 - y0}"/>')
+        parts.append(f'<text class="fig-tick" x="{round(xg + largeur / 2, 2)}" '
+                     f'y="{y0 - 8}" text-anchor="middle">{debut[:4]}</text>')
+    for v in (0.0, 0.25, 0.5, 0.75, 1.0):
+        y = sy(v, v0, v1, y0, y1)
+        parts.append(f'<line class="fig-grille" x1="{X0}" y1="{y}" x2="{X1}" y2="{y}"/>')
+        parts.append(f'<text class="fig-tick fig-tick-y" x="{X0 - 8}" y="{y + 4}">'
+                     f'{nombre(v, lang, 2)}</text>')
+    yref = sy(ctx["rho_pleine"], v0, v1, y0, y1)
+    parts.append(f'<polyline class="fig-repere" points="{X0},{yref} {X1},{yref}"/>')
+
+    # Sous-echantillonnage d'AFFICHAGE, un point sur cinq: ~1800 sommets
+    # suffisent aux 474 px de large et divisent le poids de la page par cinq;
+    # les tests, eux, courent sur la serie complete.
+    def poly(vals):
+        idx = list(range(0, n, 5))
+        if idx[-1] != n - 1:
+            idx.append(n - 1)
+        return " ".join(f"{x_de(i)},{sy(vals[i], v0, v1, y0, y1)}" for i in idx)
+
+    parts.append(f'<polyline class="fig-trait fig-trait-fin fig-serie-a" '
+                 f'points="{poly(brute)}"/>')
+    parts.append(f'<polyline class="fig-trait fig-trait-fin fig-serie-b" '
+                 f'points="{poly(corrigee)}"/>')
+    # Les noms de serie au contact du dernier point, dans la marge droite;
+    # anti-collision si les deux courbes finissent trop proches.
+    y_b = sy(brute[-1], v0, v1, y0, y1) + 4
+    y_c = sy(corrigee[-1], v0, v1, y0, y1) + 4
+    if abs(y_b - y_c) < 14:
+        milieu = (y_b + y_c) / 2
+        y_b, y_c = ((milieu - 7, milieu + 7) if y_b <= y_c
+                    else (milieu + 7, milieu - 7))
+    x_et = X1 + 6.0
+    parts.append(_etiquette(x_et, y_b, ETIQ_BRUTE[lang]))
+    parts.append(_etiquette(x_et, y_c,
+                            "corrigée" if lang == "fr" else "corrected"))
+    # La reference est nommee sous sa droite, sauf si un nom de courbe y est
+    # deja: alors elle passe au-dessus.
+    y_ref_et = yref + 14.0
+    if min(abs(y_ref_et - y_b), abs(y_ref_et - y_c)) < 14:
+        y_ref_et = yref - 6.0
+    parts.append(_etiquette(x_et, y_ref_et, ETIQ_REF[lang]))
+    # Reperes d'annees: les multiples de 5, a leur premiere date de bourse.
+    annees_vues = set()
+    for i, d in enumerate(dates):
+        an = d[:4]
+        if an not in annees_vues:
+            annees_vues.add(an)
+            if int(an) % 5 == 0:
+                parts.append(f'<text class="fig-tick" x="{x_de(i)}" '
+                             f'y="{y1 + 18}" text-anchor="middle">{an}</text>')
+    parts.append("</svg>")
+    parts.append(_tableau_episodes(ctx, lang))
+    parts.append("</figure>")
+    return "\n".join(parts)
 
 
 def injecter(chemin, bloc, contenu):

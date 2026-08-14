@@ -784,6 +784,17 @@ body.vue-disque .sim-canvas {
   stroke-width: 1.5;
 }
 .fig-repere { stroke-width: 1.5; }
+/* Bande d'episode (figure des deux crises) : un voile d'encre, pas une couleur
+   de serie. Chaque crise ne dure que quelques semaines sur 36 ans, la bande
+   est etroite : l'opacite est deux crans au-dessus du voile habituel pour
+   rester visible sur les deux fonds. */
+.fig-episode {
+  fill: var(--ink);
+  opacity: 0.15;
+}
+/* Meme figure : ~1800 sommets par courbe, le trait de 2 px des autres figures
+   empate des courbes aussi bruitees; un trait fin les garde separables. */
+.fig-trait-fin { stroke-width: 1.2; }
 
 .fig-tick,
 .fig-note,
