@@ -186,6 +186,13 @@ def _amplitude(v, lang, simule):
     return nombre(v, lang, 2) if simule else pourcent(v * 100, lang, 2)
 
 
+def _scroller(resume):
+    """Le conteneur qui defile: meme motif que la table des contacts de
+    l'eclipse (tabindex pour le clavier, la page ne defile jamais)."""
+    return (f'<div class="scroller" tabindex="0" role="region" '
+            f'aria-label="{echapper(resume)}">\n')
+
+
 def _tableau(tranches, lang, avec_corrigee, analytique=None, simule=False):
     """Vue tabulaire de la figure, repliee sous <details>: memes classes que
     les tableaux de figures de l'eclipse, sans une ligne de JavaScript.
@@ -214,8 +221,10 @@ def _tableau(tranches, lang, avec_corrigee, analytique=None, simule=False):
                       + "</tr>")
     th = "".join(f'<th scope="col">{echapper(e)}</th>' for e in entetes)
     return (f'<details class="fig-data">\n<summary>{echapper(resume)}</summary>\n'
-            f'<table class="fig-table">\n<thead><tr>{th}</tr></thead>\n'
-            f'<tbody>\n' + "\n".join(lignes) + '\n</tbody>\n</table>\n</details>')
+            + _scroller(resume)
+            + f'<table class="fig-table">\n<thead><tr>{th}</tr></thead>\n'
+            f'<tbody>\n' + "\n".join(lignes) + '\n</tbody>\n</table>\n'
+            '</div>\n</details>')
 
 
 # Les memes mots courts d'une figure a l'autre: la serie brute s'appelle
@@ -322,8 +331,10 @@ def _tableau_episodes(ctx, lang):
     tr = "\n".join("<tr>" + "".join(f"<td>{echapper(c)}</td>" for c in cases)
                    + "</tr>" for cases in lignes)
     return (f'<details class="fig-data">\n<summary>{echapper(resume)}</summary>\n'
-            f'<table class="fig-table">\n<thead><tr>{th}</tr></thead>\n'
-            f'<tbody>\n{tr}\n</tbody>\n</table>\n</details>')
+            + _scroller(resume)
+            + f'<table class="fig-table">\n<thead><tr>{th}</tr></thead>\n'
+            f'<tbody>\n{tr}\n</tbody>\n</table>\n'
+            '</div>\n</details>')
 
 
 def fig_reste(ctx, lang):

@@ -480,10 +480,14 @@ footer a:hover {
   padding-top: 1.75rem;
 }
 .article p,
-.article ul {
+.article ul,
+.article ol {
   max-width: 38rem;
 }
-.article ul {
+/* la remise a zero globale mange le retrait des listes : sans cette marge,
+   les numeros d'un <ol> tombent hors du bloc et disparaissent sur mobile. */
+.article ul,
+.article ol {
   margin-left: 1.15rem;
 }
 .article li + li {
@@ -843,6 +847,13 @@ body.vue-disque .sim-canvas {
 .fig-data :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
+}
+/* six colonnes ne tiennent pas dans un ecran de poche : meme motif que la
+   table des contacts de l'eclipse, le tableau defile dans son conteneur,
+   jamais le corps de la page. */
+.fig-data .scroller {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .fig-table {
   width: 100%;
