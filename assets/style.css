@@ -740,9 +740,10 @@ body.vue-disque .sim-canvas {
   height: auto;
   overflow: visible;
   --serie-a: #0f8f63;
+  --serie-b: #2a78d6;
 }
 @media (prefers-color-scheme: dark) {
-  .fig-svg { --serie-a: #199e70; }
+  .fig-svg { --serie-a: #199e70; --serie-b: #5b8fe0; }
 }
 
 .fig-grille {
@@ -760,6 +761,19 @@ body.vue-disque .sim-canvas {
   stroke-linejoin: round;
 }
 .fig-a { stroke: var(--serie-a); }
+/* Les deux series des figures contagion. Couple valide au meme validateur que
+   le vert de l'eclipse: cinq controles passes sur le papier ET sur l'encre. */
+.fig-serie-a { stroke: var(--serie-a); }
+.fig-serie-b { stroke: var(--serie-b); }
+/* Intervalle bootstrap a 95 % : un trait vertical en retrait derriere le point. */
+.fig-ic {
+  stroke-width: 2;
+  opacity: 0.5;
+}
+/* Sur un point, la couleur de serie passe au disque; l'anneau garde la couleur
+   du fond (convention de l'eclipse), donc on re-nomme le stroke ici. */
+.fig-point.fig-serie-a { fill: var(--serie-a); stroke: var(--paper); }
+.fig-point.fig-serie-b { fill: var(--serie-b); stroke: var(--paper); }
 /* Trace de contexte : gris de retrait, pas une seconde couleur de serie. Le
    mettre a egalite chromatique avec la courbe reelle ferait croire a deux
    mesures concurrentes, alors que l'une est le sujet et l'autre le repere. */
